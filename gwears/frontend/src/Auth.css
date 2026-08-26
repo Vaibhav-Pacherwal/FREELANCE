@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    gap: 3rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.auth-form .signin {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#googleLogo {
+    box-sizing: border-box;
+    height: 1rem;
+    width: 1rem;
+}
