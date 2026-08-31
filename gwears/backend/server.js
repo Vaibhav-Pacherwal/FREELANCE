@@ -15,10 +15,12 @@ app.use(cors({
     origin: allowedOrigin,
     credentials: true
 }));
+
 app.use(express.json());
-app.use(userRoutes);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(userRoutes);
 
 const PORT = process.env.PORT;
 
@@ -33,11 +35,11 @@ const main = async () => {
 main();
 
 // const addAdmin = async () => {
-//   const password = await bcrypt.hash("2139", 10);
+//   const password = await bcrypt.hash("2102", 10);
 
 //   const newAdmin = await User.create({
-//     name: "Vaibhav Pacherwal",
-//     email: "vaibhavpacherwal5@gmail.com",
+//     name: "John Doe",
+//     email: "joed009@gmail.com",
 //     passwordHash: password,
 //   });
 

@@ -15,7 +15,6 @@ export default function Auth({ login }) {
 
     return (
         <>
-          <Navbar />
           <div className="auth-form">
             <div className="signin">
                 <h2>ADMIN LOGIN</h2>
@@ -26,40 +25,54 @@ export default function Auth({ login }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   sx={{
-                      "& .MuiInputLabel-root": {
-                        color: "black",
-                       },
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "black",
-                       },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "black",
-                       },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "black",
-                       },
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                    },
+
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                    },
+
+                    "& .MuiInput-underline:before": {
+                      borderBottomColor: "black",
+                    },
+
+                    "& .MuiInput-underline:hover:before": {
+                      borderBottomColor: "black",
+                    },
+
+                    "& .MuiInput-underline:after": {
+                      borderBottomColor: "black",
+                    },
                   }}
                 />
-                <TextField 
-                  id="standard-basic" 
+                <TextField
+                  id="standard-basic"
                   label="Password"
-                  variant="standard" 
+                  variant="standard"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   sx={{
-                      "& .MuiInputLabel-root": {
-                        color: "black",
-                       },
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "black",
-                       },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "black",
-                       },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "black",
-                       },
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                    },
+
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                    },
+
+                    "& .MuiInput-underline:before": {
+                      borderBottomColor: "black",
+                    },
+
+                    "& .MuiInput-underline:hover:before": {
+                      borderBottomColor: "black",
+                    },
+
+                    "& .MuiInput-underline:after": {
+                      borderBottomColor: "black",
+                    },
                   }}
                 />
                 <Button 

@@ -3,6 +3,7 @@ import googleClient from "../config/google.js";
 import generateJWT from "../utils/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import Product from "../models/product.model.js";
 
 const google = async (req, res) => {
 
@@ -49,10 +50,12 @@ const googleCallback = async (req, res) => {
             });
         }
 
-        user.avatar = data.picture;
-        user.googleId = data.id;
-        user.emailVerified = data.verified_email;
-        await user.save();
+        if(user.emailVerified === false) {
+            user.avatar = data.picture;
+            user.googleId = data.id;
+            user.emailVerified = true;
+            await user.save();
+        }
 
         const token = generateJWT(user._id);
 
@@ -136,5 +139,13 @@ const logout = async (req, res) => {
     res.status(200).json({message: "Logged Out"});
 }
 
+const verify = async (req, res) => {
+    const products = await Product.find({});
 
-export { google, googleCallback, login, logout };
+    return res.json({
+        user: req.user,
+        prods: products
+    });
+}
+
+export { google, googleCallback, login, logout, verify };

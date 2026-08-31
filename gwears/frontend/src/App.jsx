@@ -1,9 +1,16 @@
 import './App.css'
 import Home from './pages/Home.jsx'
 import Auth from './pages/Auth.jsx'
-import Admin from './pages/Admin.jsx'
+import Admin from './pages/Admin/Admin.jsx'
 import server from './Environment.js'
+import { useState } from 'react'
+import ProtectedRoute from './utils/RouteProtector.jsx'
 import { Routes, Route, useNavigate } from "react-router-dom"
+import Dashboard from './pages/Admin/Dashboard.jsx'
+import Products from './pages/Admin/Products.jsx'
+import Offers from './pages/Admin/Offers.jsx'
+import Categories from './pages/Admin/Categories.jsx'
+import Settings from './pages/Admin/Settings.jsx'
 
 export default function App() {
 
@@ -32,7 +39,13 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home />}></Route>
         <Route path='/auth' element={<Auth login={onLogin}/>}></Route>
-        <Route path='/admin' element={<Admin />}></Route>
+        <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>}>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="offers" element={<Offers />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
       </Routes>
     </>
   )

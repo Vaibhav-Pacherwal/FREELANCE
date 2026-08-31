@@ -7,19 +7,17 @@ export default function Navbar() {
     return (
         <>
           <div className="nav">
-            <div className="contactUs">
-                <p>+Contact Us</p>
-            </div>
             <div className="brand">
                 <h2 onClick={() => navigate("/")}>GWears</h2>
             </div>
             <div className="navOptions">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <i class="fa-regular fa-user" onClick={() => navigate("/auth")}></i>
-                <div className="menu">
+                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fa-user" title="Admin profile" onClick={() => navigate("/auth")}></i>
+                {/* <div className="menu">
                     <i class="fa-solid fa-bars"></i> 
                     <p>MENU</p>
-                </div>
+                </div> */}
             </div>
           </div>
         </>
