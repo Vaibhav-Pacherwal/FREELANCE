@@ -11,6 +11,7 @@ import Products from './pages/Admin/Products.jsx'
 import Offers from './pages/Admin/Offers.jsx'
 import Categories from './pages/Admin/Categories.jsx'
 import Settings from './pages/Admin/Settings.jsx'
+import AddProduct from './pages/Admin/AddProduct.jsx'
 
 export default function App() {
 
@@ -45,7 +46,9 @@ export default function App() {
           <Route path="categories" element={<Categories />} />
           <Route path="offers" element={<Offers />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="products/new" element={<AddProduct />} />
         </Route>
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
   )
