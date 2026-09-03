@@ -4,6 +4,7 @@ import generateJWT from "../utils/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import Product from "../models/product.model.js";
+import Offer from "../models/offer.model.js";
 
 const google = async (req, res) => {
 
@@ -140,12 +141,39 @@ const logout = async (req, res) => {
 }
 
 const verify = async (req, res) => {
-    const products = await Product.find({});
+  try {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const [
+      products,
+      activeProducts,
+      offers,
+      recentProducts,
+    ] = await Promise.all([
+      Product.find({}),
+      Product.find({ isActive: true }),
+      Offer.find({}),
+
+      Product.find({
+        createdAt: { $gte: oneWeekAgo },
+      }).sort({ createdAt: -1 }),
+    ]);
 
     return res.json({
-        user: req.user,
-        prods: products
+      user: req.user,
+      prods: products,
+      offers,
+      activeProds: activeProducts,
+      recentProducts,
     });
-}
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to fetch data",
+    });
+  }
+};
 
 export { google, googleCallback, login, logout, verify };
