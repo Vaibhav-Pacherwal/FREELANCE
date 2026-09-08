@@ -1,101 +1,193 @@
-import { useState } from "react";
-import "../Auth.css"
-import Navbar from "./Navbar.jsx"
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import { useState, useEffect } from "react";
+import "../Auth.css";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import server from "../Environment.js";
 
 export default function Auth({ login }) {
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
 
-    const handleSignIn = async () => {
-        const data = { email, password };
-        await login(data);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [openError, setOpenError] = useState(false);
+
+  const handleSignIn = async () => {
+
+    setError("");
+    setOpenError(false);
+
+    const data = {
+      email,
+      password
+    };
+
+    const result = await login(data);
+
+    if (!result.success) {
+      setError(result.message);
+      setOpenError(true);
+    }
+  };
+
+  useEffect(() => {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const errorCode = params.get("error");
+
+    if (!errorCode) {
+      return;
     }
 
-    return (
-        <>
-          <div className="auth-form">
-            <div className="signin">
-                <h2>ADMIN LOGIN</h2>
-                <TextField 
-                  id="standard-basic" 
-                  label="Email"
-                  variant="standard" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      color: "black",
-                    },
+    const errorMessages = {
+      "not-admin":
+        "This Google account is not an admin account.",
 
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                    },
+      "admin-not-found":
+        "This Google account is not registered as an admin.",
 
-                    "& .MuiInput-underline:before": {
-                      borderBottomColor: "black",
-                    },
+      "disabled":
+        "This account has been disabled.",
 
-                    "& .MuiInput-underline:hover:before": {
-                      borderBottomColor: "black",
-                    },
+      "oauth-failed":
+        "Google authentication failed. Please try again.",
 
-                    "& .MuiInput-underline:after": {
-                      borderBottomColor: "black",
-                    },
-                  }}
-                />
-                <TextField
-                  id="standard-basic"
-                  label="Password"
-                  variant="standard"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  sx={{
-                    "& .MuiInputLabel-root": {
-                      color: "black",
-                    },
+      "invalid-auth":
+        "Invalid authentication request."
+    };
 
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                    },
+    setError(
+      errorMessages[errorCode] ||
+      "Something went wrong. Please try again."
+    );
 
-                    "& .MuiInput-underline:before": {
-                      borderBottomColor: "black",
-                    },
+    setOpenError(true);
 
-                    "& .MuiInput-underline:hover:before": {
-                      borderBottomColor: "black",
-                    },
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
 
-                    "& .MuiInput-underline:after": {
-                      borderBottomColor: "black",
-                    },
-                  }}
-                />
-                <Button 
-                  variant="contained" 
-                  onClick={handleSignIn}
-                  style={{backgroundColor:"black"}}
-                >
-                    SIGN IN
-                </Button>
+  }, []);
 
-                <Button
-                  variant="contained" 
-                  style={{backgroundColor:"white", color:"black"}}
-                  onClick={() => {
-                    window.location.href =
-                      "http://localhost:8080/auth/google";
-                  }}
-                >
-                  <img src="/public/images/googleLogo.png" alt="google" id="googleLogo"/>&nbsp;
-                  Continue with Google
-                </Button>
-            </div>
-          </div>
-        </>
-    )
+  return (
+    <>
+      <div className="auth-form">
+
+        <div className="signin">
+
+          <h2>ADMIN LOGIN</h2>
+
+          <TextField
+            label="Email"
+            variant="standard"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{
+              "& .MuiInputLabel-root": {
+                color: "black"
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "black"
+              },
+              "& .MuiInput-underline:before": {
+                borderBottomColor: "black"
+              },
+              "& .MuiInput-underline:hover:before": {
+                borderBottomColor: "black"
+              },
+              "& .MuiInput-underline:after": {
+                borderBottomColor: "black"
+              },
+            }}
+          />
+
+          <TextField
+            label="Password"
+            variant="standard"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              "& .MuiInputLabel-root": {
+                color: "black"
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "black"
+              },
+              "& .MuiInput-underline:before": {
+                borderBottomColor: "black"
+              },
+              "& .MuiInput-underline:hover:before": {
+                borderBottomColor: "black"
+              },
+              "& .MuiInput-underline:after": {
+                borderBottomColor: "black"
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            onClick={handleSignIn}
+            style={{
+              backgroundColor: "black"
+            }}
+          >
+            SIGN IN
+          </Button>
+
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "white",
+              color: "black"
+            }}
+            onClick={() => {
+              window.location.href =
+                `${server}/auth/google?role=admin`;
+            }}
+          >
+            <img
+              src="/images/googleLogo.png"
+              alt="google"
+              id="googleLogo"
+            />
+            &nbsp;
+            Continue with Google
+          </Button>
+
+        </div>
+
+      </div>
+
+      {/* ERROR POPUP */}
+
+      <Snackbar
+        open={openError}
+        autoHideDuration={4000}
+        onClose={() => setOpenError(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center"
+        }}
+      >
+        <Alert
+          onClose={() => setOpenError(false)}
+          severity="error"
+          variant="filled"
+          sx={{
+            width: "100%"
+          }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
+
+    </>
+  );
 }

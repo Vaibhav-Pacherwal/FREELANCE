@@ -31,18 +31,6 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
-    price: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    originalPrice: {
-      type: Number,
-      min: 0,
-      default: null,
-    },
-
     images: [
       {
         url: {
@@ -57,6 +45,72 @@ const productSchema = new mongoose.Schema(
       },
     ],
 
+    options: [
+      {
+        name: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+
+        values: [
+          {
+            type: String,
+            required: true,
+            trim: true,
+          },
+        ],
+      },
+    ],
+
+    variants: [
+      {
+        sku: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+
+        attributes: [
+          {
+            name: {
+              type: String,
+              required: true,
+            },
+
+            value: {
+              type: String,
+              required: true,
+            },
+          },
+        ],
+
+        price: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+
+        originalPrice: {
+          type: Number,
+          min: 0,
+          default: null,
+        },
+
+        stock: {
+          type: Number,
+          required: true,
+          min: 0,
+          default: 0,
+        },
+
+        isActive: {
+          type: Boolean,
+          default: true,
+        },
+      },
+    ],
+
     isActive: {
       type: Boolean,
       default: true,
@@ -66,7 +120,6 @@ const productSchema = new mongoose.Schema(
     isFeatured: {
       type: Boolean,
       default: false,
-      index: true,
     },
   },
   {
@@ -77,5 +130,4 @@ const productSchema = new mongoose.Schema(
 productSchema.index({ category: 1, isActive: 1 });
 
 const Product = mongoose.model("Product", productSchema);
-
 export default Product;

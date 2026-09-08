@@ -2,8 +2,13 @@ import express from "express"
 import cors from "cors";
 import connectToDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
+import productRoutes from "./routes/product.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
+import offerRoutes from "./routes/offer.routes.js";
+import settingsRoutes from "./routes/settings.routes.js";
 import cookieParser from "cookie-parser";
 import User from "./models/user.model.js";
+import cartRoutes from "./routes/cart.routes.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
 dotenv.config();
@@ -21,6 +26,11 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(userRoutes);
+app.use(productRoutes);
+app.use(categoryRoutes);
+app.use(offerRoutes);
+app.use(settingsRoutes);
+app.use("/cart", cartRoutes);
 
 const PORT = process.env.PORT;
 
@@ -35,12 +45,13 @@ const main = async () => {
 main();
 
 // const addAdmin = async () => {
-//   const password = await bcrypt.hash("2102", 10);
+//   const password = await bcrypt.hash("admin2139", 10);
 
 //   const newAdmin = await User.create({
-//     name: "John Doe",
-//     email: "joed009@gmail.com",
+//     name: "Vaibhav Pacherwal",
+//     email: "vaibhavpacherwal2139@gmail.com",
 //     passwordHash: password,
+//     role: "admin",
 //   });
 
 //   console.log(newAdmin);

@@ -11,6 +11,7 @@ export default function ProtectedRoute({ children }) {
   const [offers, setOffers] = useState(null);
   const [activeProds, setActiveProds] = useState(null);
   const [recentProducts, setRecentProducts] = useState(null);
+  const [storeSettings, setStoreSettings] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -27,6 +28,7 @@ export default function ProtectedRoute({ children }) {
           setOffers(data.offers);
           setActiveProds(data.activeProds);
           setRecentProducts(data.recentProducts);
+          setStoreSettings(data.storeSettings);
           setAuthorized(true);
         }
       } catch (error) {
@@ -48,7 +50,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, products, offers, activeProds, recentProducts }}>
+    <AuthContext.Provider value={{ user, products, offers, activeProds, recentProducts, storeSettings }}>
       {children}
     </AuthContext.Provider>
   );

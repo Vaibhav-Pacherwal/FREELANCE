@@ -33,3 +33,34 @@
     gap: 0.3rem;
     cursor: pointer;
 }
+
+.cartIcon {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cartCount {
+    position: absolute;
+    top: -9px;
+    right: -10px;
+
+    min-width: 17px;
+    height: 17px;
+
+    padding: 0 4px;
+
+    border-radius: 50%;
+
+    background: black;
+    color: white;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

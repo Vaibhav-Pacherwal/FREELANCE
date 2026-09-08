@@ -22,13 +22,17 @@ const offerSchema = new mongoose.Schema(
         default: null,
       },
 
+      publicId: {
+        type: String,
+        default: null,
+      },
+
       alt: {
         type: String,
         default: "",
       },
     },
 
-    // Discount information
     discountType: {
       type: String,
       enum: ["percentage", "fixed"],
@@ -84,6 +88,19 @@ offerSchema.index({
   isActive: 1,
   startDate: 1,
   endDate: 1,
+});
+
+offerSchema.pre("validate", function () {
+  if (
+    this.startDate &&
+    this.endDate &&
+    this.startDate >= this.endDate
+  ) {
+    this.invalidate(
+      "endDate",
+      "End date must be after start date."
+    );
+  }
 });
 
 const Offer = mongoose.model("Offer", offerSchema);
