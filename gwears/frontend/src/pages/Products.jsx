@@ -1,191 +1,414 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import server from "../Environment.js";
+import {
+    useLocation,
+} from "react-router-dom";
+
+import API from "../ApiEndpoints.js";
+import ProductCard from "../components/ProductCard.jsx";
+
+import "./Products.css";
 
 export default function Products() {
 
-    const navigate = useNavigate();
+    const location = useLocation();
 
-    const [products, setProducts] = useState([]);
 
-    const [search, setSearch] = useState("");
+    const [products, setProducts] =
+        useState([]);
 
-    const [page, setPage] = useState(1);
-    const [pagination, setPagination] = useState({});
+    const [search, setSearch] =
+        useState("");
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [page, setPage] =
+        useState(1);
+
+    const [pagination, setPagination] =
+        useState({});
+
+    const [loading, setLoading] =
+        useState(false);
+
+    const [error, setError] =
+        useState("");
+
+
+    const [categories, setCategories] =
+        useState([]);
+
+    const [category, setCategory] =
+        useState("");
+
+
+    const [group, setGroup] =
+        useState("");
+
 
     const limit = 12;
 
 
-    const fetchProducts = async () => {
-        try {
-            setLoading(true);
-            setError("");
+    /* =========================
+       READ URL FILTERS
+    ========================= */
 
-            const params = new URLSearchParams({
-                page,
-                limit,
-            });
+    useEffect(() => {
 
-            if (search.trim()) {
-                params.append(
-                    "search",
-                    search.trim()
-                );
-            }
-
-            const response = await fetch(
-                `${server}/store/products?${params.toString()}`
+        const params =
+            new URLSearchParams(
+                location.search
             );
 
-            const data = await response.json();
+        const urlCategory =
+            params.get("category") || "";
+
+        const urlGroup =
+            params.get("group") || "";
+
+
+        setCategory(urlCategory);
+        setGroup(urlGroup);
+
+        setPage(1);
+
+    }, [location.search]);
+
+
+    /* =========================
+       FETCH CATEGORIES
+    ========================= */
+
+    const fetchCategories = async () => {
+
+        try {
+
+            const response = await fetch(
+                API.categories
+            );
+
+            const data =
+                await response.json();
 
             if (!response.ok) {
                 throw new Error(
                     data.message ||
-                    "Failed to fetch products"
+                    "Failed to fetch categories"
                 );
             }
 
-            setProducts(data.products || []);
-            setPagination(data.pagination || {});
+            setCategories(
+                (data.categories || [])
+                    .filter(
+                        (category) =>
+                            category.isActive
+                    )
+            );
 
         } catch (error) {
+
+            console.error(
+                "Fetch categories error:",
+                error
+            );
+
+        }
+
+    };
+
+
+    useEffect(() => {
+
+        fetchCategories();
+
+    }, []);
+
+
+    /* =========================
+       FETCH PRODUCTS
+    ========================= */
+
+    const fetchProducts = async () => {
+
+        try {
+
+            setLoading(true);
+            setError("");
+
+
+            const params =
+                new URLSearchParams({
+
+                    page,
+                    limit,
+
+                });
+
+
+            if (search.trim()) {
+
+                params.append(
+                    "search",
+                    search.trim()
+                );
+
+            }
+
+
+            if (category) {
+
+                params.append(
+                    "category",
+                    category
+                );
+
+            }
+
+
+            if (group) {
+
+                params.append(
+                    "group",
+                    group
+                );
+
+            }
+
+
+            const response =
+                await fetch(
+                    `${API.storeProducts}?${params.toString()}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Failed to fetch products"
+                );
+
+            }
+
+
+            setProducts(
+                data.products || []
+            );
+
+
+            setPagination(
+                data.pagination || {}
+            );
+
+
+        } catch (error) {
+
             console.error(
                 "Fetch products error:",
                 error
             );
 
-            setError(error.message);
+            setError(
+                error.message
+            );
 
         } finally {
+
             setLoading(false);
+
         }
+
     };
 
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            fetchProducts();
-        }, 400);
+    /* =========================
+       PRODUCT FETCH EFFECT
+    ========================= */
 
-        return () => clearTimeout(timer);
+    useEffect(() => {
+
+        const timer =
+            setTimeout(() => {
+
+                fetchProducts();
+
+            }, 400);
+
+
+        return () =>
+            clearTimeout(timer);
 
     }, [
         search,
+        category,
+        group,
         page,
     ]);
 
 
-    const handleProductClick = (productId) => {
-        navigate(`/products/${productId}`);
+    /* =========================
+       CATEGORY CHANGE
+    ========================= */
+
+    const handleCategoryChange = (
+        e
+    ) => {
+
+        const value =
+            e.target.value;
+
+
+        setCategory(value);
+        setGroup("");
+        setPage(1);
+
     };
 
 
     return (
-        <div>
 
-            <h1>Products</h1>
+        <div className="products-page">
 
+            <div className="products-header">
 
-            {/* Search */}
-
-            <input
-                type="text"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                }}
-            />
+                <h1>
+                    Products
+                </h1>
 
 
-            {/* Loading */}
+                <div className="product-filters">
+
+                    {/* SEARCH */}
+
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={search}
+                        onChange={(e) => {
+
+                            setSearch(
+                                e.target.value
+                            );
+
+                            setPage(1);
+
+                        }}
+                    />
+
+
+                    {/* CATEGORY */}
+
+                    <select
+                        value={category}
+                        onChange={
+                            handleCategoryChange
+                        }
+                    >
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+
+                        {categories.map(
+                            (category) => (
+
+                                <option
+                                    key={
+                                        category._id
+                                    }
+                                    value={
+                                        category._id
+                                    }
+                                >
+                                    {
+                                        category.name
+                                    }
+                                </option>
+
+                            )
+                        )}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            {/* LOADING */}
 
             {loading && (
-                <p>
+
+                <div className="products-message">
                     Loading products...
-                </p>
+                </div>
+
             )}
 
 
-            {/* Error */}
+            {/* ERROR */}
 
-            {!loading && error && (
-                <p>
-                    {error}
-                </p>
-            )}
+            {!loading &&
+                error && (
+
+                    <div className="products-message error">
+                        {error}
+                    </div>
+
+                )}
 
 
-            {/* Products */}
+            {/* EMPTY */}
 
-            {!loading && !error && (
-                <>
-                    {products.length === 0 ? (
-                        <p>
-                            No products found.
-                        </p>
-                    ) : (
-                        products.map((product) => (
-                            <div
-                                key={product._id}
-                                onClick={() =>
-                                    handleProductClick(
+            {!loading &&
+                !error &&
+                products.length === 0 && (
+
+                    <div className="products-message">
+                        No products found.
+                    </div>
+
+                )}
+
+
+            {/* PRODUCTS */}
+
+            {!loading &&
+                !error &&
+                products.length > 0 && (
+
+                    <div className="products-grid">
+
+                        {products.map(
+                            (product) => (
+
+                                <ProductCard
+                                    key={
                                         product._id
-                                    )
-                                }
-                            >
+                                    }
+                                    product={
+                                        product
+                                    }
+                                />
 
-                                <h3>
-                                    {product.name}
-                                </h3>
+                            )
+                        )}
 
-                                <p>
-                                    {product.description}
-                                </p>
+                    </div>
 
-                                <p>
-                                    Category:{" "}
-                                    {product.category?.name}
-                                </p>
+                )}
 
 
-                                {product.images?.length > 0 && (
-                                    <img
-                                        src={
-                                            product
-                                                .images[0]
-                                                .url
-                                        }
-                                        alt={
-                                            product
-                                                .images[0]
-                                                .alt ||
-                                            product.name
-                                        }
-                                        width="150"
-                                    />
-                                )}
-
-                            </div>
-                        ))
-                    )}
-                </>
-            )}
-
-
-            {/* Pagination */}
+            {/* PAGINATION */}
 
             {!loading &&
                 !error &&
                 pagination &&
                 pagination.totalPages > 1 && (
 
-                    <div>
+                    <div className="pagination">
 
                         <button
                             disabled={
@@ -193,7 +416,8 @@ export default function Products() {
                             }
                             onClick={() =>
                                 setPage(
-                                    (prev) => prev - 1
+                                    (prev) =>
+                                        prev - 1
                                 )
                             }
                         >
@@ -202,11 +426,18 @@ export default function Products() {
 
 
                         <span>
-                            {" "}
+
                             Page{" "}
-                            {pagination.currentPage}{" "}
+                            {
+                                pagination.currentPage
+                            }{" "}
+
                             of{" "}
-                            {pagination.totalPages}{" "}
+
+                            {
+                                pagination.totalPages
+                            }
+
                         </span>
 
 
@@ -216,7 +447,8 @@ export default function Products() {
                             }
                             onClick={() =>
                                 setPage(
-                                    (prev) => prev + 1
+                                    (prev) =>
+                                        prev + 1
                                 )
                             }
                         >
@@ -224,8 +456,10 @@ export default function Products() {
                         </button>
 
                     </div>
+
                 )}
 
         </div>
+
     );
 }

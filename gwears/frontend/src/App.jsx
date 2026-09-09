@@ -8,7 +8,7 @@ import ProtectedRoute from './utils/RouteProtector.jsx'
 import { Routes, Route, useNavigate } from "react-router-dom"
 import Dashboard from './pages/Admin/Dashboard.jsx'
 import AdminProducts from './pages/Admin/Products.jsx'
-import Offers from './pages/Admin/Offers.jsx'
+import AdminOffers from './pages/Admin/Offers.jsx'
 import Categories from './pages/Admin/Categories.jsx'
 import Settings from './pages/Admin/Settings.jsx'
 import AddProduct from './pages/Admin/AddProduct.jsx'
@@ -23,6 +23,8 @@ import Account from './pages/Account.jsx'
 import Cart from './pages/Cart.jsx'
 import Products from './pages/Products.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
+import Wishlist from './pages/Wishlist.jsx'
+import Offers from './pages/Offers.jsx'
 
 export default function App() {
 
@@ -88,7 +90,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="categories" element={<Categories />} />
-          <Route path="offers" element={<Offers />} />
+          <Route path="offers" element={<AdminOffers />} />
           <Route path="settings" element={<Settings />} />
           <Route path="products/new" element={<AddProduct />} />
           <Route path="products/edit/:id" element={<EditProduct />} />
@@ -107,12 +109,28 @@ export default function App() {
             </CustomerProtectedRoute>
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/wishlist"
+          element={
+            <CustomerProtectedRoute>
+              <Wishlist />
+            </CustomerProtectedRoute>
+          }
+        />
+        <Route 
+          path="/cart" 
+          element={
+           <CustomerProtectedRoute>
+               <Cart />
+           </CustomerProtectedRoute>
+          } 
+        />
         <Route path="/products" element={<Products />} />
         <Route
           path="/products/:id"
           element={<ProductDetails />}
         />
+        <Route path="/offers" element={<Offers />} />
       </Routes>
     </>
   )

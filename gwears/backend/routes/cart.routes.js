@@ -9,6 +9,7 @@ import {
     updateCartItem,
     removeCartItem,
     clearCart,
+    validateCart,
 } from "../controllers/cart.controllers.js";
 
 const router = Router();
@@ -22,5 +23,6 @@ router.post("/items", addToCart);
 router.patch("/items/:itemId", updateCartItem);
 router.delete("/items/:itemId", removeCartItem);
 router.delete("/", clearCart);
+router.get("/validate", validateCart);
 
 export default router;

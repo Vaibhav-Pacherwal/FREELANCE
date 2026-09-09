@@ -1,51 +1,54 @@
 import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 100,
-      unique: true,
-    },
+    {
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
 
-    slug: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-      unique: true,
-    },
+        slug: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+        },
 
-    description: {
-      type: String,
-      trim: true,
-      maxlength: 500,
-      default: "",
-    },
+        group: {
+            type: String,
+            enum: [
+                "clothing",
+                "footwear",
+                "accessories",
+            ],
+            required: true,
+        },
 
-    image: {
-      url: {
-        type: String,
-        default: null,
-      },
+        description: {
+            type: String,
+            trim: true,
+        },
 
-      alt: {
-        type: String,
-        default: "",
-      },
-    },
+        image: {
+            url: {
+                type: String,
+            },
+            alt: {
+                type: String,
+            },
+        },
 
-    isActive: {
-      type: Boolean,
-      default: true,
-      index: true,
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
     },
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
 const Category = mongoose.model("Category", categorySchema);

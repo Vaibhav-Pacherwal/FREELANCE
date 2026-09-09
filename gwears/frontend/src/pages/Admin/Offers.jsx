@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../../Environment.js";
 
-export default function Offers() {
+export default function AdminOffers() {
     const navigate = useNavigate();
 
     const [offers, setOffers] = useState([]);

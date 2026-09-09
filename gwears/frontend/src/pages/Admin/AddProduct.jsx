@@ -92,11 +92,6 @@ export default function AddProduct() {
     const [error, setError] =
         useState("");
 
-
-    // --------------------------------------------------
-    // Categories
-    // --------------------------------------------------
-
     useEffect(() => {
 
         const fetchCategories = async () => {
@@ -136,11 +131,6 @@ export default function AddProduct() {
         fetchCategories();
 
     }, []);
-
-
-    // --------------------------------------------------
-    // Generate variants
-    // --------------------------------------------------
 
     const generateVariants = () => {
 
@@ -194,11 +184,6 @@ export default function AddProduct() {
 
         setVariants(generated);
     };
-
-
-    // --------------------------------------------------
-    // Option helpers
-    // --------------------------------------------------
 
     const addOption = () => {
 
@@ -306,11 +291,6 @@ export default function AddProduct() {
         );
     };
 
-
-    // --------------------------------------------------
-    // Variant helpers
-    // --------------------------------------------------
-
     const updateVariant = (
         index,
         field,
@@ -346,11 +326,6 @@ export default function AddProduct() {
             )
         );
     };
-
-
-    // --------------------------------------------------
-    // Images
-    // --------------------------------------------------
 
     const handleImagesChange = (e) => {
 
@@ -449,90 +424,59 @@ export default function AddProduct() {
         );
     };
 
-
-    // --------------------------------------------------
-    // Submit
-    // --------------------------------------------------
-
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         setError("");
 
-
         if (!name.trim()) {
-            setError(
-                "Product name is required"
-            );
+            setError("Product name is required");
             return;
         }
-
 
         if (!description.trim()) {
-            setError(
-                "Description is required"
-            );
+            setError("Description is required");
             return;
         }
-
 
         if (!category) {
-            setError(
-                "Please select a category"
-            );
+            setError("Please select a category");
             return;
         }
-
 
         if (!images.length) {
-            setError(
-                "Please select at least one image"
-            );
+            setError("Please select at least one image");
             return;
         }
-
 
         if (!variants.length) {
-            setError(
-                "Generate at least one product variant"
-            );
+            setError("Generate at least one product variant");
             return;
         }
-
 
         for (const variant of variants) {
 
             if (!variant.sku.trim()) {
-                setError(
-                    "Every variant must have a SKU"
-                );
+                setError("Every variant must have a SKU");
                 return;
             }
-
 
             if (
                 variant.price === "" ||
                 Number(variant.price) < 0
             ) {
-                setError(
-                    "Every variant must have a valid price"
-                );
+                setError("Every variant must have a valid price");
                 return;
             }
-
 
             if (
                 variant.stock === "" ||
                 Number(variant.stock) < 0
             ) {
-                setError(
-                    "Every variant must have valid stock"
-                );
+                setError("Every variant must have valid stock");
                 return;
             }
         }
-
 
         try {
 
@@ -1150,9 +1094,8 @@ export default function AddProduct() {
 
                                     <img
                                         src={preview}
-                                        alt={`Preview ${
-                                            index + 1
-                                        }`}
+                                        alt={`Preview ${index + 1
+                                            }`}
                                     />
 
 

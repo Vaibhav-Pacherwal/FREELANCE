@@ -9,6 +9,7 @@ import settingsRoutes from "./routes/settings.routes.js";
 import cookieParser from "cookie-parser";
 import User from "./models/user.model.js";
 import cartRoutes from "./routes/cart.routes.js";
+import wishlistRoutes from "./routes/wishlist.routes.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(categoryRoutes);
 app.use(offerRoutes);
 app.use(settingsRoutes);
 app.use("/cart", cartRoutes);
+app.use(wishlistRoutes);
 
 const PORT = process.env.PORT;
 

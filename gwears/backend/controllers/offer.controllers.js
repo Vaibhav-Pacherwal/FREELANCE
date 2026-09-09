@@ -794,6 +794,37 @@ const deleteOffer = async (req, res) => {
     }
 };
 
+const getStoreOffers = async (req, res) => {
+    try {
+        const now = new Date();
+
+        const offers = await Offer.find({
+            isActive: true,
+            startDate: { $lte: now },
+            endDate: { $gte: now },
+        })
+            .populate("category", "name")
+            .populate("product", "name images")
+            .sort({ endDate: 1 });
+
+        return res.status(200).json({
+            success: true,
+            offers,
+        });
+
+    } catch (error) {
+        console.error(
+            "Get store offers error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch offers",
+        });
+    }
+};
+
 
 export {
     createOffer,
@@ -802,4 +833,5 @@ export {
     updateOffer,
     toggleOfferStatus,
     deleteOffer,
+    getStoreOffers
 };

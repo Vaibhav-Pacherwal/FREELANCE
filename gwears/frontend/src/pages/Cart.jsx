@@ -1,9 +1,6 @@
 import { useCart } from "../utils/CartContext.jsx";
-import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-
-    const navigate = useNavigate();
 
     const {
         cart,
@@ -15,26 +12,102 @@ export default function Cart() {
 
 
     if (loading) {
-        return <div>Loading cart...</div>;
+        return <p>Loading cart...</p>;
     }
 
 
-    if (cart.items.length === 0) {
-
+    if (!cart?.items?.length) {
         return (
             <div>
-
                 <h1>Your Cart</h1>
-
                 <p>Your cart is empty.</p>
-
-                <button onClick={() => navigate("/")}>
-                    Continue Shopping
-                </button>
-
             </div>
         );
     }
+
+
+    const getVariant = (item) => {
+
+        return item.product?.variants?.find(
+            (variant) =>
+                String(variant._id) ===
+                String(item.variantId)
+        );
+
+    };
+
+
+    const getSubtotal = () => {
+
+        return cart.items.reduce(
+            (total, item) => {
+
+                const variant =
+                    getVariant(item);
+
+                if (!variant) {
+                    return total;
+                }
+
+                return (
+                    total +
+                    Number(variant.price) *
+                    item.quantity
+                );
+
+            },
+            0
+        );
+
+    };
+
+
+    const handleIncrease = async (item) => {
+
+        const variant =
+            getVariant(item);
+
+        if (!variant) {
+            return;
+        }
+
+        if (
+            item.quantity >=
+            variant.stock
+        ) {
+            return;
+        }
+
+        await updateCartItem(
+            item._id,
+            item.quantity + 1
+        );
+    };
+
+
+    const handleDecrease = async (item) => {
+
+        if (item.quantity <= 1) {
+            return;
+        }
+
+        await updateCartItem(
+            item._id,
+            item.quantity - 1
+        );
+    };
+
+
+    const handleRemove = async (itemId) => {
+
+        await removeCartItem(itemId);
+    };
+
+
+    const handleClear = async () => {
+
+        await clearCart();
+    };
 
 
     return (
@@ -42,73 +115,214 @@ export default function Cart() {
 
             <h1>Your Cart</h1>
 
+
             {cart.items.map((item) => {
 
-                const product = item.product;
+                const product =
+                    item.product;
 
-                const variant = product?.variants?.find(
-                    (variant) =>
-                        variant._id === item.variantId
-                );
+                const variant =
+                    getVariant(item);
+
+
+                if (!product || !variant) {
+
+                    return (
+                        <div key={item._id}>
+
+                            <p>
+                                This cart item is
+                                no longer available.
+                            </p>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    handleRemove(
+                                        item._id
+                                    )
+                                }
+                            >
+                                Remove
+                            </button>
+
+                        </div>
+                    );
+                }
+
 
                 return (
                     <div key={item._id}>
 
-                        <h3>
-                            {product?.name}
-                        </h3>
+                        {/* Product image */}
 
-                        {variant && (
-                            <p>
-                                ₹{variant.price}
-                            </p>
+                        {product.images?.length > 0 && (
+                            <img
+                                src={
+                                    product.images[0].url
+                                }
+                                alt={
+                                    product.images[0].alt ||
+                                    product.name
+                                }
+                                width="150"
+                            />
                         )}
 
+
+                        {/* Product information */}
+
+                        <h2>
+                            {product.name}
+                        </h2>
+
+
                         <p>
-                            Quantity: {item.quantity}
+                            ₹
+                            {Number(
+                                variant.price
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
                         </p>
 
-                        <button
-                            onClick={() =>
-                                updateCartItem(
-                                    item._id,
-                                    item.quantity + 1
+
+                        {/* Variant attributes */}
+
+                        <div>
+
+                            {variant.attributes?.map(
+                                (attribute) => (
+
+                                    <p
+                                        key={
+                                            attribute.name
+                                        }
+                                    >
+                                        {attribute.name}:{" "}
+                                        {attribute.value}
+                                    </p>
+
                                 )
-                            }
-                        >
-                            +
-                        </button>
+                            )}
 
-                        <button
-                            onClick={() => {
+                        </div>
 
-                                if (item.quantity === 1) {
-                                    removeCartItem(item._id);
-                                } else {
-                                    updateCartItem(
-                                        item._id,
-                                        item.quantity - 1
-                                    );
+
+                        {/* Quantity */}
+
+                        <div>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    handleDecrease(
+                                        item
+                                    )
                                 }
+                                disabled={
+                                    item.quantity <= 1
+                                }
+                            >
+                                -
+                            </button>
 
-                            }}
-                        >
-                            -
-                        </button>
+
+                            <span>
+                                {" "}
+                                {item.quantity}{" "}
+                            </span>
+
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    handleIncrease(
+                                        item
+                                    )
+                                }
+                                disabled={
+                                    item.quantity >=
+                                    variant.stock
+                                }
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        {/* Item subtotal */}
+
+                        <p>
+                            Item total: ₹
+                            {(
+                                Number(
+                                    variant.price
+                                ) *
+                                item.quantity
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
+                        </p>
+
+
+                        {/* Remove */}
 
                         <button
+                            type="button"
                             onClick={() =>
-                                removeCartItem(item._id)
+                                handleRemove(
+                                    item._id
+                                )
                             }
                         >
                             Remove
                         </button>
 
+
+                        <hr />
+
                     </div>
                 );
+
             })}
 
-            <button onClick={clearCart}>
+
+            {/* Cart summary */}
+
+            <div>
+
+                <h2>
+                    Cart Summary
+                </h2>
+
+                <p>
+                    Total items:{" "}
+                    {cart.items.reduce(
+                        (total, item) =>
+                            total +
+                            item.quantity,
+                        0
+                    )}
+                </p>
+
+                <p>
+                    Subtotal: ₹
+                    {getSubtotal().toLocaleString(
+                        "en-IN"
+                    )}
+                </p>
+
+            </div>
+
+
+            {/* Clear cart */}
+
+            <button
+                type="button"
+                onClick={handleClear}
+            >
                 Clear Cart
             </button>
 

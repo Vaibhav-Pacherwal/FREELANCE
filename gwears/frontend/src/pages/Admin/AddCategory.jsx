@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import server from "../../Environment.js";
 
 export default function AddCategory() {
@@ -8,17 +9,20 @@ export default function AddCategory() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        // isActive: true,
+        group: "",
     });
 
-    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const {
+            name,
+            value,
+        } = e.target;
 
         setFormData((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: value,
         }));
     };
 
@@ -26,56 +30,105 @@ export default function AddCategory() {
         e.preventDefault();
 
         if (!formData.name.trim()) {
-            alert("Category name is required");
+            alert(
+                "Category name is required"
+            );
+
             return;
         }
 
+        if (!formData.group) {
+            alert(
+                "Category group is required"
+            );
+
+            return;
+        }
+
+
         try {
-            setLoading(true);
+            setSaving(true);
 
-            const response = await fetch(`${server}/categories`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    name: formData.name,
-                    description: formData.description,
-                    // isActive: formData.isActive,
-                }),
-            });
 
-            const data = await response.json();
+            const response = await fetch(
+                `${server}/categories`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        name:
+                            formData.name,
+
+                        description:
+                            formData.description,
+
+                        group:
+                            formData.group,
+                    }),
+                }
+            );
+
+
+            const data =
+                await response.json();
+
 
             if (!response.ok) {
                 throw new Error(
-                    data.message || "Failed to create category"
+                    data.message ||
+                        "Failed to create category"
                 );
             }
 
-            navigate("/admin/categories");
+
+            navigate(
+                "/admin/categories"
+            );
+
         } catch (error) {
-            console.error("Create category error:", error);
+            console.error(
+                "Create category error:",
+                error
+            );
+
             alert(error.message);
+
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
+
 
     return (
         <div className="category-form-page">
 
             <div className="category-form-header">
-                <h1>Add Category</h1>
+
+                <h1>
+                    Add Category
+                </h1>
+
 
                 <button
                     type="button"
-                    onClick={() => navigate("/admin/categories")}
+                    onClick={() =>
+                        navigate(
+                            "/admin/categories"
+                        )
+                    }
                 >
                     Cancel
                 </button>
+
             </div>
+
 
             <form
                 className="category-form"
@@ -83,57 +136,97 @@ export default function AddCategory() {
             >
 
                 <div className="form-group">
+
                     <label htmlFor="name">
                         Category Name
                     </label>
+
 
                     <input
                         id="name"
                         name="name"
                         type="text"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Enter category name"
+                        value={
+                            formData.name
+                        }
+                        onChange={
+                            handleChange
+                        }
                         maxLength={100}
                         required
                     />
+
                 </div>
 
                 <div className="form-group">
+
+                    <label htmlFor="group">
+                        Category Group
+                    </label>
+
+
+                    <select
+                        id="group"
+                        name="group"
+                        value={
+                            formData.group
+                        }
+                        onChange={
+                            handleChange
+                        }
+                        required
+                    >
+
+                        <option value="">
+                            Select category group
+                        </option>
+
+
+                        <option value="clothing">
+                            Clothing
+                        </option>
+
+
+                        <option value="footwear">
+                            Footwear
+                        </option>
+
+
+                        <option value="accessories">
+                            Accessories
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div className="form-group">
+
                     <label htmlFor="description">
                         Description
                     </label>
 
+
                     <textarea
                         id="description"
                         name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder="Enter category description"
+                        value={
+                            formData.description
+                        }
+                        onChange={
+                            handleChange
+                        }
                         maxLength={500}
                         rows={5}
                     />
+
                 </div>
-
-                {/* <div className="form-checkbox">
-                    <input
-                        id="isActive"
-                        name="isActive"
-                        type="checkbox"
-                        checked={formData.isActive}
-                        onChange={handleChange}
-                    />
-
-                    <label htmlFor="isActive">
-                        Active
-                    </label>
-                </div> */}
 
                 <button
                     type="submit"
-                    disabled={loading}
+                    disabled={saving}
                 >
-                    {loading
+                    {saving
                         ? "Creating..."
                         : "Create Category"}
                 </button>

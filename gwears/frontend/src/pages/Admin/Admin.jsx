@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../Admin.css";
+import "./Admin.css";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import server from "../../Environment.js";

@@ -1,34 +1,30 @@
 import uploadToCloudinary from "../utils/cloudinaryUpload.js";
 import Product from "../models/product.model.js";
+import Category from "../models/category.model.js";
 import { deleteFromCloudinary } from "../utils/cloudinaryUpload.js";
-
-
-// --------------------------------------------------
-// Helper
-// --------------------------------------------------
+import Offer from "../models/offer.model.js";
+import {
+    getActiveStoreOffers,
+    getBestOfferForProduct,
+} from "../utils/offerPricing.js";
 
 const slugify = (text) => {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
 };
 
 const parseJSON = (value, fallback = null) => {
-  try {
-    return typeof value === "string"
-      ? JSON.parse(value)
-      : value ?? fallback;
-  } catch {
-    return fallback;
-  }
+    try {
+        return typeof value === "string"
+            ? JSON.parse(value)
+            : value ?? fallback;
+    } catch {
+        return fallback;
+    }
 };
-
-
-// --------------------------------------------------
-// Create Product
-// --------------------------------------------------
 
 const createProduct = async (req, res) => {
     try {
@@ -40,10 +36,6 @@ const createProduct = async (req, res) => {
             variants,
             isFeatured,
         } = req.body;
-
-        // -----------------------------
-        // Basic validation
-        // -----------------------------
 
         if (!name || !name.trim()) {
             return res.status(400).json({
@@ -73,10 +65,6 @@ const createProduct = async (req, res) => {
             });
         }
 
-        // -----------------------------
-        // Parse options and variants
-        // -----------------------------
-
         const parsedOptions = parseJSON(options, []);
         const parsedVariants = parseJSON(variants, []);
 
@@ -97,10 +85,6 @@ const createProduct = async (req, res) => {
             });
         }
 
-        // -----------------------------
-        // Validate variant SKUs
-        // -----------------------------
-
         const skus = parsedVariants.map((variant) =>
             String(variant.sku || "").trim()
         );
@@ -118,10 +102,6 @@ const createProduct = async (req, res) => {
                 message: "Variant SKUs must be unique",
             });
         }
-
-        // -----------------------------
-        // Validate variants
-        // -----------------------------
 
         for (const variant of parsedVariants) {
             if (
@@ -168,10 +148,6 @@ const createProduct = async (req, res) => {
             }
         }
 
-        // -----------------------------
-        // Upload images
-        // -----------------------------
-
         const uploadedImages = await Promise.all(
             req.files.map(async (file) => {
                 const result = await uploadToCloudinary(file.buffer);
@@ -184,10 +160,6 @@ const createProduct = async (req, res) => {
             })
         );
 
-        // -----------------------------
-        // Generate slug
-        // -----------------------------
-
         const slug = slugify(name);
 
         const existingProduct = await Product.findOne({
@@ -197,10 +169,6 @@ const createProduct = async (req, res) => {
         const finalSlug = existingProduct
             ? `${slug}-${Date.now()}`
             : slug;
-
-        // -----------------------------
-        // Create product
-        // -----------------------------
 
         const product = await Product.create({
             name: name.trim(),
@@ -228,8 +196,8 @@ const createProduct = async (req, res) => {
 
                 originalPrice:
                     variant.originalPrice === null ||
-                    variant.originalPrice === "" ||
-                    variant.originalPrice === undefined
+                        variant.originalPrice === "" ||
+                        variant.originalPrice === undefined
                         ? null
                         : Number(variant.originalPrice),
 
@@ -237,16 +205,13 @@ const createProduct = async (req, res) => {
 
                 isActive:
                     variant.isActive === false ||
-                    variant.isActive === "false"
+                        variant.isActive === "false"
                         ? false
                         : true,
             })),
 
             images: uploadedImages,
 
-            // IMPORTANT:
-            // Product is active by default.
-            // The product card status toggle controls this.
             isActive: true,
 
             isFeatured:
@@ -274,123 +239,109 @@ const createProduct = async (req, res) => {
     }
 };
 
-// --------------------------------------------------
-// Get Products
-// --------------------------------------------------
-
 const getProducts = async (req, res) => {
-  try {
-    const {
-      search = "",
-      category,
-      status,
-      page = 1,
-      limit = 10,
-    } = req.query;
+    try {
+        const {
+            search = "",
+            category,
+            status,
+            page = 1,
+            limit = 10,
+        } = req.query;
 
-    const pageNumber = Math.max(Number(page), 1);
-    const limitNumber = Math.min(
-      Math.max(Number(limit), 1),
-      100
-    );
+        const pageNumber = Math.max(Number(page), 1);
+        const limitNumber = Math.min(
+            Math.max(Number(limit), 1),
+            100
+        );
 
-    const filter = {};
+        const filter = {};
 
-    if (search.trim()) {
-      filter.name = {
-        $regex: search.trim(),
-        $options: "i",
-      };
+        if (search.trim()) {
+            filter.name = {
+                $regex: search.trim(),
+                $options: "i",
+            };
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        if (status === "active") {
+            filter.isActive = true;
+        }
+
+        if (status === "inactive") {
+            filter.isActive = false;
+        }
+
+        const skip = (pageNumber - 1) * limitNumber;
+
+        const [products, totalProducts] = await Promise.all([
+            Product.find(filter)
+                .populate("category", "name")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limitNumber),
+
+            Product.countDocuments(filter),
+        ]);
+
+        const totalPages = Math.ceil(
+            totalProducts / limitNumber
+        );
+
+        return res.status(200).json({
+            success: true,
+            products,
+            pagination: {
+                currentPage: pageNumber,
+                totalPages,
+                totalProducts,
+                limit: limitNumber,
+                hasNextPage: pageNumber < totalPages,
+                hasPreviousPage: pageNumber > 1,
+            },
+        });
+
+    } catch (error) {
+        console.error("Get products error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch products",
+        });
     }
-
-    if (category) {
-      filter.category = category;
-    }
-
-    if (status === "active") {
-      filter.isActive = true;
-    }
-
-    if (status === "inactive") {
-      filter.isActive = false;
-    }
-
-    const skip = (pageNumber - 1) * limitNumber;
-
-    const [products, totalProducts] = await Promise.all([
-      Product.find(filter)
-        .populate("category", "name")
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNumber),
-
-      Product.countDocuments(filter),
-    ]);
-
-    const totalPages = Math.ceil(
-      totalProducts / limitNumber
-    );
-
-    return res.status(200).json({
-      success: true,
-      products,
-      pagination: {
-        currentPage: pageNumber,
-        totalPages,
-        totalProducts,
-        limit: limitNumber,
-        hasNextPage: pageNumber < totalPages,
-        hasPreviousPage: pageNumber > 1,
-      },
-    });
-
-  } catch (error) {
-    console.error("Get products error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch products",
-    });
-  }
 };
-
-
-// --------------------------------------------------
-// Get Product By ID
-// --------------------------------------------------
 
 const getProductById = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const product = await Product.findById(id)
-      .populate("category", "name");
+        const product = await Product.findById(id)
+            .populate("category", "name");
 
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
+        if (!product) {
+            return res.status(404).json({
+                message: "Product not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            product,
+        });
+
+    } catch (error) {
+        console.error("Get product error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch product",
+        });
     }
-
-    return res.status(200).json({
-      success: true,
-      product,
-    });
-
-  } catch (error) {
-    console.error("Get product error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch product",
-    });
-  }
 };
-
-
-// --------------------------------------------------
-// Update Product
-// --------------------------------------------------
 
 const updateProduct = async (req, res) => {
     try {
@@ -406,10 +357,6 @@ const updateProduct = async (req, res) => {
             isFeatured,
         } = req.body;
 
-        // ----------------------------------------------
-        // Find product
-        // ----------------------------------------------
-
         const product = await Product.findById(id);
 
         if (!product) {
@@ -418,10 +365,6 @@ const updateProduct = async (req, res) => {
                 message: "Product not found",
             });
         }
-
-        // ----------------------------------------------
-        // Parse options & variants
-        // ----------------------------------------------
 
         const parsedOptions = parseJSON(options, []);
         const parsedVariants = parseJSON(variants, []);
@@ -442,10 +385,6 @@ const updateProduct = async (req, res) => {
                 message: "At least one product variant is required",
             });
         }
-
-        // ----------------------------------------------
-        // Validate variant SKUs
-        // ----------------------------------------------
 
         const skus = parsedVariants.map((variant) =>
             String(variant.sku || "").trim()
@@ -712,9 +651,9 @@ const updateProduct = async (req, res) => {
                     originalPrice:
                         variant.originalPrice ===
                             null ||
-                        variant.originalPrice ===
+                            variant.originalPrice ===
                             "" ||
-                        variant.originalPrice ===
+                            variant.originalPrice ===
                             undefined
                             ? null
                             : Number(
@@ -732,7 +671,7 @@ const updateProduct = async (req, res) => {
                     isActive:
                         variant.isActive ===
                             false ||
-                        variant.isActive ===
+                            variant.isActive ===
                             "false"
                             ? false
                             : true,
@@ -796,81 +735,80 @@ const updateProduct = async (req, res) => {
 // --------------------------------------------------
 
 const deleteProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const product = await Product.findById(id);
+        const product = await Product.findById(id);
 
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
+        if (!product) {
+            return res.status(404).json({
+                message: "Product not found",
+            });
+        }
+
+        if (product.images?.length > 0) {
+            await Promise.all(
+                product.images
+                    .filter((image) => image.publicId)
+                    .map((image) =>
+                        deleteFromCloudinary(image.publicId)
+                    )
+            );
+        }
+
+        await Product.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully",
+        });
+
+    } catch (error) {
+        console.error("Delete product error:", error);
+
+        return res.status(500).json({
+            message: "Failed to delete product",
+            error: error.message,
+        });
     }
-
-    if (product.images?.length > 0) {
-      await Promise.all(
-        product.images
-          .filter((image) => image.publicId)
-          .map((image) =>
-            deleteFromCloudinary(image.publicId)
-          )
-      );
-    }
-
-    await Product.findByIdAndDelete(id);
-
-    return res.status(200).json({
-      success: true,
-      message: "Product deleted successfully",
-    });
-
-  } catch (error) {
-    console.error("Delete product error:", error);
-
-    return res.status(500).json({
-      message: "Failed to delete product",
-      error: error.message,
-    });
-  }
 };
 
 const toggleProductStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const product = await Product.findById(id)
-      .populate("category", "name");
+        const product = await Product.findById(id)
+            .populate("category", "name");
 
-    if (!product) {
-      return res.status(404).json({
-        message: "Product not found",
-      });
+        if (!product) {
+            return res.status(404).json({
+                message: "Product not found",
+            });
+        }
+
+        product.isActive = !product.isActive;
+
+        await product.save();
+
+        return res.status(200).json({
+            success: true,
+            message: `Product ${product.isActive
+                    ? "activated"
+                    : "deactivated"
+                } successfully`,
+            product,
+        });
+
+    } catch (error) {
+        console.error(
+            "Toggle product status error:",
+            error
+        );
+
+        return res.status(500).json({
+            message: "Failed to update product status",
+        });
     }
-
-    product.isActive = !product.isActive;
-
-    await product.save();
-
-    return res.status(200).json({
-      success: true,
-      message: `Product ${
-        product.isActive
-          ? "activated"
-          : "deactivated"
-      } successfully`,
-      product,
-    });
-
-  } catch (error) {
-    console.error(
-      "Toggle product status error:",
-      error
-    );
-
-    return res.status(500).json({
-      message: "Failed to update product status",
-    });
-  }
 };
 
 const getStoreProducts = async (req, res) => {
@@ -879,69 +817,169 @@ const getStoreProducts = async (req, res) => {
         const {
             search = "",
             category,
+            group,
             page = 1,
             limit = 12,
         } = req.query;
 
-        const pageNumber = Math.max(Number(page), 1);
+
+        const pageNumber = Math.max(
+            Number(page),
+            1
+        );
 
         const limitNumber = Math.min(
             Math.max(Number(limit), 1),
             100
         );
 
+
         const filter = {
             isActive: true,
         };
 
+
         if (search.trim()) {
+
             filter.name = {
                 $regex: search.trim(),
                 $options: "i",
             };
+
         }
+
 
         if (category) {
+
             filter.category = category;
+
         }
 
-        const skip =
-            (pageNumber - 1) * limitNumber;
 
+        if (group) {
+
+            const categories =
+                await Category.find({
+                    group: group,
+                    isActive: true,
+                }).select("_id");
+
+
+            const categoryIds =
+                categories.map(
+                    (category) =>
+                        category._id
+                );
+
+
+            filter.category = {
+                $in: categoryIds,
+            };
+
+        }
+
+
+        const skip =
+            (pageNumber - 1) *
+            limitNumber;
+
+
+        // Fetch products, count and active offers
         const [
             products,
             totalProducts,
+            activeOffers,
         ] = await Promise.all([
 
             Product.find(filter)
-                .populate("category", "name")
-                .sort({ createdAt: -1 })
+                .populate(
+                    "category",
+                    "name group"
+                )
+                .sort({
+                    createdAt: -1,
+                })
                 .skip(skip)
                 .limit(limitNumber),
 
             Product.countDocuments(filter),
 
+            getActiveStoreOffers(Offer),
+
         ]);
 
-        const totalPages = Math.ceil(
-            totalProducts / limitNumber
-        );
+
+        // Apply best offer pricing
+        const productsWithPricing =
+            products.map((product) => {
+
+                const productObject =
+                    product.toObject();
+
+
+                productObject.variants =
+                    productObject.variants.map(
+                        (variant) => {
+
+                            const pricing =
+                                getBestOfferForProduct(
+                                    productObject,
+                                    variant,
+                                    activeOffers
+                                );
+
+
+                            return {
+                                ...variant,
+                                pricing,
+                            };
+
+                        }
+                    );
+
+
+                return productObject;
+
+            });
+
+
+        const totalPages =
+            Math.ceil(
+                totalProducts /
+                limitNumber
+            );
+
 
         return res.status(200).json({
+
             success: true,
-            products,
+
+            products:
+                productsWithPricing,
 
             pagination: {
-                currentPage: pageNumber,
+
+                currentPage:
+                    pageNumber,
+
                 totalPages,
+
                 totalProducts,
-                limit: limitNumber,
+
+                limit:
+                    limitNumber,
+
                 hasNextPage:
-                    pageNumber < totalPages,
+                    pageNumber <
+                    totalPages,
+
                 hasPreviousPage:
                     pageNumber > 1,
+
             },
+
         });
+
 
     } catch (error) {
 
@@ -950,11 +988,16 @@ const getStoreProducts = async (req, res) => {
             error
         );
 
+
         return res.status(500).json({
+
             success: false,
+
             message:
                 "Failed to fetch products",
+
         });
+
     }
 };
 
@@ -963,45 +1006,96 @@ const getStoreProductById = async (req, res) => {
 
         const { id } = req.params;
 
+
         const product = await Product.findOne({
             _id: id,
             isActive: true,
-        }).populate("category", "name");
+        })
+            .populate(
+                "category",
+                "name group"
+            );
+
 
         if (!product) {
+
             return res.status(404).json({
                 success: false,
                 message: "Product not found",
             });
+
         }
 
+
+        // Fetch currently active offers
+        const activeOffers =
+            await getActiveStoreOffers(Offer);
+
+
+        // Convert mongoose document to normal object
+        const productObject =
+            product.toObject();
+
+
+        // Calculate pricing for every variant
+        productObject.variants =
+            productObject.variants.map(
+                (variant) => {
+
+                    const pricing =
+                        getBestOfferForProduct(
+                            productObject,
+                            variant,
+                            activeOffers
+                        );
+
+
+                    return {
+                        ...variant,
+                        pricing,
+                    };
+
+                }
+            );
+
+
         return res.status(200).json({
+
             success: true,
-            product,
+
+            product:
+                productObject,
+
         });
+
 
     } catch (error) {
 
         console.error(
-            "Get store product error:",
+            "Get store product by ID error:",
             error
         );
 
+
         return res.status(500).json({
+
             success: false,
+
             message:
                 "Failed to fetch product",
+
         });
+
     }
 };
 
 export {
-  createProduct,
-  getProducts,
-  getStoreProducts,
-  getStoreProductById,
-  deleteProduct,
-  getProductById,
-  updateProduct,
-  toggleProductStatus,
+    createProduct,
+    getProducts,
+    getStoreProducts,
+    getStoreProductById,
+    deleteProduct,
+    getProductById,
+    updateProduct,
+    toggleProductStatus,
 };
