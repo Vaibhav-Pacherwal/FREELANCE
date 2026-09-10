@@ -1,0 +1,28 @@
+.checkoutButton {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    background: #111;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.checkoutButton:hover {
+    opacity: 0.85;
+}
+
+.checkoutButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.clearCartButton {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    background: transparent;
+    border: 1px solid #111;
+    cursor: pointer;
+}

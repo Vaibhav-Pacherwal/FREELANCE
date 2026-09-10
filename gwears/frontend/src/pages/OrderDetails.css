@@ -1,0 +1,244 @@
+.orderDetailsPage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 24px 80px;
+}
+
+.orderDetailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.orderEyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.orderDetailsHeader h1 {
+    margin: 0 0 8px;
+    font-size: 42px;
+}
+
+.orderDetailsHeader p {
+    margin: 0;
+    color: #777;
+}
+
+.backButton,
+.orderError button {
+    border: none;
+    padding: 13px 22px;
+    cursor: pointer;
+    background: #111;
+    color: white;
+}
+
+.orderStatusSection {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #ddd;
+    margin-bottom: 35px;
+}
+
+.orderStatusSection > div {
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.orderStatusSection > div:last-child {
+    border-right: none;
+}
+
+.orderStatusSection span {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.orderStatusSection strong {
+    text-transform: capitalize;
+}
+
+.orderDetailsGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 30px;
+}
+
+.orderItemsCard,
+.shippingCard,
+.orderSummaryCard {
+    border: 1px solid #ddd;
+    padding: 25px;
+}
+
+.orderItemsCard h2,
+.shippingCard h2,
+.orderSummaryCard h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 20px;
+}
+
+.orderItem {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 18px;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+}
+
+.orderItemImage {
+    width: 90px;
+    height: 110px;
+    background: #f5f5f5;
+}
+
+.orderItemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.orderItemInfo h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.orderItemInfo p {
+    margin: 5px 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.orderItemAttributes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+
+.orderItemAttributes span {
+    padding: 5px 8px;
+    background: #f5f5f5;
+    font-size: 12px;
+}
+
+.orderItemPrice {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.orderItemPrice strong {
+    font-size: 17px;
+}
+
+.orderItemPrice > span:last-child {
+    color: #777;
+    font-size: 14px;
+}
+
+.orderItemOriginalPrice {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 13px;
+}
+
+.shippingCard {
+    margin-bottom: 25px;
+}
+
+.shippingCard p {
+    margin: 7px 0;
+    color: #555;
+}
+
+.shippingCard .shippingName {
+    color: #111;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.orderSummaryCard > div {
+    display: flex;
+    justify-content: space-between;
+    margin: 14px 0;
+    color: #555;
+}
+
+.orderTotal {
+    border-top: 1px solid #ddd;
+    padding-top: 18px;
+    margin-top: 20px !important;
+    color: #111 !important;
+    font-size: 18px;
+}
+
+.orderError {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.orderError h2 {
+    margin-bottom: 10px;
+}
+
+.orderError p {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 800px) {
+
+    .orderDetailsPage {
+        padding: 30px 16px 60px;
+    }
+
+    .orderDetailsHeader {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .orderDetailsHeader h1 {
+        font-size: 32px;
+    }
+
+    .orderStatusSection {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .orderStatusSection > div:nth-child(2) {
+        border-right: none;
+    }
+
+    .orderStatusSection > div:nth-child(-n + 2) {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .orderDetailsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .orderItem {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .orderItemImage {
+        width: 70px;
+        height: 90px;
+    }
+
+    .orderItemPrice {
+        grid-column: 2;
+        text-align: left;
+        align-items: flex-start;
+    }
+}

@@ -25,6 +25,8 @@ import Products from './pages/Products.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
 import Wishlist from './pages/Wishlist.jsx'
 import Offers from './pages/Offers.jsx'
+import Checkout from './pages/Checkout.jsx'
+import OrderDetails from './pages/OrderDetails.jsx'
 
 export default function App() {
 
@@ -117,13 +119,13 @@ export default function App() {
             </CustomerProtectedRoute>
           }
         />
-        <Route 
-          path="/cart" 
+        <Route
+          path="/cart"
           element={
-           <CustomerProtectedRoute>
-               <Cart />
-           </CustomerProtectedRoute>
-          } 
+            <CustomerProtectedRoute>
+              <Cart />
+            </CustomerProtectedRoute>
+          }
         />
         <Route path="/products" element={<Products />} />
         <Route
@@ -131,6 +133,11 @@ export default function App() {
           element={<ProductDetails />}
         />
         <Route path="/offers" element={<Offers />} />
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
+        <Route path="/orders/:id" element={<OrderDetails />} />
       </Routes>
     </>
   )

@@ -7,10 +7,6 @@ const allowedGroups = [
     "accessories",
 ];
 
-
-// ===============================
-// GET ALL CATEGORIES
-// ===============================
 const getCategories = async (req, res) => {
     try {
         const categories = await Category.find({})
@@ -34,10 +30,6 @@ const getCategories = async (req, res) => {
     }
 };
 
-
-// ===============================
-// CREATE CATEGORY
-// ===============================
 const createCategory = async (req, res) => {
     try {
         const {
@@ -46,10 +38,6 @@ const createCategory = async (req, res) => {
             group,
         } = req.body;
 
-
-        // -------------------------------
-        // Validate name
-        // -------------------------------
         if (!name || !name.trim()) {
             return res.status(400).json({
                 success: false,
@@ -57,10 +45,6 @@ const createCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Validate group
-        // -------------------------------
         if (!allowedGroups.includes(group)) {
             return res.status(400).json({
                 success: false,
@@ -72,19 +56,11 @@ const createCategory = async (req, res) => {
 
         const trimmedName = name.trim();
 
-
-        // -------------------------------
-        // Generate slug
-        // -------------------------------
         const slug = trimmedName
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-|-$/g, "");
 
-
-        // -------------------------------
-        // Check duplicate
-        // -------------------------------
         const existingCategory =
             await Category.findOne({
                 $or: [
@@ -101,10 +77,6 @@ const createCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Create category
-        // -------------------------------
         const category = await Category.create({
             name: trimmedName,
             slug,
@@ -135,10 +107,6 @@ const createCategory = async (req, res) => {
     }
 };
 
-
-// ===============================
-// UPDATE CATEGORY
-// ===============================
 const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
@@ -149,10 +117,6 @@ const updateCategory = async (req, res) => {
             group,
         } = req.body;
 
-
-        // -------------------------------
-        // Find category
-        // -------------------------------
         const category =
             await Category.findById(id);
 
@@ -164,10 +128,6 @@ const updateCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Validate name
-        // -------------------------------
         if (!name || !name.trim()) {
             return res.status(400).json({
                 success: false,
@@ -176,10 +136,6 @@ const updateCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Validate group
-        // -------------------------------
         if (!allowedGroups.includes(group)) {
             return res.status(400).json({
                 success: false,
@@ -191,19 +147,11 @@ const updateCategory = async (req, res) => {
 
         const trimmedName = name.trim();
 
-
-        // -------------------------------
-        // Generate slug
-        // -------------------------------
         const slug = trimmedName
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-|-$/g, "");
 
-
-        // -------------------------------
-        // Check duplicate
-        // -------------------------------
         const duplicateCategory =
             await Category.findOne({
                 _id: { $ne: id },
@@ -223,10 +171,6 @@ const updateCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Update category
-        // -------------------------------
         category.name = trimmedName;
 
         category.slug = slug;
@@ -261,18 +205,10 @@ const updateCategory = async (req, res) => {
     }
 };
 
-
-// ===============================
-// DELETE CATEGORY
-// ===============================
 const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params;
 
-
-        // -------------------------------
-        // Find category
-        // -------------------------------
         const category =
             await Category.findById(id);
 
@@ -284,10 +220,6 @@ const deleteCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Check products using category
-        // -------------------------------
         const productCount =
             await Product.countDocuments({
                 category: id,
@@ -311,10 +243,6 @@ const deleteCategory = async (req, res) => {
             });
         }
 
-
-        // -------------------------------
-        // Delete
-        // -------------------------------
         await Category.findByIdAndDelete(id);
 
 
@@ -338,10 +266,6 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-
-// ===============================
-// GET CATEGORY BY ID
-// ===============================
 const getCategoryById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -378,10 +302,6 @@ const getCategoryById = async (req, res) => {
     }
 };
 
-
-// ===============================
-// TOGGLE CATEGORY STATUS
-// ===============================
 const toggleCategoryStatus = async (
     req,
     res

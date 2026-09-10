@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import User from "./models/user.model.js";
 import cartRoutes from "./routes/cart.routes.js";
 import wishlistRoutes from "./routes/wishlist.routes.js";
+import addressRoutes from "./routes/address.routes.js"
+import orderRoutes from "./routes/order.routes.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
 dotenv.config();
@@ -33,6 +35,8 @@ app.use(offerRoutes);
 app.use(settingsRoutes);
 app.use("/cart", cartRoutes);
 app.use(wishlistRoutes);
+app.use(addressRoutes);
+app.use(orderRoutes);
 
 const PORT = process.env.PORT;
 

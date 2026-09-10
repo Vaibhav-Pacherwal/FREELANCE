@@ -590,8 +590,6 @@ const updateOffer = async (req, res) => {
         offer.endDate =
             finalEndDate;
 
-
-        // Update status only if provided
         if (isActive !== undefined) {
             offer.isActive =
                 isActive === "true" ||

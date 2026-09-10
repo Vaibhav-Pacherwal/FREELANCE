@@ -1,6 +1,10 @@
 import { useCart } from "../utils/CartContext.jsx";
+import { useNavigate } from "react-router-dom";
+import "./Cart.css"
 
 export default function Cart() {
+
+    const navigate = useNavigate();
 
     const {
         cart,
@@ -313,6 +317,14 @@ export default function Cart() {
                         "en-IN"
                     )}
                 </p>
+
+                <button
+                    className="checkoutButton"
+                    onClick={() => navigate("/checkout")}
+                    disabled={cart.items.length === 0}
+                >
+                    Proceed to Checkout
+                </button>
 
             </div>
 

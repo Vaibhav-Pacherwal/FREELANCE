@@ -147,8 +147,6 @@ export function WishlistProvider({ children }) {
         }
     };
 
-
-    // Check whether product is wishlisted
     const isWishlisted = (productId) => {
 
         return wishlist.some(

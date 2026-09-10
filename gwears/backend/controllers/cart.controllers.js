@@ -578,8 +578,6 @@ const validateCart = async (req, res) => {
 
         }
 
-
-        // Calculate the current cart pricing
         let subtotal = 0;
         let totalItems = 0;
 
