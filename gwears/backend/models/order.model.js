@@ -19,6 +19,17 @@ const orderItemSchema = new mongoose.Schema(
             trim: true,
         },
 
+        image: {
+            url: {
+                type: String,
+                default: "",
+            },
+            alt: {
+                type: String,
+                default: "",
+            },
+        },
+
         sku: {
             type: String,
             required: true,

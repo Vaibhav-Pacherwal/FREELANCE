@@ -1,0 +1,135 @@
+.address-form-page {
+    min-height: 100vh;
+    padding: 50px 20px 80px;
+}
+
+.address-form-container {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.address-form-header {
+    margin-bottom: 35px;
+}
+
+.address-back-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 35px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.address-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.address-form-header h1 {
+    font-size: 40px;
+    margin: 0 0 10px;
+}
+
+.address-form-header p:last-child {
+    color: #777;
+    margin: 0;
+}
+
+.address-form-error {
+    background: #fff1f1;
+    border: 1px solid #e0aaaa;
+    color: #a00000;
+    padding: 14px 16px;
+    margin-bottom: 25px;
+}
+
+.address-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.address-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.address-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.address-field label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.address-field input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.address-field input:focus {
+    border-color: #111;
+}
+
+.default-address-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.default-address-option input {
+    width: 16px;
+    height: 16px;
+}
+
+.save-address-button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 16px;
+    border: none;
+    background: #111;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.save-address-button:hover {
+    opacity: 0.85;
+}
+
+.save-address-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 650px) {
+
+    .address-form-page {
+        padding: 30px 16px 60px;
+    }
+
+    .address-form-header h1 {
+        font-size: 30px;
+    }
+
+    .address-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .address-field.full-width {
+        grid-column: auto;
+    }
+}

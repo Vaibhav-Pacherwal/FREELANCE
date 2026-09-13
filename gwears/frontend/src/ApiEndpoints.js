@@ -20,6 +20,8 @@ const API = {
     addresses: `${server}/addresses`,
 
     orders: `${server}/orders`,
+
+    adminOrders: `${server}/admin/orders`,
 };
 
 export default API;

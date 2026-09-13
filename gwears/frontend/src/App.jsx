@@ -27,6 +27,10 @@ import Wishlist from './pages/Wishlist.jsx'
 import Offers from './pages/Offers.jsx'
 import Checkout from './pages/Checkout.jsx'
 import OrderDetails from './pages/OrderDetails.jsx'
+import AddressForm from "./pages/AddressForm.jsx";
+import Orders from "./pages/Orders.jsx";
+import AdminOrders from "./pages/Admin/Orders.jsx";
+import AdminOrderDetails from "./pages/Admin/OrderDetails.jsx";
 
 export default function App() {
 
@@ -100,6 +104,8 @@ export default function App() {
           <Route path="categories/edit/:id" element={<EditCategory />} />
           <Route path="offers/new" element={<AddOffer />} />
           <Route path="offers/edit/:id" element={<EditOffer />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<AdminOrderDetails />} />
         </Route>
         <Route path="*" element={<h1>404 Not Found</h1>} />
         <Route path="/login" element={<CustomerAuth />} />
@@ -135,7 +141,27 @@ export default function App() {
         <Route path="/offers" element={<Offers />} />
         <Route
           path="/checkout"
-          element={<Checkout />}
+          element={
+            <CustomerProtectedRoute>
+              <Checkout />
+            </CustomerProtectedRoute>
+          }
+        />
+        <Route
+          path="/addresses/new"
+          element={
+            <CustomerProtectedRoute>
+              <AddressForm />
+            </CustomerProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <CustomerProtectedRoute>
+              <Orders />
+            </CustomerProtectedRoute>
+          }
         />
         <Route path="/orders/:id" element={<OrderDetails />} />
       </Routes>

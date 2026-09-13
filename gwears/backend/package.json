@@ -21,6 +21,7 @@
     "googleapis": "^176.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.3",
-    "multer": "^2.3.0"
+    "multer": "^2.3.0",
+    "razorpay": "^2.9.8"
   }
 }

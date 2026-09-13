@@ -258,8 +258,9 @@ const getProducts = async (req, res) => {
         const filter = {};
 
         if (search.trim()) {
+            const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             filter.name = {
-                $regex: search.trim(),
+                $regex: escapedSearch,
                 $options: "i",
             };
         }
@@ -840,12 +841,11 @@ const getStoreProducts = async (req, res) => {
 
 
         if (search.trim()) {
-
+            const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             filter.name = {
-                $regex: search.trim(),
+                $regex: escapedSearch,
                 $options: "i",
             };
-
         }
 
 

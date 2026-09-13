@@ -6,18 +6,20 @@ import {
 } from "../controllers/settings.controllers.js";
 
 import upload from "../middlewares/upload.js";
+import protect from "../middlewares/verifyToken.js";
+import authorizeRole from "../middlewares/authorizeRole.js";
 
 const router = express.Router();
-
 
 router.get(
     "/settings",
     getSettings
 );
 
-
 router.put(
     "/settings",
+    protect,
+    authorizeRole("admin"),
     upload.fields([
         {
             name: "logo",
@@ -30,6 +32,5 @@ router.put(
     ]),
     updateSettings
 );
-
 
 export default router;

@@ -304,49 +304,22 @@ const addToCart = async (req, res) => {
 
 const updateCartItem = async (req, res) => {
     try {
-        const { productId, variantId, quantity } = req.body;
+        const { itemId } = req.params;
+        const { quantity, productId, variantId } = req.body;
 
-        if (!productId || !variantId || quantity === undefined) {
+        if (quantity === undefined || quantity === null || quantity === "") {
             return res.status(400).json({
                 success: false,
-                message: "Product, variant and quantity are required",
-            });
-        }
-
-        if (!Number.isInteger(Number(quantity)) || Number(quantity) < 1) {
-            return res.status(400).json({
-                success: false,
-                message: "Quantity must be at least 1",
-            });
-        }
-
-        const product = await Product.findOne({
-            _id: productId,
-            isActive: true,
-        });
-
-        if (!product) {
-            return res.status(404).json({
-                success: false,
-                message: "Product is no longer available",
-            });
-        }
-
-        const variant = product.variants.id(variantId);
-
-        if (!variant || !variant.isActive) {
-            return res.status(400).json({
-                success: false,
-                message: "Selected variant is no longer available",
+                message: "Quantity is required",
             });
         }
 
         const requestedQuantity = Number(quantity);
 
-        if (requestedQuantity > variant.stock) {
+        if (!Number.isInteger(requestedQuantity) || requestedQuantity < 1) {
             return res.status(400).json({
                 success: false,
-                message: `Only ${variant.stock} items are available`,
+                message: "Quantity must be an integer greater than or equal to 1",
             });
         }
 
@@ -361,16 +334,53 @@ const updateCartItem = async (req, res) => {
             });
         }
 
-        const item = cart.items.find(
-            (item) =>
-                item.product.toString() === productId &&
-                item.variantId.toString() === variantId
-        );
+        // Find item by itemId param (Mongoose subdocument _id) or fallback to product/variant match
+        let item = null;
+        if (itemId) {
+            item = cart.items.id(itemId);
+        }
+
+        if (!item && productId && variantId) {
+            item = cart.items.find(
+                (i) =>
+                    i.product.toString() === productId.toString() &&
+                    i.variantId.toString() === variantId.toString()
+            );
+        }
 
         if (!item) {
             return res.status(404).json({
                 success: false,
                 message: "Cart item not found",
+            });
+        }
+
+        // Validate product and variant availability & stock
+        const product = await Product.findOne({
+            _id: item.product,
+            isActive: true,
+        });
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product is no longer available",
+            });
+        }
+
+        const variant = product.variants.id(item.variantId);
+
+        if (!variant || !variant.isActive) {
+            return res.status(400).json({
+                success: false,
+                message: "Selected variant is no longer available",
+            });
+        }
+
+        if (requestedQuantity > variant.stock) {
+            return res.status(400).json({
+                success: false,
+                message: `Only ${variant.stock} item${variant.stock === 1 ? "" : "s"} available`,
             });
         }
 

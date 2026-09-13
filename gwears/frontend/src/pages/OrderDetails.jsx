@@ -11,6 +11,12 @@ const OrderDetails = () => {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [cancelling, setCancelling] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
+
+    const canCancelOrder = ["pending", "confirmed", "processing"].includes(
+        order?.orderStatus
+    );
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -76,6 +82,37 @@ const OrderDetails = () => {
         });
     };
 
+    const handleCancelOrder = async () => {
+        try {
+            setCancelling(true);
+            setError("");
+
+            const response = await fetch(
+                `${API.orders}/${order._id}/cancel`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Failed to cancel order"
+                );
+            }
+
+            setOrder(data.order);
+            setShowCancelModal(false);
+        } catch (error) {
+            console.error("Cancel order error:", error);
+            setError(error.message || "Failed to cancel order");
+        } finally {
+            setCancelling(false);
+        }
+    };
+
     return (
         <div className="orderDetailsPage">
 
@@ -129,6 +166,19 @@ const OrderDetails = () => {
                 </div>
 
             </div>
+
+            {canCancelOrder && (
+                <div className="cancel-order-wrapper">
+                    <button
+                        type="button"
+                        className="cancel-order-button"
+                        onClick={() => setShowCancelModal(true)}
+                        disabled={cancelling}
+                    >
+                        Cancel Order
+                    </button>
+                </div>
+            )}
 
             <div className="orderDetailsGrid">
 
@@ -284,8 +334,8 @@ const OrderDetails = () => {
                                 {order.shippingFee === 0
                                     ? "FREE"
                                     : `₹${order.shippingFee.toLocaleString(
-                                          "en-IN"
-                                      )}`}
+                                        "en-IN"
+                                    )}`}
                             </span>
                         </div>
 
@@ -304,6 +354,51 @@ const OrderDetails = () => {
                 </aside>
 
             </div>
+
+            {showCancelModal && (
+                <div
+                    className="cancel-modal-overlay"
+                    onClick={() => {
+                        if (!cancelling) {
+                            setShowCancelModal(false);
+                        }
+                    }}
+                >
+                    <div
+                        className="cancel-modal"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <h2>Cancel this order?</h2>
+
+                        <p>
+                            Are you sure you want to cancel this order?
+                            This action cannot be undone.
+                        </p>
+
+                        <div className="cancel-modal-actions">
+                            <button
+                                type="button"
+                                className="keep-order-button"
+                                onClick={() => setShowCancelModal(false)}
+                                disabled={cancelling}
+                            >
+                                Keep Order
+                            </button>
+
+                            <button
+                                type="button"
+                                className="confirm-cancel-button"
+                                onClick={handleCancelOrder}
+                                disabled={cancelling}
+                            >
+                                {cancelling
+                                    ? "Cancelling..."
+                                    : "Cancel Order"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

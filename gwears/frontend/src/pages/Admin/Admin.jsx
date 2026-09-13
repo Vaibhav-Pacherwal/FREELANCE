@@ -53,6 +53,7 @@ export default function Admin() {
           <NavLink to="/admin/products">Products</NavLink>
           <NavLink to="/admin/categories">Categories</NavLink>
           <NavLink to="/admin/offers">Offers</NavLink>
+          <NavLink to="/admin/orders">Orders</NavLink>
           <NavLink to="/admin/settings">Settings</NavLink>
         </aside>
 

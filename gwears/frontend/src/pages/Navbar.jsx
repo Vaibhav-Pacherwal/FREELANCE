@@ -238,7 +238,7 @@ export default function Navbar() {
                     navigate("/")
                 }
             >
-                <h2>GWears</h2>
+                <h2>GWEARS</h2>
             </div>
 
 

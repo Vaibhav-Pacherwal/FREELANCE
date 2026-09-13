@@ -358,9 +358,6 @@ const logout = async (req, res) => {
 
 const verify = async (req, res) => {
     try {
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
         const [
             products,
             activeProducts,
@@ -368,19 +365,27 @@ const verify = async (req, res) => {
             recentProducts,
             storeSettings
         ] = await Promise.all([
-            Product.find({}),
-            Product.find({ isActive: true }),
-            Offer.find({}),
+            Product.find({}).select("_id").lean(),
+            Product.find({ isActive: true }).select("_id").lean(),
+            Offer.find({}).select("_id title isActive discountType discountValue").lean(),
 
-            Product.find({
-                createdAt: { $gte: oneWeekAgo },
-            }).sort({ createdAt: -1 }),
+            Product.find({})
+                .select("name description createdAt images")
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .lean(),
 
-            StoreSettings.findOne({})
+            StoreSettings.findOne({}).lean()
         ]);
 
         return res.json({
-            user: req.user,
+            user: {
+                _id: req.user._id,
+                name: req.user.name,
+                email: req.user.email,
+                avatar: req.user.avatar,
+                role: req.user.role,
+            },
             prods: products,
             offers,
             activeProds: activeProducts,
@@ -388,7 +393,7 @@ const verify = async (req, res) => {
             storeSettings,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Admin verify error:", error);
 
         return res.status(500).json({
             message: "Failed to fetch data",

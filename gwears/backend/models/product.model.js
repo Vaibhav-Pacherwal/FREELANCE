@@ -38,6 +38,11 @@ const productSchema = new mongoose.Schema(
           required: true,
         },
 
+        publicId: {
+          type: String,
+          default: null,
+        },
+
         alt: {
           type: String,
           default: "",

@@ -1,4 +1,3 @@
-let IS_PROD = false;
-let server = IS_PROD ? "" : "http://localhost:8080"
+const server = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export default server;
