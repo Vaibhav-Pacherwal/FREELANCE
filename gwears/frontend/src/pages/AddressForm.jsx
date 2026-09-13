@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import API from "../ApiEndpoints.js";
 import "./AddressForm.css";
 
 export default function AddressForm() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [form, setForm] = useState({
         fullName: "",
@@ -55,7 +56,8 @@ export default function AddressForm() {
                 );
             }
 
-            navigate("/checkout", {
+            const returnPath = location.state?.from || "/checkout";
+            navigate(returnPath, {
                 state: {
                     addressCreated: true,
                     addressId: data.address?._id,

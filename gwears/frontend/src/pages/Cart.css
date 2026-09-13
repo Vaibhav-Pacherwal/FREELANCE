@@ -1,28 +1,360 @@
-.checkoutButton {
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    border: none;
-    background: #111;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
+/* =========================================
+   GWEARS - LUXURY SHOPPING BAG (CART) STYLES
+   ========================================= */
+
+.gw-cart-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem 2rem;
+  box-sizing: border-box;
 }
 
-.checkoutButton:hover {
-    opacity: 0.85;
+.gw-cart-title {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
-.checkoutButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.gw-cart-subtitle {
+  color: #737373;
+  font-size: 0.88rem;
+  margin: 0 0 3rem 0;
 }
 
-.clearCartButton {
-    width: 100%;
-    padding: 13px;
-    margin-top: 10px;
-    background: transparent;
-    border: 1px solid #111;
-    cursor: pointer;
+/* LAYOUT GRID */
+.gw-cart-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+/* CART ITEMS LIST */
+.gw-cart-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.gw-cart-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid #EEEEEE;
+  align-items: start;
+}
+
+.gw-cart-item:first-child {
+  border-top: 1px solid #EEEEEE;
+}
+
+.gw-cart-item-img {
+  width: 100px;
+  aspect-ratio: 1 / 1.2;
+  object-fit: cover;
+  background: #F9F9F9;
+  border-radius: 2px;
+  border: 1px solid #EAEAEA;
+  cursor: pointer;
+}
+
+.gw-cart-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.gw-cart-item-cat {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #737373;
+  margin-bottom: 4px;
+}
+
+.gw-cart-item-name {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.5rem 0;
+  color: #111111;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.gw-cart-item-name:hover {
+  color: #B45309;
+}
+
+.gw-cart-item-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.gw-cart-attr-badge {
+  background: #F5F5F5;
+  color: #404040;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.gw-cart-item-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.gw-cart-unit-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.gw-cart-unit-orig {
+  font-size: 0.85rem;
+  color: #A3A3A3;
+  text-decoration: line-through;
+}
+
+.gw-cart-discount-tag {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* STEPPER */
+.gw-cart-stepper-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.gw-cart-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #D4D4D4;
+  height: 36px;
+  border-radius: 2px;
+  background: #FFFFFF;
+}
+
+.gw-cart-stepper button {
+  width: 34px;
+  height: 100%;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #111111;
+  transition: background 0.2s ease;
+}
+
+.gw-cart-stepper button:hover:not(:disabled) {
+  background: #F5F5F5;
+}
+
+.gw-cart-stepper button:disabled {
+  color: #CCCCCC;
+  cursor: not-allowed;
+}
+
+.gw-cart-stepper span {
+  min-width: 28px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.gw-cart-remove-btn {
+  background: none;
+  border: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #737373;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.gw-cart-remove-btn:hover {
+  color: #DC2626;
+}
+
+/* ITEM RIGHT: TOTAL */
+.gw-cart-item-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111111;
+  text-align: right;
+  letter-spacing: -0.02em;
+}
+
+/* ACTIONS BAR */
+.gw-cart-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.gw-cart-clear-btn {
+  background: none;
+  border: none;
+  color: #737373;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.gw-cart-clear-btn:hover {
+  color: #DC2626;
+}
+
+/* SUMMARY COLUMN */
+.gw-cart-summary {
+  background: #F9F9F9;
+  border: 1px solid #EAEAEA;
+  border-radius: 3px;
+  padding: 2.25rem;
+  position: sticky;
+  top: 90px;
+}
+
+.gw-cart-summary-title {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.5rem 0;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.gw-cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #525252;
+  margin-bottom: 1rem;
+}
+
+.gw-cart-summary-row.total {
+  border-top: 1px solid #E5E5E5;
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+.gw-cart-checkout-btn {
+  width: 100%;
+  height: 52px;
+  background: #111111;
+  color: #FFFFFF;
+  border: 1px solid #111111;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.gw-cart-checkout-btn:hover:not(:disabled) {
+  background: #D4AF37;
+  border-color: #D4AF37;
+  color: #0A0A0A;
+}
+
+.gw-cart-trust-block {
+  border-top: 1px solid #EAEAEA;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gw-cart-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #737373;
+}
+
+.gw-cart-trust-item i {
+  color: #B45309;
+  font-size: 0.9rem;
+}
+
+/* EMPTY STATE */
+.gw-cart-empty {
+  text-align: center;
+  padding: 6rem 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.gw-cart-empty i {
+  color: #CCCCCC;
+  margin-bottom: 1.5rem;
+}
+
+.gw-cart-empty h2 {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: 1.75rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+}
+
+.gw-cart-empty p {
+  color: #737373;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .gw-cart-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .gw-cart-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .gw-cart-item {
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+  }
+
+  .gw-cart-item-total {
+    grid-column: span 2;
+    text-align: left;
+    margin-top: 0.5rem;
+  }
 }

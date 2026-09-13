@@ -27,14 +27,9 @@ export default function Admin() {
     <>
       <div className="horizontalNavbar">
         <div
-          className="logo-container"
           onClick={() => navigate("/")}
         >
-          <img
-            className="store-logo"
-            src={storeSettings?.logo?.url}
-            alt="Gupta Wears Logo"
-          />
+          <h2>GWEARS</h2>
         </div>
 
         <div className="options">

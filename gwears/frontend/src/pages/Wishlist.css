@@ -1,62 +1,69 @@
+/* =========================================
+   GWEARS - LUXURY WISHLIST STYLES
+   ========================================= */
+
 .wishlist-page {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 30px 40px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem 2rem;
+  box-sizing: border-box;
 }
 
 .wishlist-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #EEEEEE;
 }
 
 .wishlist-header h1 {
-    margin: 0;
-    font-size: 32px;
+  font-family: var(--gw-font-serif, "Cinzel", Georgia, serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: 0.1em;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #111111;
 }
 
 .wishlist-header span {
-    color: #777;
-    font-size: 14px;
+  color: #737373;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
 }
 
-.wishlist-message {
-    padding: 80px 20px;
-    text-align: center;
+.wishlist-empty-state {
+  text-align: center;
+  padding: 6rem 1rem;
+  max-width: 520px;
+  margin: 0 auto;
 }
 
-.wishlist-message h2 {
-    margin-bottom: 10px;
+.wishlist-empty-state i {
+  color: #D4AF37;
+  margin-bottom: 1.5rem;
 }
 
-.wishlist-message p {
-    color: #777;
-    margin-bottom: 25px;
+.wishlist-empty-state h2 {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
 }
 
-.wishlist-message button {
-    padding: 11px 22px;
-    border: none;
-    border-radius: 5px;
-    background: #111;
-    color: white;
-    cursor: pointer;
+.wishlist-empty-state p {
+  color: #737373;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
 }
 
-.wishlist-message button:hover {
-    opacity: 0.85;
-}
-
-@media (max-width: 768px) {
-
-    .wishlist-page {
-        padding: 20px;
-    }
-
-    .wishlist-header h1 {
-        font-size: 26px;
-    }
+@media (max-width: 640px) {
+  .wishlist-page {
+    padding: 1.5rem 1rem 4rem 1rem;
+  }
 }

@@ -1,0 +1,329 @@
+/* =========================================
+   GWEARS - LUXURY CHECKOUT EXPERIENCE STYLES
+   ========================================= */
+
+.checkout-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.checkout-container h1 {
+  font-family: var(--gw-font-serif, "Cinzel", Georgia, serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: 0.1em;
+  margin: 0 0 2rem 0;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 1rem;
+}
+
+.checkout-error {
+  background: #FEE2E2;
+  color: #991B1B;
+  padding: 1rem 1.25rem;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid #DC2626;
+}
+
+.checkout-section {
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 4px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.checkout-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.checkout-section-header h2,
+.checkout-section h2 {
+  font-family: var(--gw-font-serif, "Cinzel", serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+  color: #111111;
+  font-weight: 700;
+}
+
+.checkout-section-header button {
+  background: none;
+  border: 1px solid #D4D4D4;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkout-section-header button:hover {
+  border-color: #111111;
+  background: #111111;
+  color: #FFFFFF;
+}
+
+/* ADDRESS SELECTION */
+.address-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.address-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid #E0E0E0;
+  border-radius: 3px;
+  padding: 1.25rem;
+  cursor: pointer;
+  background: #FAFAFA;
+  transition: all 0.2s ease;
+}
+
+.address-card:hover {
+  border-color: #111111;
+  background: #FFFFFF;
+}
+
+.address-card input[type="radio"] {
+  margin-top: 4px;
+  accent-color: #111111;
+  cursor: pointer;
+}
+
+.address-card strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #111111;
+}
+
+.address-card p {
+  margin: 0 0 3px 0;
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.4;
+}
+
+.address-card span {
+  display: inline-block;
+  background: #111111;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.no-address {
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed #D4D4D4;
+  border-radius: 3px;
+}
+
+.no-address button {
+  background: #111111;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 22px;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+/* ORDER SUMMARY ITEMS */
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.checkout-item-image {
+  width: 64px;
+  aspect-ratio: 1 / 1.15;
+  object-fit: cover;
+  background: #F9F9F9;
+  border: 1px solid #EAEAEA;
+  border-radius: 2px;
+}
+
+.checkout-item-details {
+  flex: 1;
+}
+
+.checkout-item-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+.checkout-item-details p {
+  margin: 0 0 2px 0;
+  font-size: 0.8rem;
+  color: #737373;
+}
+
+.checkout-item-total {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* PRICING BREAKDOWN */
+.checkout-pricing {
+  border-top: 1px solid #EEEEEE;
+  padding-top: 1.25rem;
+}
+
+.checkout-pricing div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #525252;
+  margin-bottom: 0.75rem;
+}
+
+.checkout-pricing .total-row {
+  border-top: 1px solid #E5E5E5;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* PAYMENT METHODS */
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.payment-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #E0E0E0;
+  border-radius: 3px;
+  padding: 1.25rem;
+  cursor: pointer;
+  background: #FAFAFA;
+  transition: all 0.2s ease;
+}
+
+.payment-card:hover {
+  border-color: #111111;
+  background: #FFFFFF;
+}
+
+.payment-card input[type="radio"] {
+  accent-color: #111111;
+}
+
+.payment-card strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #111111;
+}
+
+.payment-card p {
+  margin: 2px 0 0 0;
+  font-size: 0.8rem;
+  color: #737373;
+}
+
+.payment-card.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #F5F5F5;
+}
+
+.razorpay-notice {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  padding: 0.85rem 1rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* PLACE ORDER BUTTON */
+.place-order-btn,
+.place-order-button {
+  width: 100%;
+  height: 54px;
+  background: #111111;
+  color: #FFFFFF;
+  border: 1px solid #111111;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 2rem;
+  transition: all 0.25s ease;
+}
+
+.place-order-btn:hover:not(:disabled),
+.place-order-button:hover:not(:disabled) {
+  background: #D4AF37;
+  border-color: #D4AF37;
+  color: #0A0A0A;
+}
+
+.place-order-btn:disabled,
+.place-order-button:disabled {
+  background: #CCCCCC;
+  border-color: #CCCCCC;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .checkout-section {
+    padding: 1.25rem;
+  }
+
+  .address-list {
+    grid-template-columns: 1fr;
+  }
+}

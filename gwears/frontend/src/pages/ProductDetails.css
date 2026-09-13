@@ -1,0 +1,546 @@
+/* =========================================
+   GWEARS - LUXURY PRODUCT DETAILS STYLES
+   ========================================= */
+
+.gw-pdp {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem 2rem;
+  box-sizing: border-box;
+}
+
+/* BREADCRUMB */
+.gw-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: #737373;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.gw-breadcrumb a {
+  color: #737373;
+  transition: color 0.2s ease;
+}
+
+.gw-breadcrumb a:hover {
+  color: #111111;
+}
+
+.gw-breadcrumb span {
+  color: #BDBDBD;
+}
+
+.gw-breadcrumb .current {
+  color: #111111;
+  font-weight: 600;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* MAIN LAYOUT GRID */
+.gw-pdp-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 4.5rem;
+  align-items: start;
+}
+
+/* GALLERY COLUMN */
+.gw-pdp-gallery {
+  display: flex;
+  gap: 1.5rem;
+  position: sticky;
+  top: 90px;
+}
+
+.gw-pdp-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 76px;
+  flex-shrink: 0;
+}
+
+.gw-pdp-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1.15;
+  border: 1px solid #E5E5E5;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #F9F9F9;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.gw-pdp-thumb.active {
+  border-color: #111111;
+  box-shadow: 0 0 0 1px #111111;
+}
+
+.gw-pdp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gw-pdp-main-image-wrap {
+  flex: 1;
+  position: relative;
+  aspect-ratio: 1 / 1.22;
+  background: #F8F8F8;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid #EAEAEA;
+}
+
+.gw-pdp-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gw-pdp-main-image-wrap:hover .gw-pdp-main-img {
+  transform: scale(1.04);
+}
+
+.gw-pdp-badge-wrap {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+}
+
+.gw-pdp-badge {
+  background: #111111;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.gw-pdp-badge-gold {
+  background: #B45309;
+}
+
+/* DETAILS COLUMN */
+.gw-pdp-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.gw-pdp-category-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: #737373;
+  text-transform: uppercase;
+  margin-bottom: 0.65rem;
+}
+
+.gw-pdp-title {
+  font-family: var(--gw-font-serif, "Cinzel", Georgia, serif);
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  letter-spacing: 0.08em;
+  color: #111111;
+  margin: 0 0 1rem 0;
+  line-height: 1.25;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* PRICING */
+.gw-pdp-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #EEEEEE;
+  margin-bottom: 1.75rem;
+}
+
+.gw-pdp-price {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.02em;
+}
+
+.gw-pdp-original-price {
+  font-size: 1.15rem;
+  color: #9E9E9E;
+  text-decoration: line-through;
+}
+
+.gw-pdp-discount-badge {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+/* OPTIONS (SIZE / COLOR) */
+.gw-pdp-options-block {
+  margin-bottom: 1.75rem;
+}
+
+.gw-pdp-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.gw-pdp-option-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #111111;
+}
+
+.gw-pdp-option-selected-val {
+  font-size: 0.8rem;
+  color: #737373;
+  text-transform: capitalize;
+}
+
+.gw-pdp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.gw-pdp-pill {
+  min-width: 46px;
+  height: 42px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #D4D4D4;
+  background: #FFFFFF;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #171717;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.gw-pdp-pill:hover {
+  border-color: #111111;
+}
+
+.gw-pdp-pill.active {
+  background: #111111;
+  color: #FFFFFF;
+  border-color: #111111;
+}
+
+.gw-pdp-pill.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* STOCK STATUS */
+.gw-pdp-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.gw-stock-in {
+  color: #15803D;
+}
+
+.gw-stock-low {
+  color: #B45309;
+}
+
+.gw-stock-out {
+  color: #DC2626;
+}
+
+/* QUANTITY & ACTIONS */
+.gw-pdp-action-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.gw-pdp-qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #D4D4D4;
+  border-radius: 2px;
+  height: 50px;
+  background: #FFFFFF;
+}
+
+.gw-pdp-qty-btn {
+  width: 44px;
+  height: 100%;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #171717;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gw-pdp-qty-btn:hover:not(:disabled) {
+  background: #F5F5F5;
+}
+
+.gw-pdp-qty-btn:disabled {
+  color: #C0C0C0;
+  cursor: not-allowed;
+}
+
+.gw-pdp-qty-val {
+  min-width: 36px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.gw-pdp-add-btn {
+  flex: 1;
+  height: 50px;
+  background: #111111;
+  color: #FFFFFF;
+  border: 1px solid #111111;
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.gw-pdp-add-btn:hover:not(:disabled) {
+  background: #D4AF37;
+  border-color: #D4AF37;
+  color: #0A0A0A;
+}
+
+.gw-pdp-add-btn:disabled {
+  background: #E5E5E5;
+  border-color: #E5E5E5;
+  color: #8C8C8C;
+  cursor: not-allowed;
+}
+
+.gw-pdp-wish-btn {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #D4D4D4;
+  background: #FFFFFF;
+  border-radius: 2px;
+  font-size: 1.25rem;
+  color: #111111;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.gw-pdp-wish-btn:hover {
+  border-color: #111111;
+}
+
+.gw-pdp-wish-btn.active {
+  color: #DC2626;
+  border-color: #DC2626;
+}
+
+/* PINCODE DELIVERY CHECKER */
+.gw-pdp-pincode-card {
+  background: #F9F9F9;
+  border: 1px solid #EAEAEA;
+  border-radius: 3px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.gw-pdp-pincode-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #111111;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gw-pdp-pincode-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.gw-pdp-pincode-input {
+  flex: 1;
+  border: 1px solid #D4D4D4;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  border-radius: 2px;
+  outline: none;
+  background: #FFFFFF;
+}
+
+.gw-pdp-pincode-btn {
+  background: #111111;
+  color: #FFFFFF;
+  border: none;
+  padding: 9px 16px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.gw-pdp-pincode-result {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #15803D;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ACCORDIONS */
+.gw-pdp-accordions {
+  border-top: 1px solid #EEEEEE;
+}
+
+.gw-pdp-accordion-item {
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.gw-pdp-accordion-header {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #111111;
+  cursor: pointer;
+  text-align: left;
+}
+
+.gw-pdp-accordion-header i {
+  font-size: 0.8rem;
+  color: #737373;
+  transition: transform 0.25s ease;
+}
+
+.gw-pdp-accordion-header i.open {
+  transform: rotate(180deg);
+}
+
+.gw-pdp-accordion-body {
+  padding-bottom: 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #525252;
+}
+
+.gw-pdp-accordion-body ul {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.gw-pdp-accordion-body li {
+  margin-bottom: 0.35rem;
+}
+
+/* RELATED CREATIONS SECTION */
+.gw-pdp-related {
+  margin-top: 6rem;
+  padding-top: 4rem;
+  border-top: 1px solid #EAEAEA;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .gw-pdp-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .gw-pdp-gallery {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .gw-pdp {
+    padding: 1.5rem 1rem 4rem 1rem;
+  }
+
+  .gw-pdp-gallery {
+    flex-direction: column-reverse;
+  }
+
+  .gw-pdp-thumbs {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .gw-pdp-thumb {
+    width: 64px;
+  }
+
+  .gw-pdp-action-row {
+    flex-direction: column;
+  }
+
+  .gw-pdp-qty-stepper {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -32,6 +32,8 @@ import Orders from "./pages/Orders.jsx";
 import AdminOrders from "./pages/Admin/Orders.jsx";
 import AdminOrderDetails from "./pages/Admin/OrderDetails.jsx";
 
+import StorefrontLayout from "./components/StorefrontLayout.jsx";
+
 export default function App() {
 
   const router = useNavigate();
@@ -53,8 +55,6 @@ export default function App() {
       });
 
       const data = await res.json();
-
-      console.log(data);
 
       if (!res.ok) {
         return {
@@ -90,8 +90,75 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Home />}></Route>
-        <Route path='/auth' element={<Auth login={onLogin} />}></Route>
+        {/* STOREFRONT GLOBAL LAYOUT */}
+        <Route element={<StorefrontLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/login" element={<CustomerAuth />} />
+
+          {/* PROTECTED CUSTOMER ROUTES */}
+          <Route
+            path="/account"
+            element={
+              <CustomerProtectedRoute>
+                <Account />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <CustomerProtectedRoute>
+                <Wishlist />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <CustomerProtectedRoute>
+                <Cart />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <CustomerProtectedRoute>
+                <Checkout />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/addresses/new"
+            element={
+              <CustomerProtectedRoute>
+                <AddressForm />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <CustomerProtectedRoute>
+                <Orders />
+              </CustomerProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <CustomerProtectedRoute>
+                <OrderDetails />
+              </CustomerProtectedRoute>
+            }
+          />
+        </Route>
+
+        {/* ADMIN AUTH & PANEL */}
+        <Route path="/auth" element={<Auth login={onLogin} />} />
         <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
@@ -107,64 +174,9 @@ export default function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="orders/:id" element={<AdminOrderDetails />} />
         </Route>
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-        <Route path="/login" element={<CustomerAuth />} />
-        <Route
-          path="/account"
-          element={
-            <CustomerProtectedRoute>
-              <Account />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route
-          path="/wishlist"
-          element={
-            <CustomerProtectedRoute>
-              <Wishlist />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <CustomerProtectedRoute>
-              <Cart />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route path="/products" element={<Products />} />
-        <Route
-          path="/products/:id"
-          element={<ProductDetails />}
-        />
-        <Route path="/offers" element={<Offers />} />
-        <Route
-          path="/checkout"
-          element={
-            <CustomerProtectedRoute>
-              <Checkout />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route
-          path="/addresses/new"
-          element={
-            <CustomerProtectedRoute>
-              <AddressForm />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <CustomerProtectedRoute>
-              <Orders />
-            </CustomerProtectedRoute>
-          }
-        />
-        <Route path="/orders/:id" element={<OrderDetails />} />
+
+        <Route path="*" element={<h1 style={{ textAlign: "center", padding: "5rem" }}>404 - Page Not Found</h1>} />
       </Routes>
     </>
-  )
+  );
 }
