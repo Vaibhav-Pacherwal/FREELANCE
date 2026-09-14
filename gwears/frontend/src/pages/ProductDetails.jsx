@@ -223,7 +223,7 @@ export default function ProductDetails() {
       <div className="gw-pdp" style={{ textAlign: "center", padding: "8rem 2rem" }}>
         <i className="fa-solid fa-circle-notch fa-spin fa-2x" style={{ color: "#111" }}></i>
         <p style={{ marginTop: "1rem", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: "0.82rem" }}>
-          Unveiling atelier creation...
+          Loading product details...
         </p>
       </div>
     );
@@ -232,9 +232,9 @@ export default function ProductDetails() {
   if (error || !product) {
     return (
       <div className="gw-pdp" style={{ textAlign: "center", padding: "8rem 2rem" }}>
-        <h2>Creation Not Found</h2>
+        <h2>Product Not Found</h2>
         <p style={{ color: "#737373", margin: "1rem 0 2rem 0" }}>
-          {error || "The requested atelier design is no longer available in our catalog."}
+          {error || "The requested product is no longer available in our store."}
         </p>
         <button className="gw-btn gw-btn-primary" onClick={() => navigate("/products")}>
           EXPLORE CATALOG
@@ -311,7 +311,7 @@ export default function ProductDetails() {
         {/* RIGHT: DETAILS COLUMN */}
         <div className="gw-pdp-info">
           <span className="gw-pdp-category-tag">
-            {product.category?.group?.toUpperCase() || "ATELIER COLLECTION"}
+            {product.category?.group?.toUpperCase() || "MEN'S COLLECTION"}
           </span>
 
           <h1 className="gw-pdp-title">{product.name}</h1>
@@ -382,7 +382,7 @@ export default function ProductDetails() {
                 </span>
               ) : isLowStock ? (
                 <span className="gw-stock-low">
-                  <i className="fa-solid fa-triangle-exclamation"></i> Only {activeVariantStock} remaining in atelier
+                  <i className="fa-solid fa-triangle-exclamation"></i> Only {activeVariantStock} left in stock
                 </span>
               ) : (
                 <span className="gw-stock-in">
@@ -502,11 +502,11 @@ export default function ProductDetails() {
               </button>
               {openAccordions.details && (
                 <div className="gw-pdp-accordion-body">
-                  <p>{product.description || "Archival tailored silhouette with contemporary detailing. Crafted with bespoke precision and premium tactile handfeel."}</p>
+                  <p>{product.description || "Premium men's fashion designed for effortless daily style, superior comfort, and durability."}</p>
                   <ul>
-                    <li>Bespoke relaxed luxury silhouette</li>
-                    <li>Reinforced tonal seams &amp; custom hardware</li>
-                    <li>Sourced from sustainable textile partners</li>
+                    <li>Modern regular / relaxed fit</li>
+                    <li>Durable stitching &amp; quality finishing</li>
+                    <li>High-grade fabric selected for all-day comfort</li>
                     {selectedVariant?.sku && <li>SKU: {selectedVariant.sku}</li>}
                   </ul>
                 </div>
@@ -525,9 +525,9 @@ export default function ProductDetails() {
               </button>
               {openAccordions.care && (
                 <div className="gw-pdp-accordion-body">
-                  <p>Handcrafted using high-density organic cotton and bespoke blends.</p>
+                  <p>Crafted from premium cotton blends and quality fabrics.</p>
                   <ul>
-                    <li>Dry clean recommended or gentle machine wash inside-out at 30°C</li>
+                    <li>Gentle machine wash or hand wash inside-out at 30°C</li>
                     <li>Do not tumble dry; reshape while damp and dry flat</li>
                     <li>Cool iron on reverse side</li>
                   </ul>
@@ -542,18 +542,18 @@ export default function ProductDetails() {
                 className="gw-pdp-accordion-header"
                 onClick={() => toggleAccordion("shipping")}
               >
-                <span>COMPLIMENTARY SHIPPING &amp; RETURNS</span>
+                <span>SHIPPING &amp; EXCHANGES</span>
                 <i className={`fa-solid fa-chevron-down ${openAccordions.shipping ? "open" : ""}`}></i>
               </button>
               {openAccordions.shipping && (
                 <div className="gw-pdp-accordion-body">
                   <p>
-                    All atelier orders above ₹1,999 qualify for complimentary domestic express shipping with insured tracking.
+                    All orders above ₹1,999 qualify for complimentary domestic express shipping with tracked delivery.
                   </p>
                   <ul>
                     <li>Estimated express delivery within 2-4 business days</li>
                     <li>Cash on Delivery (COD) supported nationwide</li>
-                    <li>30-day effortless return and exchange concierge service</li>
+                    <li>7-day easy size exchange and store customer support</li>
                   </ul>
                 </div>
               )}
@@ -566,8 +566,8 @@ export default function ProductDetails() {
       {relatedProducts.length > 0 && (
         <div className="gw-pdp-related">
           <div className="gw-section-header">
-            <span className="gw-section-badge">YOU MAY ALSO APPRECIATE</span>
-            <h2 className="gw-section-title">COMPLEMENTARY SILHOUETTES</h2>
+            <span className="gw-section-badge">RECOMMENDED FOR YOU</span>
+            <h2 className="gw-section-title">SIMILAR STYLES</h2>
           </div>
           <div className="products-grid">
             {relatedProducts.map((p) => (

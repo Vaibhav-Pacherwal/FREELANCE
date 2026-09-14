@@ -31,10 +31,10 @@ export default function Cart() {
           <i className="fa-solid fa-bag-shopping fa-3x"></i>
           <h2>Your Shopping Bag is Empty</h2>
           <p>
-            Your private selection currently contains no pieces. Explore our latest atelier silhouettes and curated collections.
+            Your shopping bag is empty. Explore our latest collection of clothing, footwear, and accessories.
           </p>
           <button className="gw-btn gw-btn-primary" onClick={() => navigate("/products")}>
-            DISCOVER CREATIONS
+            START SHOPPING
           </button>
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function Cart() {
                   {/* INFO */}
                   <div className="gw-cart-item-info">
                     <span className="gw-cart-item-cat">
-                      {product.category?.name || "ATELIER"}
+                      {product.category?.name || "MEN'S WEAR"}
                     </span>
                     <h3
                       className="gw-cart-item-name"
@@ -210,7 +210,7 @@ export default function Cart() {
 
                     {variant.stock <= 3 && variant.stock > 0 && (
                       <p style={{ color: "#B45309", fontSize: "0.75rem", margin: "6px 0 0 0" }}>
-                        Only {variant.stock} left in atelier
+                        Only {variant.stock} left in stock
                       </p>
                     )}
                   </div>
@@ -226,7 +226,7 @@ export default function Cart() {
 
           <div className="gw-cart-actions-bar">
             <Link to="/products" style={{ fontSize: "0.82rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-              &larr; Continue Exploring
+              &larr; Continue Shopping
             </Link>
             <button className="gw-cart-clear-btn" onClick={handleClear}>
               Empty Shopping Bag

@@ -125,17 +125,17 @@ export default function Products() {
   const pageTitle = group
     ? `${group.toUpperCase()} COLLECTION`
     : activeCategoryObj
-    ? `${activeCategoryObj.name.toUpperCase()} ARCHIVES`
-    : "ALL ATELIER CREATIONS";
+    ? `${activeCategoryObj.name.toUpperCase()}`
+    : "ALL PRODUCTS";
 
   return (
     <div className="products-page">
       {/* EDITORIAL BANNER */}
       <div className="gw-plp-banner">
-        <span className="gw-plp-badge">ATELIER CATALOG</span>
+        <span className="gw-plp-badge">MEN'S FASHION</span>
         <h1 className="gw-plp-title">{pageTitle}</h1>
         <p className="gw-plp-subtitle">
-          Impeccably tailored silhouettes crafted from archival textiles for modern distinction.
+          Browse our curated selection of quality shirts, t-shirts, denim, jackets, footwear, and accessories.
         </p>
       </div>
 
@@ -145,7 +145,7 @@ export default function Products() {
           className={`gw-group-tab ${!group && !category ? "active" : ""}`}
           onClick={() => handleGroupSelect("")}
         >
-          All Silhouettes
+          All Products
         </button>
         <button
           className={`gw-group-tab ${group === "clothing" ? "active" : ""}`}
@@ -171,8 +171,8 @@ export default function Products() {
       <div className="gw-plp-toolbar">
         <div className="gw-plp-counts">
           {pagination.totalProducts != null
-            ? `Showing ${products.length} of ${pagination.totalProducts} creations`
-            : `Showing ${products.length} creations`}
+            ? `Showing ${products.length} of ${pagination.totalProducts} products`
+            : `Showing ${products.length} products`}
         </div>
 
         <div className="gw-plp-filters-right">
@@ -181,7 +181,7 @@ export default function Products() {
             <i className="fa-solid fa-magnifying-glass"></i>
             <input
               type="text"
-              placeholder="Search silhouettes..."
+              placeholder="Search products..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -279,8 +279,8 @@ export default function Products() {
       {!loading && !error && products.length === 0 && (
         <div className="gw-plp-empty">
           <i className="fa-regular fa-folder-open fa-3x"></i>
-          <h3>No Creations Matched Your Search</h3>
-          <p>We could not locate any pieces matching your specific filter criteria.</p>
+          <h3>No Products Found</h3>
+          <p>We could not find any products matching your selected filters.</p>
           <button className="gw-btn gw-btn-primary" onClick={clearAllFilters}>
             RESET ALL FILTERS
           </button>

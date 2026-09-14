@@ -12,7 +12,7 @@ export default function Wishlist() {
       <div className="wishlist-page" style={{ textAlign: "center", padding: "8rem 1rem" }}>
         <i className="fa-solid fa-circle-notch fa-spin fa-2x"></i>
         <p style={{ marginTop: "1rem", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: "0.82rem", color: "#737373" }}>
-          Unlocking your private wishlist...
+          Loading your wishlist...
         </p>
       </div>
     );
@@ -21,10 +21,10 @@ export default function Wishlist() {
   return (
     <div className="wishlist-page">
       <div className="wishlist-header">
-        <h1>PRIVATE WISHLIST</h1>
+        <h1>MY WISHLIST</h1>
         {wishlist.length > 0 && (
           <span>
-            &bull; {wishlist.length} creation{wishlist.length === 1 ? "" : "s"} saved
+            &bull; {wishlist.length} item{wishlist.length === 1 ? "" : "s"} saved
           </span>
         )}
       </div>
@@ -34,10 +34,10 @@ export default function Wishlist() {
           <i className="fa-regular fa-heart fa-3x"></i>
           <h2>Your Wishlist is Empty</h2>
           <p>
-            Save your favorite bespoke silhouettes and curated wardrobe pieces to reserve your inspiration for future acquisitions.
+            Save your favorite items here to easily review and shop whenever you're ready.
           </p>
           <button className="gw-btn gw-btn-primary" onClick={() => navigate("/products")}>
-            DISCOVER ATELIER CREATIONS
+            EXPLORE PRODUCTS
           </button>
         </div>
       ) : (

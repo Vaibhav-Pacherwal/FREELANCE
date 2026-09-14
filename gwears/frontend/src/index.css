@@ -113,17 +113,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Layout Utilities */
-.container-gw {
+.container-gw,
+.gw-container,
+.gw-footer-container {
   width: 100%;
-  max-width: var(--gw-max-width);
+  max-width: 1360px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 2rem;
   padding-right: 2rem;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
-  .container-gw {
+  .container-gw,
+  .gw-container,
+  .gw-footer-container {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }

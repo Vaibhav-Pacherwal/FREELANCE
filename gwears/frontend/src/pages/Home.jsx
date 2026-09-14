@@ -61,29 +61,29 @@ export default function Home() {
       {/* HERO SECTION */}
       <section className="gw-hero">
         <div className="gw-hero-content">
-          <span className="gw-hero-badge">ATELIER AUTUMN / WINTER 2026</span>
-          <h1 className="gw-hero-title">THE NEW SILHOUETTES OF LUXURY</h1>
+          <span className="gw-hero-badge">ESTABLISHED 2019 &bull; MEN'S FASHION</span>
+          <h1 className="gw-hero-title">TRENDING STYLES &amp; FOOTWEAR</h1>
           <p className="gw-hero-subtitle">
-            Bespoke tailoring, archival fabrics, and refined modern silhouettes crafted for effortless distinction.
+            Explore premium quality shirts, t-shirts, hoodies, denim, jackets, and footwear curated for everyday confidence and modern streetwear.
           </p>
           <div className="gw-hero-ctas">
             <button
               className="gw-hero-btn-primary"
               onClick={() => navigate("/products")}
             >
-              EXPLORE CREATIONS
+              SHOP NEW ARRIVALS
             </button>
             <button
               className="gw-hero-btn-outline"
               onClick={() => navigate("/offers")}
             >
-              CURATED OFFERS
+              SPECIAL OFFERS
             </button>
           </div>
         </div>
       </section>
 
-      {/* LUXURY VALUES STRIP */}
+      {/* RETAIL VALUE PROPOSITION STRIP */}
       <section className="gw-values-strip">
         <div className="gw-values-grid">
           <div className="gw-value-item">
@@ -91,8 +91,8 @@ export default function Home() {
               <i className="fa-solid fa-gem"></i>
             </div>
             <div className="gw-value-text">
-              <h4>Bespoke Tailoring</h4>
-              <p>Hand-finished silhouettes & premium textiles</p>
+              <h4>Premium Quality</h4>
+              <p>Carefully selected fabrics and durable everyday wear</p>
             </div>
           </div>
           <div className="gw-value-item">
@@ -109,8 +109,8 @@ export default function Home() {
               <i className="fa-solid fa-rotate-left"></i>
             </div>
             <div className="gw-value-text">
-              <h4>Effortless Returns</h4>
-              <p>30-day exchange and concierge support</p>
+              <h4>Easy Exchanges</h4>
+              <p>Hassle-free size replacement and customer care</p>
             </div>
           </div>
           <div className="gw-value-item">
@@ -118,8 +118,8 @@ export default function Home() {
               <i className="fa-solid fa-shield-halved"></i>
             </div>
             <div className="gw-value-text">
-              <h4>Guaranteed Authenticity</h4>
-              <p>100% genuine atelier guaranteed products</p>
+              <h4>Established 2019</h4>
+              <p>Trusted retail destination with thousands of satisfied clients</p>
             </div>
           </div>
         </div>
@@ -128,10 +128,10 @@ export default function Home() {
       {/* DISCOVER BY CATEGORY */}
       <section className="gw-section">
         <div className="gw-section-header">
-          <span className="gw-section-badge">THE ARCHIVES</span>
-          <h2 className="gw-section-title">EXPLORE BY SILHOUETTE</h2>
+          <span className="gw-section-badge">CURATED STYLES</span>
+          <h2 className="gw-section-title">SHOP BY CATEGORY</h2>
           <p className="gw-section-subtitle">
-            Impeccably tailored garments, statement footwear, and refined artisanal accessories.
+            Upgrade your wardrobe with trending clothing, comfortable footwear, and essential accessories.
           </p>
         </div>
 
@@ -147,10 +147,10 @@ export default function Home() {
             ></div>
             <div className="gw-category-overlay"></div>
             <div className="gw-category-info">
-              <span className="gw-category-tag">ATELIER READY-TO-WEAR</span>
-              <h3 className="gw-category-name">TAILORED CLOTHING</h3>
+              <span className="gw-category-tag">MEN'S APPAREL</span>
+              <h3 className="gw-category-name">SHOP CLOTHING</h3>
               <span className="gw-category-cta">
-                DISCOVER WARDROBE <i className="fa-solid fa-arrow-right"></i>
+                VIEW CLOTHING <i className="fa-solid fa-arrow-right"></i>
               </span>
             </div>
           </Link>
@@ -166,10 +166,10 @@ export default function Home() {
             ></div>
             <div className="gw-category-overlay"></div>
             <div className="gw-category-info">
-              <span className="gw-category-tag">HANDCRAFTED EDITIONS</span>
-              <h3 className="gw-category-name">FOOTWEAR ATELIER</h3>
+              <span className="gw-category-tag">SNEAKERS &amp; SHOES</span>
+              <h3 className="gw-category-name">SHOP FOOTWEAR</h3>
               <span className="gw-category-cta">
-                DISCOVER FOOTWEAR <i className="fa-solid fa-arrow-right"></i>
+                VIEW FOOTWEAR <i className="fa-solid fa-arrow-right"></i>
               </span>
             </div>
           </Link>
@@ -185,10 +185,10 @@ export default function Home() {
             ></div>
             <div className="gw-category-overlay"></div>
             <div className="gw-category-info">
-              <span className="gw-category-tag">REFINED ACCENTS</span>
-              <h3 className="gw-category-name">CAPS & ACCESSORIES</h3>
+              <span className="gw-category-tag">CAPS &amp; MORE</span>
+              <h3 className="gw-category-name">SHOP ACCESSORIES</h3>
               <span className="gw-category-cta">
-                DISCOVER ACCENTS <i className="fa-solid fa-arrow-right"></i>
+                VIEW ACCESSORIES <i className="fa-solid fa-arrow-right"></i>
               </span>
             </div>
           </Link>
@@ -198,17 +198,17 @@ export default function Home() {
       {/* NEW ARRIVALS GRID */}
       <section className="gw-section" style={{ paddingTop: 0 }}>
         <div className="gw-section-header">
-          <span className="gw-section-badge">FRESH FROM THE WORKSHOP</span>
-          <h2 className="gw-section-title">NEW SEASON ARRIVALS</h2>
+          <span className="gw-section-badge">JUST ARRIVED</span>
+          <h2 className="gw-section-title">LATEST ARRIVALS</h2>
           <p className="gw-section-subtitle">
-            Handpicked latest releases combining elevated street sensibility with contemporary elegance.
+            The newest drops in men's apparel, footwear, and accessories.
           </p>
         </div>
 
         {loading ? (
           <div style={{ textAlign: "center", padding: "3rem", color: "#737373" }}>
             <i className="fa-solid fa-circle-notch fa-spin fa-2x"></i>
-            <p style={{ marginTop: "1rem" }}>Curating collection...</p>
+            <p style={{ marginTop: "1rem" }}>Loading latest styles...</p>
           </div>
         ) : newArrivals.length > 0 ? (
           <div className="products-grid">
@@ -218,7 +218,7 @@ export default function Home() {
           </div>
         ) : (
           <div style={{ textAlign: "center", padding: "3rem", color: "#737373" }}>
-            <p>New season creations are arriving shortly.</p>
+            <p>New arrivals coming soon.</p>
             <button
               className="gw-btn gw-btn-primary"
               onClick={() => navigate("/products")}
@@ -235,31 +235,31 @@ export default function Home() {
             onClick={() => navigate("/products")}
             style={{ padding: "14px 40px", letterSpacing: "0.18em" }}
           >
-            VIEW ENTIRE CATALOG
+            VIEW ALL PRODUCTS
           </button>
         </div>
       </section>
 
-      {/* EDITORIAL SPOTLIGHT BANNER */}
+      {/* RETAIL STORY / ABOUT BANNER */}
       <section className="gw-spotlight-banner">
         <div className="gw-spotlight-content">
           <div className="gw-spotlight-text">
-            <span className="gw-section-badge" style={{ color: "#D4AF37" }}>THE PHILOSOPHY</span>
-            <h3>PRECISION STITCHWORK & MODERN SENSIBILITY</h3>
+            <span className="gw-section-badge" style={{ color: "#D4AF37" }}>ABOUT GWEARS</span>
+            <h3>ESTABLISHED 2019 &bull; QUALITY &amp; STYLE</h3>
             <p>
-              At {storeName}, we believe luxury is defined not by excess, but by intentional restraint. Every seam, cut, and texture is engineered with purpose — blending high-grade fabrics with relaxed silhouettes designed to transition seamlessly from private ateliers to city streets.
+              At {storeName}, we are passionate about bringing you the best in men's retail fashion. Since opening our doors in 2019, we have built a trusted reputation for curating trending streetwear, sharp shirts, comfortable hoodies, high-performance footwear, and daily essentials — delivering premium quality and modern style at accessible retail prices.
             </p>
             <button
               className="gw-btn gw-btn-primary"
               onClick={() => navigate("/products?group=clothing")}
               style={{ background: "#FFFFFF", color: "#000000" }}
             >
-              EXPLORE TAILORING
+              SHOP MEN'S CLOTHING
             </button>
           </div>
           <div>
             <blockquote className="gw-spotlight-quote">
-              "Elegance is refusal — the discipline to craft only what is essential, durable, and breathtakingly modern."
+              "Great style should be effortless, modern, and accessible for everyday life."
             </blockquote>
           </div>
         </div>
@@ -270,15 +270,15 @@ export default function Home() {
         <section className="gw-promo-section">
           <div className="gw-promo-card">
             <div>
-              <span className="gw-promo-badge">EXCLUSIVE ATELIER PRIVILEGE</span>
+              <span className="gw-promo-badge">SPECIAL PROMOTION</span>
               <h3 className="gw-promo-title">{activeOffer.title}</h3>
               <p className="gw-promo-desc">
                 {activeOffer.description ||
                   `Enjoy an exclusive ${
                     activeOffer.discountType === "percentage"
                       ? `${activeOffer.discountValue}% discount`
-                      : `flat ₹${activeOffer.discountValue} concession`
-                  } on eligible wardrobe selections.`}
+                      : `flat ₹${activeOffer.discountValue} off`
+                  } on eligible fashion selections.`}
               </p>
             </div>
             <div>
@@ -287,42 +287,42 @@ export default function Home() {
                 onClick={() => navigate("/offers")}
                 style={{ padding: "14px 32px", whiteSpace: "nowrap" }}
               >
-                CLAIM OFFER
+                SHOP SPECIAL OFFERS
               </button>
             </div>
           </div>
         </section>
       )}
 
-      {/* FLAGSHIP BOUTIQUE SECTION */}
+      {/* RETAIL STORE LOCATION SECTION */}
       {settings && (
         <section className="gw-boutique-section">
           <div className="gw-boutique-grid">
             <div className="gw-boutique-info">
-              <span className="gw-section-badge">VISIT OUR ATELIER</span>
-              <h3>OUR FLAGSHIP BOUTIQUE</h3>
+              <span className="gw-section-badge">VISIT OUR STORE</span>
+              <h3>OUR RETAIL STORE LOCATION</h3>
               <p>
-                Experience our curated fabrics, bespoke sizing, and personal styling consultation in person at our flagship destination.
+                Visit our retail store in Delhi to browse our complete inventory in person, try on sizes, and explore our newest clothing and footwear arrivals.
               </p>
               <div className="gw-boutique-detail-list">
                 <div className="gw-boutique-detail-item">
                   <i className="fa-solid fa-location-dot"></i>
                   <div>
-                    <h5>Boutique Address</h5>
+                    <h5>Store Address</h5>
                     <p>{settings.address || "Delhi, India"}</p>
                   </div>
                 </div>
                 <div className="gw-boutique-detail-item">
                   <i className="fa-solid fa-clock"></i>
                   <div>
-                    <h5>Consultation Hours</h5>
+                    <h5>Store Opening Hours</h5>
                     <p>{settings.openingHours || "Monday - Saturday: 10:00 AM - 08:30 PM"}</p>
                   </div>
                 </div>
                 <div className="gw-boutique-detail-item">
                   <i className="fa-solid fa-phone"></i>
                   <div>
-                    <h5>Private Appointments</h5>
+                    <h5>Store Contact &amp; Enquiries</h5>
                     <p>{settings.phone || "+91 72898 54805"}</p>
                   </div>
                 </div>
@@ -350,7 +350,7 @@ export default function Home() {
                     style={{ textDecoration: "none" }}
                   >
                     <i className="fa-brands fa-whatsapp" style={{ marginRight: "8px" }}></i>
-                    WHATSAPP CONCIERGE
+                    WHATSAPP STORE
                   </a>
                 )}
               </div>
@@ -359,7 +359,7 @@ export default function Home() {
             <div style={{ position: "relative", height: "380px", borderRadius: "4px", overflow: "hidden" }}>
               <img
                 src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80"
-                alt="Flagship Boutique"
+                alt="Gupta Wears Retail Store"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>

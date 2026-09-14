@@ -117,7 +117,7 @@ export default function Account() {
           <div>
             <h1 className="gw-account-name">{user.name}</h1>
             <p className="gw-account-email">{user.email}</p>
-            <span className="gw-account-tier">GWears Atelier Member</span>
+            <span className="gw-account-tier">GWears Customer Account</span>
           </div>
         </div>
 
@@ -252,7 +252,7 @@ export default function Account() {
               <i className="fa-solid fa-bag-shopping fa-3x" style={{ color: "#CCCCCC", marginBottom: "1rem" }}></i>
               <h3>No Orders Placed Yet</h3>
               <p style={{ color: "#737373", margin: "0.5rem 0 1.5rem 0" }}>
-                Explore our latest silhouettes and indulge in atelier craftsmanship.
+                Explore our latest collection and start shopping.
               </p>
               <button className="gw-btn gw-btn-primary" onClick={() => navigate("/products")}>
                 START BROWSING
@@ -333,14 +333,14 @@ export default function Account() {
               <label style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#737373", display: "block", marginBottom: "6px" }}>
                 Membership Tier
               </label>
-              <div style={{ fontSize: "0.95rem", color: "#B45309", fontWeight: 600 }}>
-                GWears Private Atelier Client (VIP)
+              <div style={{ fontSize: "0.95rem", color: "#111111", fontWeight: 600 }}>
+                GWears Registered Customer (Est. 2019)
               </div>
             </div>
 
             <div style={{ borderTop: "1px solid #EEEEEE", paddingTop: "1.5rem", marginTop: "1.5rem" }}>
               <p style={{ fontSize: "0.85rem", color: "#737373", margin: "0 0 1rem 0" }}>
-                Need to update your account email or credentials? Please connect with our concierge.
+                Need to update your account email or credentials? Please contact our store customer support.
               </p>
               <button
                 className="gw-btn gw-btn-outline"

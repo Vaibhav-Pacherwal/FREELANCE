@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import API from "../ApiEndpoints.js";
 import "./Footer.css";
 
 export default function Footer() {
   const [settings, setSettings] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -23,7 +22,7 @@ export default function Footer() {
   }, []);
 
   const storeName = settings?.storeName || "Gupta Wears";
-  const address = settings?.address || "Atelier Flagship Store, Delhi, India";
+  const address = settings?.address || "Gupta Wears Retail Store, Delhi, India";
   const phone = settings?.phone || "+91 72898 54805";
   const whatsapp = settings?.whatsapp || "+91 72898 54805";
   const instagram = settings?.instagram || "https://instagram.com";
@@ -32,13 +31,13 @@ export default function Footer() {
 
   return (
     <footer className="gw-footer">
-      <div className="gw-container">
+      <div className="gw-footer-container">
         <div className="gw-footer-grid">
           {/* BRAND COLUMN */}
           <div className="gw-footer-brand">
             <h2>{storeName}</h2>
             <p className="gw-footer-tagline">
-              Curated contemporary elegance, bespoke craftsmanship, and refined streetwear. Redefining modern luxury tailoring for the discerning wardrobe.
+              Established in 2019. Gupta Wears is your premier retail destination for trending men's fashion, footwear, streetwear, and everyday essentials.
             </p>
             <div className="gw-footer-socials">
               {instagram && (
@@ -91,26 +90,26 @@ export default function Footer() {
             <h4>Collections</h4>
             <ul className="gw-footer-links">
               <li>
-                <Link to="/products">All Creations</Link>
+                <Link to="/products">All Products</Link>
               </li>
               <li>
-                <Link to="/products?group=clothing">Tailored Clothing</Link>
+                <Link to="/products?group=clothing">Men's Clothing</Link>
               </li>
               <li>
-                <Link to="/products?group=footwear">Footwear Atelier</Link>
+                <Link to="/products?group=footwear">Shoes &amp; Footwear</Link>
               </li>
               <li>
-                <Link to="/products?group=accessories">Accessories & Caps</Link>
+                <Link to="/products?group=accessories">Caps &amp; Accessories</Link>
               </li>
               <li>
-                <Link to="/offers">Curated Offers</Link>
+                <Link to="/offers">Special Offers</Link>
               </li>
             </ul>
           </div>
 
           {/* CLIENT CARE COLUMN */}
           <div className="gw-footer-col">
-            <h4>Client Care</h4>
+            <h4>Customer Care</h4>
             <ul className="gw-footer-links">
               <li>
                 <Link to="/account">My Account</Link>
@@ -119,22 +118,22 @@ export default function Footer() {
                 <Link to="/orders">Track Orders</Link>
               </li>
               <li>
-                <Link to="/wishlist">Private Wishlist</Link>
+                <Link to="/wishlist">My Wishlist</Link>
               </li>
               <li>
                 <Link to="/cart">Shopping Bag</Link>
               </li>
               <li>
                 <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer">
-                  Boutique Concierge
+                  Store Support (WhatsApp)
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* ATELIER & BOUTIQUE INFO */}
+          {/* RETAIL STORE LOCATION & INFO */}
           <div className="gw-footer-col">
-            <h4>Flagship Boutique</h4>
+            <h4>Our Retail Store</h4>
             <div className="gw-footer-contact-item">
               <i className="fa-solid fa-location-dot"></i>
               <span>{address}</span>
@@ -153,14 +152,14 @@ export default function Footer() {
         {/* BOTTOM BAR */}
         <div className="gw-footer-bottom">
           <p className="gw-footer-copyright">
-            &copy; {new Date().getFullYear()} {storeName}. All rights reserved. Handcrafted with luxury excellence.
+            &copy; {new Date().getFullYear()} {storeName}. Established 2019. All rights reserved.
           </p>
           <div className="gw-footer-payments" title="Accepted Payment Methods">
             <i className="fa-brands fa-cc-visa" title="Visa"></i>
             <i className="fa-brands fa-cc-mastercard" title="Mastercard"></i>
             <i className="fa-solid fa-credit-card" title="Cards / UPI"></i>
             <i className="fa-solid fa-truck" title="Cash on Delivery Available"></i>
-            <i className="fa-solid fa-shield-halved" title="Verified Checkout"></i>
+            <i className="fa-solid fa-shield-halved" title="Secure Checkout"></i>
           </div>
         </div>
       </div>

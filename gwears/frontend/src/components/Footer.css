@@ -1,5 +1,5 @@
 /* =========================================
-   GWEARS - LUXURY FOOTER STYLING
+   GWEARS - LUXURY RETAIL FOOTER STYLING
    ========================================= */
 
 .gw-footer {
@@ -9,6 +9,20 @@
   padding-bottom: 2.5rem;
   margin-top: 6rem;
   border-top: 1px solid #1F1F1F;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* PRIMARY CONTENT CONTAINER - ALIGNED WITH REST OF STOREFRONT */
+.gw-footer-container,
+.gw-container {
+  width: 100%;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
 }
 
 .gw-footer-grid {
@@ -16,6 +30,8 @@
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 3.5rem;
   margin-bottom: 4rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .gw-footer-brand h2 {
@@ -85,6 +101,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+  padding: 0;
+  margin: 0;
 }
 
 .gw-footer-links li a,
@@ -126,12 +144,15 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .gw-footer-copyright {
   color: #6E6E6E;
   font-size: 0.8rem;
   letter-spacing: 0.05em;
+  margin: 0;
 }
 
 .gw-footer-payments {
@@ -142,7 +163,7 @@
   font-size: 1.25rem;
 }
 
-/* Responsive */
+/* RESPONSIVE BREAKPOINTS */
 @media (max-width: 1024px) {
   .gw-footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -150,10 +171,17 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .gw-footer {
-    padding-top: 3.5rem;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
     margin-top: 4rem;
+  }
+
+  .gw-footer-container,
+  .gw-container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
   .gw-footer-grid {

@@ -58,7 +58,7 @@ export default function CustomerAuth() {
       }
 
       if (data.user?.role !== "customer") {
-        showError("This account has elevated administrative permissions. Please use the Atelier Admin portal.");
+        showError("This account has administrative permissions. Please use the Admin portal.");
         return;
       }
 
@@ -66,7 +66,7 @@ export default function CustomerAuth() {
       navigate("/");
     } catch (err) {
       console.error("Customer authentication error:", err);
-      showError("Unable to connect to atelier server. Please try again.");
+      showError("Unable to connect to server. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -84,7 +84,7 @@ export default function CustomerAuth() {
 
     const errorMessages = {
       "not-customer": "This account is registered as administrative. Please use the Admin portal.",
-      disabled: "This atelier account has been suspended.",
+      disabled: "This account has been suspended.",
       "oauth-failed": "Google verification failed. Please try again or use your password.",
       "invalid-auth": "Invalid authentication credentials supplied.",
     };
@@ -96,14 +96,14 @@ export default function CustomerAuth() {
   return (
     <div className="gw-auth-page">
       <div className="gw-auth-card">
-        <span className="gw-auth-badge">GWears ATELIER</span>
+        <span className="gw-auth-badge">GWEARS STORE</span>
         <h1 className="gw-auth-title">
-          {isLogin ? "SIGN IN" : "JOIN THE ATELIER"}
+          {isLogin ? "SIGN IN" : "CREATE AN ACCOUNT"}
         </h1>
         <p className="gw-auth-subtitle">
           {isLogin
-            ? "Access your curated silhouettes, saved private wishlist, and past commissions."
-            : "Create a private account for bespoke ordering, express dispatch, and private sales."}
+            ? "Access your saved wishlist, track orders, and manage your account."
+            : "Create an account for fast checkout, order tracking, and exclusive offers."}
         </p>
 
         <form onSubmit={handleSubmit} className="gw-auth-form">
@@ -203,13 +203,13 @@ export default function CustomerAuth() {
           }}
         >
           {isLogin
-            ? "New to GWears? Create an Atelier Account"
-            : "Already a member? Sign in to your account"}
+            ? "New to GWears? Create an Account"
+            : "Already have an account? Sign In"}
         </button>
 
         <div className="gw-auth-security-note">
           <i className="fa-solid fa-shield-halved"></i>
-          <span>Encrypted client security &amp; data confidentiality</span>
+          <span>100% Secure &amp; Protected Account</span>
         </div>
       </div>
 

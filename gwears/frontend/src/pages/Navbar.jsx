@@ -157,7 +157,7 @@ export default function Navbar() {
       {/* TOP ANNOUNCEMENT BAR */}
       <div className="gw-announcement-bar">
         <p>
-          COMPLIMENTARY SHIPPING ON ORDERS OVER ₹1,999 &bull; BESPOKE ATELIER DESIGNS
+          COMPLIMENTARY SHIPPING ON ORDERS OVER ₹1,999 &bull; ESTABLISHED 2019
         </p>
       </div>
 
@@ -245,7 +245,7 @@ export default function Navbar() {
               <i className="fa-solid fa-magnifying-glass gw-search-icon"></i>
               <input
                 type="text"
-                placeholder="Search by collection, silhouette, or fabric (e.g. Shoes, Hoodie, Denim)..."
+                placeholder="Search products (e.g. Shoes, Hoodie, Shirt, Jeans, Jacket, Cap)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 autoFocus
@@ -450,7 +450,7 @@ export default function Navbar() {
 
             {settings?.phone && (
               <div className="gw-drawer-footer">
-                <p>Boutique Concierge</p>
+                <p>Store Customer Support</p>
                 <a href={`tel:${settings.phone}`}>{settings.phone}</a>
               </div>
             )}
