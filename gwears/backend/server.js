@@ -12,6 +12,7 @@ import cartRoutes from "./routes/cart.routes.js";
 import wishlistRoutes from "./routes/wishlist.routes.js";
 import addressRoutes from "./routes/address.routes.js";
 import orderRoutes from "./routes/order.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/cart", cartRoutes);
 app.use(wishlistRoutes);
 app.use(addressRoutes);
 app.use(orderRoutes);
+app.use(analyticsRoutes);
 
 // 404 Handler
 app.use((req, res) => {

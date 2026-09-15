@@ -16,18 +16,13 @@ export default function AdminProducts() {
     const [pagination, setPagination] = useState({});
 
     const [loading, setLoading] = useState(false);
-
-    const [productToDelete, setProductToDelete] =
-        useState(null);
-
+    const [productToDelete, setProductToDelete] = useState(null);
     const [deleting, setDeleting] = useState(false);
 
-    const limit = 10;
-
+    const limit = 12;
 
     const getPriceDisplay = (product) => {
         const variants = product.variants || [];
-
         const prices = variants
             .map((variant) => Number(variant.price))
             .filter((price) => !isNaN(price));
@@ -43,20 +38,15 @@ export default function AdminProducts() {
             return `₹${minPrice.toLocaleString("en-IN")}`;
         }
 
-        return `₹${minPrice.toLocaleString(
-            "en-IN"
-        )} - ₹${maxPrice.toLocaleString("en-IN")}`;
+        return `₹${minPrice.toLocaleString("en-IN")} - ₹${maxPrice.toLocaleString("en-IN")}`;
     };
-
 
     const getTotalStock = (product) => {
         return (product.variants || []).reduce(
-            (total, variant) =>
-                total + Number(variant.stock || 0),
+            (total, variant) => total + Number(variant.stock || 0),
             0
         );
     };
-
 
     const handleToggleStatus = async (productId) => {
         try {
@@ -71,28 +61,18 @@ export default function AdminProducts() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data.message ||
-                    "Failed to update product status"
-                );
+                throw new Error(data.message || "Failed to update product status");
             }
 
             setProducts((prevProducts) =>
                 prevProducts.map((product) =>
-                    product._id === productId
-                        ? data.product
-                        : product
+                    product._id === productId ? data.product : product
                 )
             );
-
         } catch (error) {
-            console.error(
-                "Toggle product status error:",
-                error
-            );
+            console.error("Toggle product status error:", error);
         }
     };
-
 
     const handleDelete = async () => {
         if (!productToDelete) return;
@@ -111,50 +91,37 @@ export default function AdminProducts() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data.message ||
-                    "Failed to delete product"
-                );
+                throw new Error(data.message || "Failed to delete product");
             }
 
-            setProductToDelete(null);
-
-            fetchProducts();
-
-        } catch (error) {
-            console.error(
-                "Delete product error:",
-                error
+            setProducts((prevProducts) =>
+                prevProducts.filter(
+                    (product) => product._id !== productToDelete._id
+                )
             );
+
+            setProductToDelete(null);
+        } catch (error) {
+            console.error("Delete product error:", error);
+            alert(error.message || "Failed to delete product");
+            setProductToDelete(null);
         } finally {
             setDeleting(false);
         }
     };
 
-
     const fetchProducts = async () => {
         try {
             setLoading(true);
 
-            const params = new URLSearchParams({
-                page,
-                limit,
-            });
+            const params = new URLSearchParams();
 
-            if (search.trim()) {
-                params.append(
-                    "search",
-                    search.trim()
-                );
-            }
+            if (search.trim()) params.append("search", search.trim());
+            if (category) params.append("category", category);
+            if (status) params.append("status", status);
 
-            if (category) {
-                params.append("category", category);
-            }
-
-            if (status) {
-                params.append("status", status);
-            }
+            params.append("page", page);
+            params.append("limit", limit);
 
             const response = await fetch(
                 `${server}/products?${params.toString()}`,
@@ -166,381 +133,365 @@ export default function AdminProducts() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data.message ||
-                    "Failed to fetch products"
-                );
+                throw new Error(data.message || "Failed to fetch products");
             }
 
             setProducts(data.products || []);
-            setPagination(data.pagination || {});
-
+            const pageData = data.pagination || {};
+            setPagination({
+                totalProducts: pageData.totalProducts ?? data.totalProducts ?? (data.products?.length || 0),
+                totalPages: pageData.totalPages ?? data.totalPages ?? 1,
+                currentPage: pageData.currentPage ?? data.currentPage ?? page,
+                hasNextPage: pageData.hasNextPage ?? (page < (pageData.totalPages || 1)),
+                hasPreviousPage: pageData.hasPreviousPage ?? (page > 1),
+            });
         } catch (error) {
-            console.error(
-                "Get products error:",
-                error
-            );
+            console.error("Get products error:", error);
         } finally {
             setLoading(false);
         }
     };
 
-
     useEffect(() => {
-        const timer = setTimeout(() => {
+        const timeout = setTimeout(() => {
             fetchProducts();
-        }, 400);
+        }, 250);
 
-        return () => clearTimeout(timer);
-    }, [
-        search,
-        page,
-        category,
-        status,
-    ]);
-
+        return () => clearTimeout(timeout);
+    }, [search, category, status, page]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch(
-                    `${server}/categories`,
-                    {
-                        credentials: "include",
-                    }
-                );
+                const response = await fetch(`${server}/categories`, {
+                    credentials: "include",
+                });
 
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(
-                        data.message ||
-                        "Failed to fetch categories"
-                    );
+                    throw new Error(data.message || "Failed to fetch categories");
                 }
 
-                setCategories(
-                    data.categories || []
-                );
-
+                setCategories(data.categories || []);
             } catch (error) {
-                console.error(
-                    "Get categories error:",
-                    error
-                );
+                console.error("Get categories error:", error);
             }
         };
 
         fetchCategories();
     }, []);
 
-
     return (
-        <div className="products-page">
-
-            <div className="products-header">
-                <h1>Products</h1>
-
+        <div className="gw-admin-page">
+            {/* PAGE HEADER */}
+            <div className="gw-page-header">
+                <div>
+                    <h1 className="gw-page-title">Product Catalog</h1>
+                    <p className="gw-page-subtitle">
+                        Manage store inventory, variant specifications, retail pricing, and catalog visibility
+                    </p>
+                </div>
                 <button
-                    onClick={() =>
-                        navigate(
-                            "/admin/products/new"
-                        )
-                    }
+                    type="button"
+                    className="gw-primary-btn"
+                    onClick={() => navigate("/admin/products/new")}
                 >
-                    + Add Product
+                    <i className="fa-solid fa-plus"></i>
+                    <span>Add Product</span>
                 </button>
             </div>
 
-
-            <div className="products-filters">
-
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={search}
-                    onChange={(e) => {
-                        setSearch(e.target.value);
-                        setPage(1);
-                    }}
-                />
-
-
-                <select
-                    value={category}
-                    onChange={(e) => {
-                        setCategory(e.target.value);
-                        setPage(1);
-                    }}
-                >
-                    <option value="">
-                        Category
-                    </option>
-
-                    {categories.map((cat) => (
-                        <option
-                            key={cat._id}
-                            value={cat._id}
+            {/* FILTERS & SEARCH BAR */}
+            <div className="gw-filter-bar">
+                <div className="gw-search-box">
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        className="gw-search-input"
+                        placeholder="Search products by name or SKU..."
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setPage(1);
+                        }}
+                    />
+                    {search && (
+                        <button
+                            type="button"
+                            className="gw-search-clear"
+                            onClick={() => {
+                                setSearch("");
+                                setPage(1);
+                            }}
                         >
-                            {cat.name}
-                        </option>
-                    ))}
-                </select>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    )}
+                </div>
 
+                <div className="gw-filter-dropdowns">
+                    <select
+                        className="gw-select"
+                        value={category}
+                        onChange={(e) => {
+                            setCategory(e.target.value);
+                            setPage(1);
+                        }}
+                    >
+                        <option value="">All Categories</option>
+                        {categories.map((cat) => (
+                            <option key={cat._id} value={cat._id}>
+                                {cat.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <select
-                    value={status}
-                    onChange={(e) => {
-                        setStatus(e.target.value);
-                        setPage(1);
-                    }}
-                >
-                    <option value="">
-                        Status
-                    </option>
+                    <select
+                        className="gw-select"
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                            setPage(1);
+                        }}
+                    >
+                        <option value="">All Visibility</option>
+                        <option value="active">Active Only</option>
+                        <option value="inactive">Inactive Only</option>
+                    </select>
+                </div>
 
-                    <option value="active">
-                        Active
-                    </option>
-
-                    <option value="inactive">
-                        Inactive
-                    </option>
-                </select>
-
+                <div className="gw-filter-count">
+                    <span>Showing</span>
+                    <strong>{products.length}</strong>
+                    <span>of {pagination.totalProducts || products.length} products</span>
+                </div>
             </div>
 
-
-            <div className="products-grid">
-
-                {loading ? (
-                    <div className="products-state">
-                        Loading products...
-                    </div>
-
-                ) : products.length === 0 ? (
-                    <div className="products-state">
-                        No products found.
-                    </div>
-
-                ) : (
-                    products.map((product) => {
-
-                        const totalStock =
-                            getTotalStock(product);
-
-                        const variantCount =
-                            product.variants?.length || 0;
+            {/* PRODUCT CARDS GRID */}
+            {loading ? (
+                <div className="gw-state-loading">
+                    <i className="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                    <p>Loading products...</p>
+                </div>
+            ) : products.length === 0 ? (
+                <div className="gw-state-empty">
+                    <i className="fa-solid fa-box-open fa-3x"></i>
+                    <h3>No Products Found</h3>
+                    <p>
+                        {search || category || status
+                            ? "No products match the selected filters. Try broadening your search or resetting filters."
+                            : "Your store catalog does not have any products yet. Add your first product to begin."}
+                    </p>
+                    {search || category || status ? (
+                        <button
+                            type="button"
+                            className="gw-secondary-btn"
+                            onClick={() => {
+                                setSearch("");
+                                setCategory("");
+                                setStatus("");
+                                setPage(1);
+                            }}
+                        >
+                            Reset All Filters
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="gw-primary-btn"
+                            onClick={() => navigate("/admin/products/new")}
+                        >
+                            <i className="fa-solid fa-plus"></i> Add First Product
+                        </button>
+                    )}
+                </div>
+            ) : (
+                <div className="gw-products-grid">
+                    {products.map((product) => {
+                        const totalStock = getTotalStock(product);
+                        const variantCount = product.variants?.length || 0;
+                        const mainImage = product.images?.[0]?.url;
 
                         return (
-                            <div
-                                className="product-card"
-                                key={product._id}
-                            >
+                            <div className="gw-admin-product-card" key={product._id}>
+                                {/* IMAGE WRAPPER */}
+                                <div className="gw-admin-prod-media">
+                                    {mainImage ? (
+                                        <img
+                                            src={mainImage}
+                                            alt={product.images?.[0]?.alt || product.name}
+                                            className="gw-admin-prod-img"
+                                        />
+                                    ) : (
+                                        <div className="gw-admin-prod-no-img">
+                                            <i className="fa-regular fa-image"></i>
+                                            <span>No Image</span>
+                                        </div>
+                                    )}
 
-                                <div className="product-card-image">
-                                    <img
-                                        src={
-                                            product
-                                                .images?.[0]?.url
-                                        }
-                                        alt={
-                                            product
-                                                .images?.[0]?.alt ||
-                                            product.name
-                                        }
-                                    />
+                                    <button
+                                        type="button"
+                                        className={`gw-status-pill ${product.isActive ? "active" : "inactive"}`}
+                                        onClick={() => handleToggleStatus(product._id)}
+                                        title="Click to toggle product visibility"
+                                    >
+                                        <span className="gw-status-dot"></span>
+                                        <span>{product.isActive ? "Active" : "Inactive"}</span>
+                                    </button>
                                 </div>
 
+                                {/* CONTENT BODY */}
+                                <div className="gw-admin-prod-body">
+                                    <span className="gw-admin-prod-cat">
+                                        {product.category?.name || "General Catalog"}
+                                    </span>
 
-                                <div className="product-card-content">
+                                    <h3 className="gw-admin-prod-title" title={product.name}>
+                                        {product.name}
+                                    </h3>
 
-                                    <div className="product-card-top">
-
-                                        <h3>
-                                            {product.name}
-                                        </h3>
-
-                                        <button
-                                            className={
-                                                product.isActive
-                                                    ? "status-active"
-                                                    : "status-inactive"
-                                            }
-                                            onClick={() =>
-                                                handleToggleStatus(
-                                                    product._id
-                                                )
-                                            }
-                                        >
-                                            {product.isActive
-                                                ? "Active"
-                                                : "Inactive"}
-                                        </button>
-
+                                    <div className="gw-admin-prod-price">
+                                        {getPriceDisplay(product)}
                                     </div>
 
-
-                                    <p className="product-card-category">
-                                        {product.category?.name ||
-                                            "No category"}
-                                    </p>
-
-
-                                    <p className="product-card-price">
-                                        {getPriceDisplay(
-                                            product
-                                        )}
-                                    </p>
-
-
-                                    <div className="product-card-meta">
-
-                                        <span>
-                                            {variantCount}{" "}
-                                            {variantCount === 1
-                                                ? "Variant"
-                                                : "Variants"}
+                                    <div className="gw-admin-prod-meta">
+                                        <span className="gw-meta-badge">
+                                            <i className="fa-solid fa-layer-group"></i>
+                                            <span>
+                                                {variantCount} {variantCount === 1 ? "Variant" : "Variants"}
+                                            </span>
                                         </span>
 
-                                        <span>
-                                            {totalStock} in stock
+                                        <span className={`gw-stock-badge ${totalStock <= 5 ? (totalStock === 0 ? "out" : "low") : "ok"}`}>
+                                            {totalStock === 0
+                                                ? "Out of Stock"
+                                                : totalStock <= 5
+                                                ? `Only ${totalStock} left`
+                                                : `${totalStock} in stock`}
                                         </span>
-
                                     </div>
-
-
-                                    <div className="product-card-actions">
-
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/admin/products/edit/${product._id}`
-                                                )
-                                            }
-                                        >
-                                            Edit
-                                        </button>
-
-
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() =>
-                                                setProductToDelete(
-                                                    product
-                                                )
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-
-                                    </div>
-
                                 </div>
 
+                                {/* ACTIONS FOOTER */}
+                                <div className="gw-admin-prod-actions">
+                                    <button
+                                        type="button"
+                                        className="gw-action-btn edit"
+                                        onClick={() => navigate(`/admin/products/edit/${product._id}`)}
+                                    >
+                                        <i className="fa-regular fa-pen-to-square"></i>
+                                        <span>Edit</span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="gw-action-btn delete"
+                                        onClick={() => setProductToDelete(product)}
+                                    >
+                                        <i className="fa-regular fa-trash-can"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
                             </div>
                         );
-                    })
-                )}
+                    })}
+                </div>
+            )}
 
-            </div>
+            {/* UNIFIED PAGINATION CONTROL */}
+            {products.length > 0 && pagination.totalPages !== undefined && (
+                <div className="gw-admin-pagination">
+                    <button
+                        type="button"
+                        className="gw-page-btn"
+                        disabled={!pagination.hasPreviousPage}
+                        onClick={() => {
+                            setPage((prev) => Math.max(1, prev - 1));
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                    >
+                        <i className="fa-solid fa-arrow-left"></i>
+                        <span>Previous</span>
+                    </button>
 
+                    <div className="gw-page-indicator">
+                        <span>Page</span>
+                        <strong>{pagination.currentPage || 1}</strong>
+                        <span>of</span>
+                        <strong>{pagination.totalPages || 1}</strong>
+                    </div>
 
-            <div className="products-pagination">
+                    <button
+                        type="button"
+                        className="gw-page-btn"
+                        disabled={!pagination.hasNextPage}
+                        onClick={() => {
+                            setPage((prev) => prev + 1);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                    >
+                        <span>Next</span>
+                        <i className="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            )}
 
-                <button
-                    disabled={
-                        !pagination.hasPreviousPage
-                    }
-                    onClick={() =>
-                        setPage(
-                            (prev) => prev - 1
-                        )
-                    }
-                >
-                    Previous
-                </button>
-
-
-                <span>
-                    Page{" "}
-                    {pagination.currentPage || 1}{" "}
-                    of{" "}
-                    {pagination.totalPages || 1}
-                </span>
-
-
-                <button
-                    disabled={
-                        !pagination.hasNextPage
-                    }
-                    onClick={() =>
-                        setPage(
-                            (prev) => prev + 1
-                        )
-                    }
-                >
-                    Next
-                </button>
-
-            </div>
-
-
+            {/* DELETE CONFIRMATION MODAL */}
             {productToDelete && (
+                <div className="gw-modal-backdrop" onClick={() => !deleting && setProductToDelete(null)}>
+                    <div className="gw-confirm-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="gw-confirm-modal-header">
+                            <div className="gw-confirm-icon-wrap">
+                                <i className="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h3>Delete Product</h3>
+                                <p>Are you sure you want to permanently remove this product?</p>
+                            </div>
+                        </div>
 
-                <div className="delete-modal-overlay">
+                        <div className="gw-confirm-modal-body">
+                            <div className="gw-confirm-target">
+                                <strong>Product:</strong> {productToDelete.name}
+                            </div>
+                            <div className="gw-confirm-alert">
+                                <i className="fa-solid fa-circle-info"></i>
+                                <span>This will remove all associated variants and images from your catalog.</span>
+                            </div>
+                        </div>
 
-                    <div className="delete-modal">
-
-                        <h3>
-                            Delete Product?
-                        </h3>
-
-                        <p>
-                            Are you sure you want to
-                            delete
-                            <strong>
-                                {" "}
-                                {productToDelete.name}
-                            </strong>?
-                        </p>
-
-                        <p className="delete-warning">
-                            This action cannot be undone.
-                        </p>
-
-
-                        <div className="delete-modal-actions">
-
+                        <div className="gw-confirm-modal-actions">
                             <button
-                                onClick={() =>
-                                    setProductToDelete(null)
-                                }
+                                type="button"
+                                className="gw-secondary-btn"
+                                onClick={() => setProductToDelete(null)}
                                 disabled={deleting}
                             >
                                 Cancel
                             </button>
-
-
                             <button
-                                className="delete-confirm-btn"
+                                type="button"
+                                className="gw-danger-btn"
                                 onClick={handleDelete}
                                 disabled={deleting}
                             >
-                                {deleting
-                                    ? "Deleting..."
-                                    : "Delete Product"}
+                                {deleting ? (
+                                    <>
+                                        <i className="fa-solid fa-circle-notch fa-spin"></i>
+                                        <span>Deleting...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fa-regular fa-trash-can"></i>
+                                        <span>Confirm Delete</span>
+                                    </>
+                                )}
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             )}
-
         </div>
     );
 }

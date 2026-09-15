@@ -22,6 +22,8 @@ const API = {
     orders: `${server}/orders`,
 
     adminOrders: `${server}/admin/orders`,
+
+    adminAnalytics: `${server}/admin/analytics`,
 };
 
 export default API;

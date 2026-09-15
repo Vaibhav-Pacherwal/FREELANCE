@@ -5,9 +5,6 @@ import server from "../../Environment.js";
 export default function AddOffer() {
     const navigate = useNavigate();
 
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
-
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -21,6 +18,9 @@ export default function AddOffer() {
         imageAlt: "",
     });
 
+    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
+
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState("");
 
@@ -33,52 +33,22 @@ export default function AddOffer() {
             try {
                 setLoading(true);
 
-                const [categoryResponse, productResponse] =
-                    await Promise.all([
-                        fetch(`${server}/categories`, {
-                            credentials: "include",
-                        }),
+                const [catRes, prodRes] = await Promise.all([
+                    fetch(`${server}/categories`, { credentials: "include" }),
+                    fetch(`${server}/products?limit=1000`, { credentials: "include" }),
+                ]);
 
-                        fetch(`${server}/products?limit=1000`, {
-                            credentials: "include",
-                        }),
-                    ]);
+                const catData = await catRes.json();
+                const prodData = await prodRes.json();
 
-                const categoryData =
-                    await categoryResponse.json();
+                if (!catRes.ok) throw new Error(catData.message || "Failed to fetch categories");
+                if (!prodRes.ok) throw new Error(prodData.message || "Failed to fetch products");
 
-                const productData =
-                    await productResponse.json();
-
-                if (!categoryResponse.ok) {
-                    throw new Error(
-                        categoryData.message ||
-                        "Failed to fetch categories"
-                    );
-                }
-
-                if (!productResponse.ok) {
-                    throw new Error(
-                        productData.message ||
-                        "Failed to fetch products"
-                    );
-                }
-
-                setCategories(
-                    categoryData.categories || []
-                );
-
-                setProducts(
-                    productData.products || []
-                );
-
-            } catch (error) {
-                console.error(
-                    "Add offer fetch error:",
-                    error
-                );
-
-                setError(error.message);
+                setCategories(catData.categories || []);
+                setProducts(prodData.products || []);
+            } catch (err) {
+                console.error("Add offer init error:", err);
+                setError(err.message || "Failed to initialize offer form");
             } finally {
                 setLoading(false);
             }
@@ -89,7 +59,6 @@ export default function AddOffer() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
         setFormData((prev) => ({
             ...prev,
             [name]: value,
@@ -98,7 +67,6 @@ export default function AddOffer() {
 
     const handleAppliesToChange = (e) => {
         const value = e.target.value;
-
         setFormData((prev) => ({
             ...prev,
             appliesTo: value,
@@ -109,415 +77,438 @@ export default function AddOffer() {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-
         if (!file) return;
 
         if (!file.type.startsWith("image/")) {
-            setError("Only image files are allowed");
-            e.target.value = "";
+            setError("Only image files (JPG, PNG, WebP) are allowed");
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) {
-            setError("Image must be less than 5MB");
-            e.target.value = "";
+            setError("Image size must be less than 5MB");
             return;
         }
 
         setError("");
-
         setImage(file);
-
-        const preview = URL.createObjectURL(file);
-        setImagePreview(preview);
-
-        e.target.value = "";
+        setImagePreview(URL.createObjectURL(file));
     };
 
     const removeImage = () => {
-        if (imagePreview) {
-            URL.revokeObjectURL(imagePreview);
-        }
-
+        if (imagePreview) URL.revokeObjectURL(imagePreview);
         setImage(null);
         setImagePreview("");
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
 
         if (!image) {
-            setError("Offer image is required");
+            setError("A promotional campaign banner image is required");
             return;
         }
 
-        if (
-            formData.discountType === "percentage" &&
-            Number(formData.discountValue) > 100
-        ) {
-            setError(
-                "Percentage discount cannot be greater than 100"
-            );
+        if (formData.discountType === "percentage" && Number(formData.discountValue) > 100) {
+            setError("Percentage discount cannot exceed 100%");
             return;
         }
 
-        if (
-            new Date(formData.startDate) >=
-            new Date(formData.endDate)
-        ) {
-            setError(
-                "End date must be after start date"
-            );
+        if (new Date(formData.endDate) <= new Date(formData.startDate)) {
+            setError("Campaign End Date must be after the Start Date");
             return;
         }
 
-        if (
-            formData.appliesTo === "category" &&
-            !formData.category
-        ) {
-            setError("Please select a category");
+        if (formData.appliesTo === "category" && !formData.category) {
+            setError("Please select the target category for this promotion");
             return;
         }
 
-        if (
-            formData.appliesTo === "product" &&
-            !formData.product
-        ) {
-            setError("Please select a product");
+        if (formData.appliesTo === "product" && !formData.product) {
+            setError("Please select the target product for this promotion");
             return;
         }
 
         try {
             setSaving(true);
-            setError("");
 
             const data = new FormData();
-
-            data.append("title", formData.title);
-            data.append(
-                "description",
-                formData.description
-            );
-            data.append(
-                "discountType",
-                formData.discountType
-            );
-            data.append(
-                "discountValue",
-                formData.discountValue
-            );
-            data.append(
-                "appliesTo",
-                formData.appliesTo
-            );
-
-            data.append(
-                "category",
-                formData.appliesTo === "category"
-                    ? formData.category
-                    : ""
-            );
-
-            data.append(
-                "product",
-                formData.appliesTo === "product"
-                    ? formData.product
-                    : ""
-            );
-
-            data.append(
-                "startDate",
-                formData.startDate
-            );
-
-            data.append(
-                "endDate",
-                formData.endDate
-            );
-
-            data.append(
-                "imageAlt",
-                formData.imageAlt
-            );
-
+            data.append("title", formData.title.trim());
+            data.append("description", formData.description.trim());
+            data.append("discountType", formData.discountType);
+            data.append("discountValue", formData.discountValue);
+            data.append("appliesTo", formData.appliesTo);
+            if (formData.appliesTo === "category") data.append("category", formData.category);
+            if (formData.appliesTo === "product") data.append("product", formData.product);
+            data.append("startDate", formData.startDate);
+            data.append("endDate", formData.endDate);
+            data.append("imageAlt", formData.imageAlt.trim() || formData.title.trim());
             data.append("image", image);
 
-            const response = await fetch(
-                `${server}/offers`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    body: data,
-                }
-            );
+            const response = await fetch(`${server}/offers`, {
+                method: "POST",
+                credentials: "include",
+                body: data,
+            });
 
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    result.message ||
-                    "Failed to create offer"
-                );
+                throw new Error(result.message || "Failed to create offer");
             }
 
             navigate("/admin/offers");
-
-        } catch (error) {
-            console.error(
-                "Create offer error:",
-                error
-            );
-
-            setError(error.message);
+        } catch (err) {
+            console.error("Create offer error:", err);
+            setError(err.message || "Failed to create offer");
         } finally {
             setSaving(false);
         }
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="gw-admin-page">
+                <div className="gw-state-loading">
+                    <i className="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                    <p>Loading promotion builder...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="add-offer-page">
-
-            <h1>Add Offer</h1>
-
-            {error && (
-                <p className="error-message">
-                    {error}
-                </p>
-            )}
-
-            <form onSubmit={handleSubmit}>
-
-                <div>
-                    <label>Title</label>
-
-                    <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        maxLength={150}
-                        required
-                    />
+        <div className="gw-admin-page">
+            <div className="gw-form-page-container">
+                {/* PAGE HEADER */}
+                <div className="gw-page-header">
+                    <div>
+                        <div className="gw-back-link" onClick={() => navigate("/admin/offers")}>
+                            <i className="fa-solid fa-arrow-left"></i>
+                            <span>Back to Offers</span>
+                        </div>
+                        <h1 className="gw-page-title">Create Special Offer</h1>
+                        <p className="gw-page-subtitle">
+                            Configure promotional discount campaigns, scope rules, and scheduled dates
+                        </p>
+                    </div>
                 </div>
 
-                <div>
-                    <label>Description</label>
+                {/* ERROR ALERT */}
+                {error && (
+                    <div className="gw-alert-toast error" style={{ marginBottom: "1.5rem" }}>
+                        <div className="gw-alert-icon">
+                            <i className="fa-solid fa-circle-exclamation"></i>
+                        </div>
+                        <div className="gw-alert-text">
+                            <strong>Validation Error</strong>
+                            <span>{error}</span>
+                        </div>
+                        <button type="button" className="gw-alert-close" onClick={() => setError("")}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                )}
 
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        maxLength={1000}
-                        rows={4}
-                    />
-                </div>
+                <form className="gw-form-layout" onSubmit={handleSubmit}>
+                    {/* SECTION 1: PROMOTION OVERVIEW */}
+                    <div className="gw-form-card">
+                        <div className="gw-form-card-header">
+                            <div className="gw-form-header-icon">
+                                <i className="fa-solid fa-bullhorn"></i>
+                            </div>
+                            <div>
+                                <h3>Promotion Overview</h3>
+                                <p>Campaign title, description, and promotional marketing banner</p>
+                            </div>
+                        </div>
 
-                {/* IMAGE */}
+                        <div className="gw-form-card-body">
+                            <div className="gw-form-group">
+                                <label className="gw-label" htmlFor="title">
+                                    Offer Title <span className="req">*</span>
+                                </label>
+                                <input
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    className="gw-input"
+                                    placeholder="e.g. End of Season Sale, Festive Flat 20% Off"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    maxLength={150}
+                                    required
+                                />
+                            </div>
 
-                <div>
-                    <label>Offer Image</label>
+                            <div className="gw-form-group">
+                                <label className="gw-label" htmlFor="description">
+                                    Campaign Description
+                                </label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    className="gw-textarea"
+                                    placeholder="Add details about terms, highlights, and promotional highlights..."
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    maxLength={500}
+                                    rows={3}
+                                />
+                            </div>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
+                            {/* BANNER UPLOAD */}
+                            <div className="gw-form-group">
+                                <label className="gw-label">
+                                    Campaign Banner Image <span className="req">*</span>
+                                </label>
 
-                    {imagePreview && (
-                        <div className="image-item">
-                            <img
-                                src={imagePreview}
-                                alt="Offer preview"
-                            />
+                                {imagePreview ? (
+                                    <div className="gw-image-preview-box">
+                                        <img src={imagePreview} alt="Offer Preview" className="gw-offer-form-preview" />
+                                        <button
+                                            type="button"
+                                            className="gw-img-remove-btn"
+                                            onClick={removeImage}
+                                        >
+                                            <i className="fa-solid fa-trash"></i> Remove Image
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <label className="gw-dropzone">
+                                        <i className="fa-solid fa-cloud-arrow-up fa-2x"></i>
+                                        <span>Click or drag image to upload banner</span>
+                                        <span className="gw-dropzone-sub">JPG, PNG, or WebP up to 5MB</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            style={{ display: "none" }}
+                                        />
+                                    </label>
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
+                    {/* SECTION 2: DISCOUNT & SCOPE */}
+                    <div className="gw-form-card">
+                        <div className="gw-form-card-header">
+                            <div className="gw-form-header-icon">
+                                <i className="fa-solid fa-percent"></i>
+                            </div>
+                            <div>
+                                <h3>Discount &amp; Scope Rules</h3>
+                                <p>Set the discount rate and define which catalog items qualify</p>
+                            </div>
+                        </div>
+
+                        <div className="gw-form-card-body">
+                            <div className="gw-form-row">
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="discountType">
+                                        Discount Type <span className="req">*</span>
+                                    </label>
+                                    <select
+                                        id="discountType"
+                                        name="discountType"
+                                        className="gw-select"
+                                        value={formData.discountType}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="percentage">Percentage Discount (% Off)</option>
+                                        <option value="fixed">Fixed Price Discount (₹ Off)</option>
+                                    </select>
+                                </div>
+
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="discountValue">
+                                        Discount Value <span className="req">*</span>
+                                    </label>
+                                    <input
+                                        id="discountValue"
+                                        name="discountValue"
+                                        type="number"
+                                        min="1"
+                                        className="gw-input"
+                                        placeholder={formData.discountType === "percentage" ? "e.g. 15 (for 15%)" : "e.g. 500 (for ₹500)"}
+                                        value={formData.discountValue}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="gw-form-group">
+                                <label className="gw-label">
+                                    Catalog Scope (Applies To) <span className="req">*</span>
+                                </label>
+                                <div className="gw-radio-pills">
+                                    <label className={`gw-radio-pill ${formData.appliesTo === "store" ? "active" : ""}`}>
+                                        <input
+                                            type="radio"
+                                            name="appliesTo"
+                                            value="store"
+                                            checked={formData.appliesTo === "store"}
+                                            onChange={handleAppliesToChange}
+                                        />
+                                        <i className="fa-solid fa-store"></i>
+                                        <span>Entire Storewide Catalog</span>
+                                    </label>
+
+                                    <label className={`gw-radio-pill ${formData.appliesTo === "category" ? "active" : ""}`}>
+                                        <input
+                                            type="radio"
+                                            name="appliesTo"
+                                            value="category"
+                                            checked={formData.appliesTo === "category"}
+                                            onChange={handleAppliesToChange}
+                                        />
+                                        <i className="fa-solid fa-tags"></i>
+                                        <span>Specific Category</span>
+                                    </label>
+
+                                    <label className={`gw-radio-pill ${formData.appliesTo === "product" ? "active" : ""}`}>
+                                        <input
+                                            type="radio"
+                                            name="appliesTo"
+                                            value="product"
+                                            checked={formData.appliesTo === "product"}
+                                            onChange={handleAppliesToChange}
+                                        />
+                                        <i className="fa-solid fa-box"></i>
+                                        <span>Specific Product</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* CONDITIONAL CATEGORY SELECT */}
+                            {formData.appliesTo === "category" && (
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="category">
+                                        Select Target Category <span className="req">*</span>
+                                    </label>
+                                    <select
+                                        id="category"
+                                        name="category"
+                                        className="gw-select"
+                                        value={formData.category}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select Category</option>
+                                        {categories.map((cat) => (
+                                            <option key={cat._id} value={cat._id}>
+                                                {cat.name} ({cat.group})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* CONDITIONAL PRODUCT SELECT */}
+                            {formData.appliesTo === "product" && (
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="product">
+                                        Select Target Product <span className="req">*</span>
+                                    </label>
+                                    <select
+                                        id="product"
+                                        name="product"
+                                        className="gw-select"
+                                        value={formData.product}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select Product</option>
+                                        {products.map((p) => (
+                                            <option key={p._id} value={p._id}>
+                                                {p.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* SECTION 3: SCHEDULE */}
+                    <div className="gw-form-card">
+                        <div className="gw-form-card-header">
+                            <div className="gw-form-header-icon">
+                                <i className="fa-regular fa-calendar-days"></i>
+                            </div>
+                            <div>
+                                <h3>Campaign Schedule</h3>
+                                <p>Set active start and end dates for the promotional discount</p>
+                            </div>
+                        </div>
+
+                        <div className="gw-form-card-body">
+                            <div className="gw-form-row">
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="startDate">
+                                        Start Date <span className="req">*</span>
+                                    </label>
+                                    <input
+                                        id="startDate"
+                                        name="startDate"
+                                        type="date"
+                                        className="gw-input"
+                                        value={formData.startDate}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="gw-form-group">
+                                    <label className="gw-label" htmlFor="endDate">
+                                        End Date <span className="req">*</span>
+                                    </label>
+                                    <input
+                                        id="endDate"
+                                        name="endDate"
+                                        type="date"
+                                        className="gw-input"
+                                        value={formData.endDate}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="gw-form-card-footer">
                             <button
                                 type="button"
-                                onClick={removeImage}
+                                className="gw-secondary-btn"
+                                onClick={() => navigate("/admin/offers")}
+                                disabled={saving}
                             >
-                                ×
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="gw-primary-btn"
+                                disabled={saving}
+                            >
+                                {saving ? (
+                                    <>
+                                        <i className="fa-solid fa-circle-notch fa-spin"></i>
+                                        <span>Saving Promotion...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fa-solid fa-check"></i>
+                                        <span>Create Special Offer</span>
+                                    </>
+                                )}
                             </button>
                         </div>
-                    )}
-                </div>
-
-                <div>
-                    <label>Image Alt Text</label>
-
-                    <input
-                        type="text"
-                        name="imageAlt"
-                        value={formData.imageAlt}
-                        onChange={handleChange}
-                    />
-                </div>
-
-                {/* DISCOUNT */}
-
-                <div>
-                    <label>Discount Type</label>
-
-                    <select
-                        name="discountType"
-                        value={formData.discountType}
-                        onChange={handleChange}
-                    >
-                        <option value="percentage">
-                            Percentage
-                        </option>
-
-                        <option value="fixed">
-                            Fixed Amount
-                        </option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Discount Value</label>
-
-                    <input
-                        type="number"
-                        name="discountValue"
-                        value={formData.discountValue}
-                        onChange={handleChange}
-                        min="0"
-                        max={
-                            formData.discountType ===
-                            "percentage"
-                                ? "100"
-                                : undefined
-                        }
-                        step="0.01"
-                        required
-                    />
-                </div>
-
-                {/* APPLIES TO */}
-
-                <div>
-                    <label>Applies To</label>
-
-                    <select
-                        value={formData.appliesTo}
-                        onChange={handleAppliesToChange}
-                    >
-                        <option value="store">
-                            Entire Store
-                        </option>
-
-                        <option value="category">
-                            Category
-                        </option>
-
-                        <option value="product">
-                            Product
-                        </option>
-                    </select>
-                </div>
-
-                {formData.appliesTo === "category" && (
-                    <div>
-                        <label>Category</label>
-
-                        <select
-                            name="category"
-                            value={formData.category}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">
-                                Select category
-                            </option>
-
-                            {categories.map((category) => (
-                                <option
-                                    key={category._id}
-                                    value={category._id}
-                                >
-                                    {category.name}
-                                </option>
-                            ))}
-                        </select>
                     </div>
-                )}
-
-                {formData.appliesTo === "product" && (
-                    <div>
-                        <label>Product</label>
-
-                        <select
-                            name="product"
-                            value={formData.product}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">
-                                Select product
-                            </option>
-
-                            {products.map((product) => (
-                                <option
-                                    key={product._id}
-                                    value={product._id}
-                                >
-                                    {product.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                )}
-
-                {/* DATES */}
-
-                <div>
-                    <label>Start Date</label>
-
-                    <input
-                        type="datetime-local"
-                        name="startDate"
-                        value={formData.startDate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>End Date</label>
-
-                    <input
-                        type="datetime-local"
-                        name="endDate"
-                        value={formData.endDate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div>
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate("/admin/offers")
-                        }
-                        disabled={saving}
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        type="submit"
-                        disabled={saving}
-                    >
-                        {saving
-                            ? "Creating..."
-                            : "Create Offer"}
-                    </button>
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
     );
 }
