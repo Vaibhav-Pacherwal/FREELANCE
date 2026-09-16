@@ -12,13 +12,11 @@ export default function Admin() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Close mobile sidebar on route change
   useEffect(() => {
     setSidebarOpen(false);
     setShowAcc(false);
   }, [location.pathname]);
 
-  // Contextual breadcrumb / page title mapping
   const getPageTitle = () => {
     const path = location.pathname;
     if (path === "/admin" || path === "/admin/") return "Store Overview";
@@ -61,7 +59,6 @@ export default function Admin() {
         />
       )}
 
-      {/* FIXED / COLLAPSIBLE SIDEBAR */}
       <aside className={`gw-admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         {/* BRAND HEADER */}
         <div className="gw-admin-brand">
@@ -81,7 +78,6 @@ export default function Admin() {
           </button>
         </div>
 
-        {/* NAVIGATION SECTIONS */}
         <div className="gw-admin-nav-scroll">
           {/* SECTION 1: OVERVIEW */}
           <div className="gw-admin-nav-group">
@@ -98,7 +94,6 @@ export default function Admin() {
             </NavLink>
           </div>
 
-          {/* SECTION 2: STORE MANAGEMENT */}
           <div className="gw-admin-nav-group">
             <span className="gw-admin-nav-label">CATALOG &amp; STORE</span>
             <NavLink
@@ -130,7 +125,6 @@ export default function Admin() {
             </NavLink>
           </div>
 
-          {/* SECTION 3: SALES & OPS */}
           <div className="gw-admin-nav-group">
             <span className="gw-admin-nav-label">SALES &amp; ORDERS</span>
             <NavLink
@@ -144,7 +138,6 @@ export default function Admin() {
             </NavLink>
           </div>
 
-          {/* SECTION 4: SYSTEM */}
           <div className="gw-admin-nav-group">
             <span className="gw-admin-nav-label">PREFERENCES</span>
             <NavLink
@@ -159,7 +152,6 @@ export default function Admin() {
           </div>
         </div>
 
-        {/* SIDEBAR FOOTER */}
         <div className="gw-admin-sidebar-footer">
           <button
             type="button"
@@ -226,13 +218,11 @@ export default function Admin() {
           </div>
         </header>
 
-        {/* OUTLET CONTENT */}
         <main className="gw-admin-content">
           <Outlet />
         </main>
       </div>
 
-      {/* ACCOUNT DETAILS MODAL / POPOVER */}
       {showAcc && (
         <>
           <div className="gw-modal-backdrop" onClick={() => setShowAcc(false)} />
