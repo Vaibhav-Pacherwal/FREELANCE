@@ -20,6 +20,9 @@ const API = {
     addresses: `${server}/addresses`,
 
     orders: `${server}/orders`,
+    razorpayConfig: `${server}/orders/razorpay/config`,
+    razorpayCreate: `${server}/orders/razorpay/create`,
+    razorpayVerify: `${server}/orders/razorpay/verify`,
 
     adminOrders: `${server}/admin/orders`,
 

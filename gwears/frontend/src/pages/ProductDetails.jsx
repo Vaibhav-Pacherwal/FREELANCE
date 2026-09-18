@@ -214,7 +214,7 @@ export default function ProductDetails() {
     }
     setPincodeStatus({
       valid: true,
-      message: `Delivery available to ${cleanPin}. Estimated 2-4 business days with Cash on Delivery & Express Courier.`,
+      message: `Delivery available to ${cleanPin}. Estimated 2-4 business days via Express Courier & Secure Online Payment.`,
     });
   };
 
@@ -552,7 +552,7 @@ export default function ProductDetails() {
                   </p>
                   <ul>
                     <li>Estimated express delivery within 2-4 business days</li>
-                    <li>Cash on Delivery (COD) supported nationwide</li>
+                    <li>100% Secure Online Payment via Razorpay (UPI, Cards, NetBanking)</li>
                     <li>7-day easy size exchange and store customer support</li>
                   </ul>
                 </div>

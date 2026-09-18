@@ -13,6 +13,7 @@ const OrderDetails = () => {
     const [error, setError] = useState("");
     const [cancelling, setCancelling] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [retryingPayment, setRetryingPayment] = useState(false);
 
     const canCancelOrder = ["pending", "confirmed", "processing"].includes(
         order?.orderStatus
@@ -113,6 +114,74 @@ const OrderDetails = () => {
         }
     };
 
+    const handleRetryPayment = async () => {
+        try {
+            setRetryingPayment(true);
+            setError("");
+
+            const res = await fetch(API.razorpayCreate, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ orderId: order._id }),
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || "Failed to initiate payment retry");
+            }
+
+            const options = {
+                key: data.keyId,
+                amount: data.amount,
+                currency: data.currency || "INR",
+                name: "GWears",
+                description: "Order Payment",
+                order_id: data.razorpayOrderId,
+                prefill: {
+                    name: order.shippingAddress?.fullName || "",
+                    contact: order.shippingAddress?.phone || "",
+                },
+                theme: { color: "#111111" },
+                handler: async function (paymentResponse) {
+                    try {
+                        const verifyRes = await fetch(API.razorpayVerify, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "include",
+                            body: JSON.stringify({
+                                orderId: order._id,
+                                razorpayOrderId: paymentResponse.razorpay_order_id,
+                                razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                                razorpaySignature: paymentResponse.razorpay_signature,
+                            }),
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (verifyRes.ok && verifyData.success) {
+                            setOrder(verifyData.order);
+                        } else {
+                            setError(verifyData.message || "Payment verification failed");
+                        }
+                    } catch (err) {
+                        setError(err.message || "Payment verification failed");
+                    }
+                },
+                modal: {
+                    ondismiss: function () {
+                        setRetryingPayment(false);
+                    },
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (err) {
+            setError(err.message || "Failed to retry payment");
+        } finally {
+            setRetryingPayment(false);
+        }
+    };
+
     return (
         <div className="orderDetailsPage">
 
@@ -167,8 +236,29 @@ const OrderDetails = () => {
 
             </div>
 
-            {canCancelOrder && (
-                <div className="cancel-order-wrapper">
+            <div className="order-actions-row" style={{ display: "flex", gap: "12px", marginBottom: "25px", flexWrap: "wrap" }}>
+                {order.paymentMethod === "razorpay" && order.paymentStatus === "pending" && order.orderStatus === "pending" && (
+                    <button
+                        type="button"
+                        style={{
+                            background: "#111111",
+                            color: "#FFFFFF",
+                            border: "none",
+                            padding: "12px 24px",
+                            fontSize: "13px",
+                            fontWeight: 700,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                            cursor: "pointer",
+                        }}
+                        onClick={handleRetryPayment}
+                        disabled={retryingPayment}
+                    >
+                        {retryingPayment ? "Opening Payment..." : "Complete Payment Now"}
+                    </button>
+                )}
+
+                {canCancelOrder && (
                     <button
                         type="button"
                         className="cancel-order-button"
@@ -177,8 +267,8 @@ const OrderDetails = () => {
                     >
                         Cancel Order
                     </button>
-                </div>
-            )}
+                )}
+            </div>
 
             <div className="orderDetailsGrid">
 

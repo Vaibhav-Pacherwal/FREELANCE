@@ -262,6 +262,16 @@ const orderSchema = new mongoose.Schema(
             default: null,
         },
 
+        razorpaySignature: {
+            type: String,
+            default: null,
+        },
+
+        paidAt: {
+            type: Date,
+            default: null,
+        },
+
         cancelledAt: {
             type: Date,
             default: null,

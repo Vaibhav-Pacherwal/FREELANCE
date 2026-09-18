@@ -158,8 +158,8 @@ export default function Footer() {
             <i className="fa-brands fa-cc-visa" title="Visa"></i>
             <i className="fa-brands fa-cc-mastercard" title="Mastercard"></i>
             <i className="fa-solid fa-credit-card" title="Cards / UPI"></i>
-            <i className="fa-solid fa-truck" title="Cash on Delivery Available"></i>
-            <i className="fa-solid fa-shield-halved" title="Secure Checkout"></i>
+            <i className="fa-solid fa-truck-fast" title="Express Courier Delivery"></i>
+            <i className="fa-solid fa-shield-halved" title="Secure Razorpay Checkout"></i>
           </div>
         </div>
       </div>
