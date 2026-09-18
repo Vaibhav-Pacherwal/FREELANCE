@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#090A0F"/>
+  <rect x="0.5" y="0.5" width="63" height="63" rx="13.5" stroke="#1F2433"/>
+  <path d="M18 16H46V22H24V28H40V34H24V42H46V48H18V16Z" fill="url(#estaris_grad)"/>
+  <circle cx="48" cy="18" r="3" fill="#00E5FF"/>
+  <defs>
+    <linearGradient id="estaris_grad" x1="18" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.6" stop-color="#E2E8F0"/>
+      <stop offset="1" stop-color="#94A3B8"/>
+    </linearGradient>
+  </defs>
+</svg>
