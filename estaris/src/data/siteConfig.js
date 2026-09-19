@@ -20,7 +20,7 @@ export const siteConfig = {
       shortRole: "Frontend Developer",
       college: "4th Year, NSUT",
       focus: "Frontend Engineering, Interactive Interfaces, Design Systems, Performance",
-      github: "https://github.com/karanjangra",
+      github: "https://github.com/krnjangraa",
       linkedin: "https://linkedin.com/in/karanjangra",
     },
   ],
@@ -37,8 +37,8 @@ export const siteConfig = {
   },
   socials: {
     github: "https://github.com/Vaibhav-Pacherwal",
-    linkedin: "https://linkedin.com/company/estaris-studio",
-    instagram: "https://www.instagram.com/fdeism?stkn=Yjd5NTQ4eDdwdWl2",
+    linkedin: "https://www.linkedin.com/company/estaris-in",
+    instagram: "https://www.instagram.com/estaris.in?stkn=MXNqNmpyZ3N2ank3bw==",
     twitter: "https://x.com/estaris_studio",
   },
   navLinks: [

@@ -8,16 +8,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-[#121316] border-t border-[#27272a] text-[#a1a1aa] pt-16 pb-12 overflow-hidden">
+    <footer className="relative bg-[#121316] border-t border-[#27272a] text-[#a1a1aa] pt-12 sm:pt-16 pb-12 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-14 border-b border-[#27272a]">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10 md:gap-12 pb-12 md:pb-14 border-b border-[#27272a]">
           {/* Brand Column */}
-          <div className="md:col-span-5 space-y-4">
-            <Link to="/" className="inline-flex items-baseline gap-2.5">
+          <div className="col-span-2 md:col-span-5 space-y-4">
+            <Link to="/" className="inline-flex items-center md:items-baseline gap-2.5">
               <span className="text-xl font-bold tracking-tight text-white">
                 {siteConfig.name}
               </span>
-              <span className="text-xs text-[#71717a] font-medium">
+              <span className="text-xs text-[#71717a] font-medium pl-2.5 border-l border-[#2e3038] md:border-none md:pl-0">
                 Digital Studio
               </span>
             </Link>
@@ -26,13 +26,13 @@ export default function Footer() {
               Bespoke websites, commerce platforms, and software engineered for businesses that refuse templates.
             </p>
 
-            <div className="pt-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1c1d22] border border-[#2e3038] text-xs text-[#d4d4d8]">
+            <div className="pt-1 sm:pt-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1c1d22] border border-[#2e3038] text-[11px] sm:text-xs text-[#d4d4d8] max-w-full">
                 <span>Founded in 2026 by Vaibhav Pacherwal & Karan Jangra</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 pt-3">
+            <div className="flex items-center gap-2.5 sm:gap-3 pt-2 sm:pt-3 flex-wrap">
               <a
                 href={siteConfig.socials.github}
                 target="_blank"
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links Column */}
-          <div className="md:col-span-2 col-span-6 space-y-3">
+          <div className="col-span-1 md:col-span-2 space-y-3">
             <h3 className="text-xs uppercase tracking-wider text-[#d4d4d8] font-semibold">
               Navigation
             </h3>
@@ -110,7 +110,7 @@ export default function Footer() {
           </div>
 
           {/* Selected Work Links */}
-          <div className="md:col-span-2 col-span-6 space-y-3">
+          <div className="col-span-1 md:col-span-2 space-y-3">
             <h3 className="text-xs uppercase tracking-wider text-[#d4d4d8] font-semibold">
               Selected Work
             </h3>
@@ -129,7 +129,7 @@ export default function Footer() {
           </div>
 
           {/* Direct Contact & Status */}
-          <div className="md:col-span-3 space-y-3">
+          <div className="col-span-2 md:col-span-3 space-y-3">
             <h3 className="text-xs uppercase tracking-wider text-[#d4d4d8] font-semibold">
               Studio Inquiries
             </h3>
@@ -159,7 +159,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#71717a]">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-[#71717a] text-center sm:text-left">
           <p>© {currentYear} {siteConfig.legalName}. All rights reserved.</p>
           <p className="text-center sm:text-right">
             Handcrafted with modern design and engineering discipline.
