@@ -71,8 +71,23 @@ Looking forward to your response.
 Regards,
 ${formData.name.trim() || 'Prospective Client'}`;
 
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(gmailUrl, '_blank');
+    const isMobile = () => {
+      if (typeof window === 'undefined') return false;
+      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+      const isIPad = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
+      const isSmallScreenTouch = window.matchMedia('(max-width: 768px)').matches &&
+        (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+      return Boolean(isMobileUA || isIPad || isSmallScreenTouch);
+    };
+
+    if (isMobile()) {
+      const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
+    } else {
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(gmailUrl, '_blank');
+    }
     setSubmittedMethod('email');
   };
 
