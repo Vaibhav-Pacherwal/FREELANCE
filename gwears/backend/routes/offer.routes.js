@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/offers", protect, authorizeRole("admin"), upload.single("image"), createOffer);
 router.get("/offers", protect, authorizeRole("admin"), getOffers);
 router.get("/store/offers", getStoreOffers);
+router.get("/offers/active", getStoreOffers);
 router.get("/offers/:id", getOffer);
 router.put("/offers/:id", protect, authorizeRole("admin"), upload.single("image"), updateOffer);
 router.patch("/offers/:id/status", protect, authorizeRole("admin"), toggleOfferStatus);

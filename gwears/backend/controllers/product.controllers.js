@@ -234,7 +234,7 @@ const createProduct = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Failed to create product",
-            error: error.message,
+            ...(process.env.NODE_ENV !== "production" && { error: error.message }),
         });
     }
 };
@@ -726,7 +726,7 @@ const updateProduct = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Failed to update product",
-            error: error.message,
+            ...(process.env.NODE_ENV !== "production" && { error: error.message }),
         });
     }
 };
@@ -768,8 +768,9 @@ const deleteProduct = async (req, res) => {
         console.error("Delete product error:", error);
 
         return res.status(500).json({
+            success: false,
             message: "Failed to delete product",
-            error: error.message,
+            ...(process.env.NODE_ENV !== "production" && { error: error.message }),
         });
     }
 };

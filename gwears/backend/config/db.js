@@ -3,12 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const connectToDB = async () => {
-    await mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("Connected to mongodb");
-    }).catch((err) => {
-        console.log("Connection to mongodb failed", err);
-    });
-}
+    if (!process.env.MONGO_URI) {
+        throw new Error("MONGO_URI is not defined in environment variables");
+    }
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB");
+};
 
-export default connectToDB;
+export default connectToDB;

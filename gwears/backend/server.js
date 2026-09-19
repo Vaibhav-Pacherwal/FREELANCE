@@ -16,17 +16,25 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 
 const app = express();
 
+// Trust reverse proxy (e.g. Azure App Service / Load Balancer) for secure HTTPS cookies
+app.set("trust proxy", 1);
+
+const clientUrls = (process.env.CLIENT_URL || "")
+    .split(",")
+    .map((url) => url.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
 const allowedOrigins = [
-    process.env.CLIENT_URL,
+    ...clientUrls,
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://freelance-chi-jade.vercel.app"
-].filter(Boolean);
+];
 
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (e.g. mobile apps or curl) or if in allowed list
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin) return callback(null, true);
+        const normalizedOrigin = origin.replace(/\/$/, "");
+        if (allowedOrigins.includes(normalizedOrigin)) {
             callback(null, true);
         } else {
             callback(new Error(`CORS policy does not allow access from ${origin}`));
@@ -90,35 +98,30 @@ app.use((err, req, res, next) => {
     const status = err.statusCode || 500;
     const message = err.message || "Internal server error";
 
+    const responseMessage =
+        process.env.NODE_ENV === "production" && status >= 500
+            ? "An unexpected error occurred"
+            : message;
+
     return res.status(status).json({
         success: false,
-        message: process.env.NODE_ENV === "production" ? "An unexpected error occurred" : message,
+        message: responseMessage,
     });
 });
 
 const PORT = process.env.PORT || 8080;
 
 const main = async () => {
-    await connectToDB();
-    
-    app.listen(PORT, "0.0.0.0", () => {
-        console.log(`Server is running on ${PORT}`);
-    });
+    try {
+        await connectToDB();
+        
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server is running on ${PORT}`);
+        });
+    } catch (err) {
+        console.error("Fatal startup error:", err.message);
+        process.exit(1);
+    }
 };
 
 main();
-
-// const addAdmin = async () => {
-//   const password = await bcrypt.hash("admin2139", 10);
-
-//   const newAdmin = await User.create({
-//     name: "Vaibhav Pacherwal",
-//     email: "vaibhavpacherwal2139@gmail.com",
-//     passwordHash: password,
-//     role: "admin",
-//   });
-
-//   console.log(newAdmin);
-// }
-
-// addAdmin();

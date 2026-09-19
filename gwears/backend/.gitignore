@@ -1,2 +1,9 @@
 .env
+.env.*
 /node_modules
+dist
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/
