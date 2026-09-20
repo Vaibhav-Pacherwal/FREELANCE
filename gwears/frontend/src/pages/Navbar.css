@@ -559,6 +559,21 @@
   }
 }
 
+@media (max-width: 768px) {
+  .gw-announcement-bar {
+    padding: 7px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+
+  .gw-announcement-bar p {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.45;
+  }
+}
+
 @media (max-width: 600px) {
   .gw-nav-search-tray {
     padding: 12px 0;
@@ -581,6 +596,12 @@
 }
 
 @media (max-width: 360px) {
+  .gw-announcement-bar {
+    padding: 6px 8px;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
   .nav {
     padding: 0 10px;
   }
