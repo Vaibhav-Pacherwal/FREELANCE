@@ -501,7 +501,7 @@
 /* RESPONSIVE BREAKPOINTS */
 @media (max-width: 960px) {
   .nav {
-    padding: 0 20px;
+    padding: 0 16px;
     height: 64px;
   }
 
@@ -510,14 +510,89 @@
   }
 
   .mobileMenuToggle {
-    display: block;
-  }
-
-  .gw-brand-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
     font-size: 1.35rem;
   }
 
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .gw-brand-title {
+    font-size: 1.25rem;
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .navOptions {
-    gap: 16px;
+    gap: 0;
+  }
+
+  /* Hide Wishlist, Account, and Cart on mobile navbar (accessible via hamburger drawer) */
+  .navWishlistBtn,
+  .navAccountBtn,
+  .navCartBtn {
+    display: none !important;
+  }
+
+  .navSearchBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .gw-nav-search-tray {
+    padding: 12px 0;
+  }
+
+  .gw-nav-search-form {
+    gap: 8px;
+  }
+
+  .gw-nav-search-form input {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-width: 0;
+  }
+
+  .gw-search-submit {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav {
+    padding: 0 10px;
+  }
+
+  .mobileMenuToggle,
+  .navSearchBtn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .gw-brand-title {
+    font-size: 1.05rem;
+    letter-spacing: 0.1em;
   }
 }

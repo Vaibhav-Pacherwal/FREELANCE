@@ -193,7 +193,7 @@ export default function Navbar() {
         <div className="navOptions">
           {/* SEARCH TOGGLE */}
           <button
-            className="navIconButton"
+            className="navIconButton navSearchBtn"
             title="Search creations"
             onClick={() => setSearchOpen(!searchOpen)}
             aria-label="Search"
@@ -203,7 +203,7 @@ export default function Navbar() {
 
           {/* WISHLIST */}
           <button
-            className="navIconButton navBadgeWrapper"
+            className="navIconButton navBadgeWrapper navWishlistBtn"
             title={user ? "Private Wishlist" : "Login to view wishlist"}
             onClick={handleWishlistClick}
             aria-label="Wishlist"
@@ -216,7 +216,7 @@ export default function Navbar() {
 
           {/* ACCOUNT */}
           <button
-            className="navIconButton"
+            className="navIconButton navAccountBtn"
             title={user ? `Account (${user.name || "Customer"})` : "Login / Register"}
             onClick={handleUserClick}
             aria-label="Account"
@@ -226,7 +226,7 @@ export default function Navbar() {
 
           {/* CART */}
           <button
-            className="navIconButton navBadgeWrapper"
+            className="navIconButton navBadgeWrapper navCartBtn"
             title="Shopping Bag"
             onClick={() => navigate("/cart")}
             aria-label="Shopping Bag"
