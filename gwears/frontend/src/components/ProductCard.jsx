@@ -99,9 +99,8 @@ export default function ProductCard({ product }) {
         {/* WISHLIST BUTTON */}
         <button
           type="button"
-          className={`wishlist-button ${wishlisted ? "wishlisted" : ""} ${
-            wishlistLoading ? "wishlist-loading" : ""
-          }`}
+          className={`wishlist-button ${wishlisted ? "wishlisted" : ""} ${wishlistLoading ? "wishlist-loading" : ""
+            }`}
           onClick={handleWishlistClick}
           disabled={wishlistLoading}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}

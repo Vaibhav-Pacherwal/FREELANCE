@@ -479,9 +479,8 @@ export default function ProductDetails() {
                 style={{ color: pincodeStatus.valid ? "#15803D" : "#DC2626" }}
               >
                 <i
-                  className={`fa-solid ${
-                    pincodeStatus.valid ? "fa-circle-check" : "fa-circle-exclamation"
-                  }`}
+                  className={`fa-solid ${pincodeStatus.valid ? "fa-circle-check" : "fa-circle-exclamation"
+                    }`}
                 ></i>
                 <span>{pincodeStatus.message}</span>
               </div>

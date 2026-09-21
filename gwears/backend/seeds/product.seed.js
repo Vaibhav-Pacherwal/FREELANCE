@@ -1,867 +1,542 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import Product from "../models/product.model.js";
 import Category from "../models/category.model.js";
 import connectDB from "../config/db.js";
 
-dotenv.config({ path: "../.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-// =====================================================
-// BASE PRODUCTS
-// =====================================================
-
-const products = [
-
-    // =========================
-    // T-SHIRTS
-    // =========================
-
-    {
-        name: "Classic Black Oversized T-Shirt",
-        category: "T-Shirts",
-        description:
-            "Premium cotton oversized t-shirt with a relaxed fit for everyday comfort.",
-        price: 799,
-        originalPrice: 999,
-        colors: ["Black"],
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-    {
-        name: "Essential White Cotton T-Shirt",
-        category: "T-Shirts",
-        description:
-            "Soft breathable cotton t-shirt designed for a clean and minimal everyday look.",
-        price: 599,
-        originalPrice: 799,
-        colors: ["White"],
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-    {
-        name: "Urban Graphic Print T-Shirt",
-        category: "T-Shirts",
-        description:
-            "Modern graphic print t-shirt with premium fabric and comfortable fit.",
-        price: 899,
-        originalPrice: 1199,
-        colors: ["Black", "White"],
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-    {
-        name: "Minimal Beige Oversized Tee",
-        category: "T-Shirts",
-        description:
-            "Minimal beige oversized t-shirt perfect for casual streetwear outfits.",
-        price: 799,
-        originalPrice: 999,
-        colors: ["Beige"],
-        sizes: ["M", "L", "XL"],
-    },
-
-    {
-        name: "Vintage Washed Black T-Shirt",
-        category: "T-Shirts",
-        description:
-            "Vintage washed cotton t-shirt with a unique faded finish.",
-        price: 999,
-        originalPrice: 1299,
-        colors: ["Black", "Grey"],
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-
-    // =========================
-    // SHIRTS
-    // =========================
-
-    {
-        name: "Classic White Casual Shirt",
-        category: "Shirts",
-        description:
-            "Clean and versatile white shirt suitable for casual and semi-formal occasions.",
-        price: 1199,
-        originalPrice: 1599,
-        colors: ["White"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Black Relaxed Fit Shirt",
-        category: "Shirts",
-        description:
-            "Modern relaxed fit shirt with a clean silhouette.",
-        price: 1299,
-        originalPrice: 1699,
-        colors: ["Black"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Beige Linen Style Shirt",
-        category: "Shirts",
-        description:
-            "Lightweight beige shirt designed for a relaxed summer look.",
-        price: 1399,
-        originalPrice: 1799,
-        colors: ["Beige"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-
-    // =========================
-    // JEANS
-    // =========================
-
-    {
-        name: "Classic Blue Denim Jeans",
-        category: "Jeans",
-        description:
-            "Classic slim fit blue denim jeans made with durable stretch fabric.",
-        price: 1499,
-        originalPrice: 1999,
-        colors: ["Blue"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        name: "Black Slim Fit Jeans",
-        category: "Jeans",
-        description:
-            "Modern slim fit black jeans suitable for casual and semi-formal looks.",
-        price: 1599,
-        originalPrice: 2199,
-        colors: ["Black"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        name: "Light Wash Straight Fit Jeans",
-        category: "Jeans",
-        description:
-            "Comfortable straight fit jeans with a stylish light wash finish.",
-        price: 1699,
-        originalPrice: 2299,
-        colors: ["Blue"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        name: "Grey Relaxed Fit Denim",
-        category: "Jeans",
-        description:
-            "Relaxed fit grey denim designed for maximum comfort and style.",
-        price: 1799,
-        originalPrice: 2399,
-        colors: ["Grey"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        name: "Dark Indigo Stretch Jeans",
-        category: "Jeans",
-        description:
-            "Premium stretch denim jeans with a deep indigo finish.",
-        price: 1899,
-        originalPrice: 2499,
-        colors: ["Blue"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-
-    // =========================
-    // HOODIES
-    // =========================
-
-    {
-        name: "Classic Black Hoodie",
-        category: "Hoodies",
-        description:
-            "Warm and comfortable black hoodie made from premium cotton blend fabric.",
-        price: 1499,
-        originalPrice: 1999,
-        colors: ["Black"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Grey Oversized Hoodie",
-        category: "Hoodies",
-        description:
-            "Oversized hoodie with soft fleece interior for ultimate comfort.",
-        price: 1699,
-        originalPrice: 2199,
-        colors: ["Grey"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Minimal White Hoodie",
-        category: "Hoodies",
-        description:
-            "Clean minimal white hoodie perfect for everyday casual wear.",
-        price: 1599,
-        originalPrice: 2099,
-        colors: ["White"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Streetwear Graphic Hoodie",
-        category: "Hoodies",
-        description:
-            "Bold graphic hoodie inspired by modern streetwear culture.",
-        price: 1899,
-        originalPrice: 2499,
-        colors: ["Black", "White"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Olive Green Pullover Hoodie",
-        category: "Hoodies",
-        description:
-            "Premium olive green hoodie with adjustable drawstrings and kangaroo pocket.",
-        price: 1799,
-        originalPrice: 2299,
-        colors: ["Green"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-
-    // =========================
-    // SHOES
-    // =========================
-
-    {
-        name: "Classic White Sneakers",
-        category: "Shoes",
-        description:
-            "Versatile white sneakers designed for comfort and everyday style.",
-        price: 2499,
-        originalPrice: 3299,
-        colors: ["White"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        name: "Black Running Shoes",
-        category: "Shoes",
-        description:
-            "Lightweight running shoes with cushioned sole and breathable upper.",
-        price: 2999,
-        originalPrice: 3999,
-        colors: ["Black"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        name: "High Top Street Sneakers",
-        category: "Shoes",
-        description:
-            "Stylish high-top sneakers inspired by contemporary streetwear.",
-        price: 3499,
-        originalPrice: 4499,
-        colors: ["Black", "White"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        name: "Casual Canvas Shoes",
-        category: "Shoes",
-        description:
-            "Classic canvas shoes suitable for everyday casual outfits.",
-        price: 1999,
-        originalPrice: 2699,
-        colors: ["Black", "White"],
-        sizes: ["7", "8", "9", "10"],
-    },
-
-    {
-        name: "Minimal Leather Sneakers",
-        category: "Shoes",
-        description:
-            "Premium leather sneakers with a clean and minimal design.",
-        price: 3999,
-        originalPrice: 4999,
-        colors: ["White", "Black"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-
-    // =========================
-    // SLIPPERS
-    // =========================
-
-    {
-        name: "Classic Black Slides",
-        category: "Slippers",
-        description:
-            "Comfortable everyday slides with a clean minimal design.",
-        price: 699,
-        originalPrice: 999,
-        colors: ["Black"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        name: "Comfort Grey Slides",
-        category: "Slippers",
-        description:
-            "Soft and comfortable slides designed for everyday use.",
-        price: 799,
-        originalPrice: 1099,
-        colors: ["Grey"],
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-
-    // =========================
-    // JACKETS
-    // =========================
-
-    {
-        name: "Classic Black Jacket",
-        category: "Jackets",
-        description:
-            "Stylish black jacket designed for modern casual outfits.",
-        price: 2499,
-        originalPrice: 3299,
-        colors: ["Black"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Denim Blue Jacket",
-        category: "Jackets",
-        description:
-            "Classic denim jacket with durable construction and timeless style.",
-        price: 2799,
-        originalPrice: 3699,
-        colors: ["Blue"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Olive Bomber Jacket",
-        category: "Jackets",
-        description:
-            "Modern bomber jacket with lightweight insulation and stylish fit.",
-        price: 2999,
-        originalPrice: 3999,
-        colors: ["Green"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Brown Leather Jacket",
-        category: "Jackets",
-        description:
-            "Premium leather jacket with a classic silhouette and detailed finish.",
-        price: 4999,
-        originalPrice: 6499,
-        colors: ["Brown"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Puffer Winter Jacket",
-        category: "Jackets",
-        description:
-            "Warm puffer jacket designed to provide comfort during cold weather.",
-        price: 3999,
-        originalPrice: 5499,
-        colors: ["Black", "Grey"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-
-    // =========================
-    // PANTS
-    // =========================
-
-    {
-        name: "Classic Black Cargo Pants",
-        category: "Pants",
-        description:
-            "Relaxed cargo pants with multiple utility pockets.",
-        price: 1399,
-        originalPrice: 1899,
-        colors: ["Black"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        name: "Beige Relaxed Fit Pants",
-        category: "Pants",
-        description:
-            "Modern relaxed fit pants designed for everyday comfort.",
-        price: 1299,
-        originalPrice: 1699,
-        colors: ["Beige"],
-        sizes: ["30", "32", "34", "36"],
-    },
-
-
-    // =========================
-    // SWEATSHIRTS
-    // =========================
-
-    {
-        name: "Classic Grey Sweatshirt",
-        category: "Sweatshirts",
-        description:
-            "Comfortable everyday sweatshirt with a clean minimal design.",
-        price: 1199,
-        originalPrice: 1599,
-        colors: ["Grey"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Black Minimal Sweatshirt",
-        category: "Sweatshirts",
-        description:
-            "Minimal black sweatshirt made for effortless everyday styling.",
-        price: 1299,
-        originalPrice: 1699,
-        colors: ["Black"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-
-    // =========================
-    // TRACK SUITS
-    // =========================
-
-    {
-        name: "Classic Black Track Suit",
-        category: "Track Suits",
-        description:
-            "Comfortable two-piece track suit designed for casual and active wear.",
-        price: 1999,
-        originalPrice: 2699,
-        colors: ["Black"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        name: "Grey Sport Track Suit",
-        category: "Track Suits",
-        description:
-            "Modern grey track suit combining comfort and sporty style.",
-        price: 2199,
-        originalPrice: 2899,
-        colors: ["Grey"],
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-
-    // =========================
-    // CAPS
-    // =========================
-
-    {
-        name: "Classic Black Cap",
-        category: "Caps",
-        description:
-            "Minimal everyday cap with an adjustable fit.",
-        price: 499,
-        originalPrice: 699,
-        colors: ["Black"],
-        sizes: ["One Size"],
-    },
-
-    {
-        name: "Beige Casual Cap",
-        category: "Caps",
-        description:
-            "Classic beige cap designed to complement casual outfits.",
-        price: 549,
-        originalPrice: 749,
-        colors: ["Beige"],
-        sizes: ["One Size"],
-    },
-];
-
-
-// =====================================================
-// RANDOM PRODUCT GENERATION
-// =====================================================
-
-const colors = [
-    "Black",
-    "White",
-    "Grey",
-    "Blue",
-    "Red",
-    "Green",
-    "Beige",
-    "Brown",
-];
-
-const productTypes = [
-    {
-        type: "Oversized T-Shirt",
-        category: "T-Shirts",
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-    {
-        type: "Cotton Shirt",
-        category: "Shirts",
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        type: "Casual Hoodie",
-        category: "Hoodies",
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        type: "Slim Fit Jeans",
-        category: "Jeans",
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        type: "Streetwear Jacket",
-        category: "Jackets",
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        type: "Cargo Pants",
-        category: "Pants",
-        sizes: ["30", "32", "34", "36"],
-    },
-
-    {
-        type: "Sweatshirt",
-        category: "Sweatshirts",
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        type: "Polo T-Shirt",
-        category: "T-Shirts",
-        sizes: ["S", "M", "L", "XL"],
-    },
-
-    {
-        type: "Track Suit",
-        category: "Track Suits",
-        sizes: ["M", "L", "XL", "XXL"],
-    },
-
-    {
-        type: "Casual Shoes",
-        category: "Shoes",
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        type: "Casual Slippers",
-        category: "Slippers",
-        sizes: ["7", "8", "9", "10", "11"],
-    },
-
-    {
-        type: "Classic Cap",
-        category: "Caps",
-        sizes: ["One Size"],
-    },
-];
-
-
-// Generate products until we have 100
-for (
-    let i = products.length;
-    i < 100;
-    i++
-) {
-    const color =
-        colors[i % colors.length];
-
-    const productType =
-        productTypes[
-            i % productTypes.length
-        ];
-
-    const price =
-        Math.floor(
-            Math.random() * 3000
-        ) + 599;
-
-
-    products.push({
-        name:
-            `${color} Premium ${productType.type}`,
-
-        category:
-            productType.category,
-
-        price,
-
-        originalPrice:
-            price +
-            Math.floor(
-                Math.random() * 1000
-            ) +
-            300,
-
-        description:
-            `Premium ${color.toLowerCase()} ${productType.type.toLowerCase()} designed with high quality materials for comfort and everyday style.`,
-
-        colors: [color],
-
-        sizes:
-            productType.sizes,
-    });
-}
-
-
-// =====================================================
-// SLUGIFY
-// =====================================================
-
+// Helper: URL-friendly slug creation
 const slugify = (text) => {
     return text
         .toLowerCase()
         .trim()
         .replace(/[^a-z0-9]+/g, "-")
-        .replace(
-            /(^-|-$)/g,
-            ""
-        );
+        .replace(/(^-|-$)/g, "");
 };
 
+// Normalize category name for matching (e.g., "Track Suits" matches "Tracksuits")
+const normalizeCategory = (name) => {
+    return String(name || "").toLowerCase().replace(/[\s\-_]+/g, "");
+};
 
 // =====================================================
-// GENERATE VARIANTS
+// 30 SAMPLE GUPTA WEARS PRODUCTS
+// 10 categories x 3 realistic products
+// Reusing the 10 photos from backend/sample_products/
 // =====================================================
 
-const generateVariants = (
-    product,
-    index
-) => {
+const sampleProducts = [
+    // -------------------------------------------------
+    // 1. SHIRTS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Classic Cotton Piqué Polo Shirt",
+        category: "Shirts",
+        description: "Refined polo shirt tailored from breathable cotton piqué knit, featuring a structured collar, two-button placket, and pearlized buttons for a versatile smart-casual look.",
+        image: "Cotton Piqué Polo.avif",
+        price: 1199,
+        originalPrice: 1599,
+        colors: ["Navy", "White", "Black"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Baroque Print Casual Shirt",
+        category: "Shirts",
+        description: "Statement casual shirt showcasing an ornate heritage baroque pattern printed on lightweight cotton fabric, cut in a modern relaxed drape perfect for evenings.",
+        image: "Barocco cotton T-shirt.webp",
+        price: 1499,
+        originalPrice: 1999,
+        colors: ["Black/Gold", "Monochrome"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Urban Utility Overshirt",
+        category: "Shirts",
+        description: "Durable cotton-nylon blend overshirt featuring twin bellows chest pockets, point collar, and reinforced stitching for effortless layering across seasons.",
+        image: "cotton nylon blend jacket.jpg",
+        price: 1699,
+        originalPrice: 2299,
+        colors: ["Olive", "Charcoal", "Beige"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: false,
+    },
 
+    // -------------------------------------------------
+    // 2. T-SHIRTS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Barocco Signature Graphic Tee",
+        category: "T-Shirts",
+        description: "Signature streetwear t-shirt crafted from heavy 240 GSM combed cotton with high-definition baroque graphics, dropped shoulders, and a thick ribbed collar.",
+        image: "Barocco cotton T-shirt.webp",
+        price: 899,
+        originalPrice: 1299,
+        colors: ["Black", "White"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Regular Fit Cotton-Jersey T-Shirt",
+        category: "T-Shirts",
+        description: "Timeless everyday crewneck tee constructed from premium 100% organic cotton jersey with minimal chest typography and superior color fastness.",
+        image: "Printed Cotton-Jersey Regular T-Shirt.avif",
+        price: 699,
+        originalPrice: 999,
+        colors: ["White", "Black", "Melange Grey"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Relaxed Fit Vintage Wash Tee",
+        category: "T-Shirts",
+        description: "Relaxed fit vintage tee featuring an artisanal garment-dyed wash for a lived-in texture, soft hand-feel, and effortless relaxed streetwear silhouette.",
+        image: "Relaxed Fit Printed T-shirt.avif",
+        price: 799,
+        originalPrice: 1099,
+        colors: ["Washed Grey", "Faded Black", "Sand"],
+        sizes: ["M", "L", "XL", "XXL"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 3. JEANS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Classic Indigo Denim Jeans",
+        category: "Jeans",
+        description: "Classic 5-pocket jeans forged from 13.5 oz authentic ring-spun denim with 1% elastane for subtle stretch, tailored in a timeless straight leg cut.",
+        image: "demin jeans.avif",
+        price: 1899,
+        originalPrice: 2499,
+        colors: ["Indigo Blue", "Dark Stone Wash"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Loose Fit Skate Jeans",
+        category: "Jeans",
+        description: "90s-inspired loose fit skate denim featuring a roomy leg, comfortable mid-rise waist, heavy-duty metal rivets, and reinforced belt loops.",
+        image: "loose fit jeans.jpg",
+        price: 1999,
+        originalPrice: 2699,
+        colors: ["Light Blue", "Vintage Tint"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Distressed Vintage Straight Jeans",
+        category: "Jeans",
+        description: "Hand-finished straight leg denim jeans with artisanal distressed abrasions, subtle whiskering, and custom branded copper hardware.",
+        image: "demin jeans.avif",
+        price: 2199,
+        originalPrice: 2899,
+        colors: ["Medium Blue", "Washed Charcoal"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 4. PANTS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Relaxed Chino Pants",
+        category: "Pants",
+        description: "Modern casual chino trousers made with premium washed cotton twill, featuring front slant pockets, welt rear pockets, and a neat tapered leg.",
+        image: "loose fit jeans.jpg",
+        price: 1599,
+        originalPrice: 2199,
+        colors: ["Khaki", "Navy", "Olive"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Utility Cargo Trousers",
+        category: "Pants",
+        description: "Heavyweight cotton utility cargo pants designed with articulated knee panels, generous bellow cargo pockets, and adjustable toggle drawstring hems.",
+        image: "demin jeans.avif",
+        price: 1799,
+        originalPrice: 2399,
+        colors: ["Matte Black", "Army Green"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Minimalist Everyday Trousers",
+        category: "Pants",
+        description: "Sleek smart-casual trousers crafted from stretch-infused twill with an elasticated waistband and drawstring for seamless desk-to-dinner comfort.",
+        image: "loose fit jeans.jpg",
+        price: 1699,
+        originalPrice: 2299,
+        colors: ["Charcoal Grey", "Black"],
+        sizes: ["30", "32", "34", "36"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 5. HOODIES
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Zero Degree Oversized Hoodie",
+        category: "Hoodies",
+        description: "Ultra-heavyweight 420 GSM fleece hoodie built for cold climates, featuring double-needle construction, a double-lined structured hood, and oversized silhouette.",
+        image: "Zero Degree Oversized Hoodie.avif",
+        price: 2199,
+        originalPrice: 2999,
+        colors: ["Washed Black", "Heather Grey", "Cream"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Cotton Fleece Pullover Hoodie",
+        category: "Hoodies",
+        description: "Plush brushed fleece hoodie with classic pouch kangaroo pocket, flat-woven drawcords, and thick 2x2 ribbed cuffs and hem for everyday warmth.",
+        image: "cotton fleece oversize hoodie.jpg",
+        price: 1999,
+        originalPrice: 2699,
+        colors: ["Dusty Sage", "Black", "Mocha Brown"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Street Graphic Oversized Hoodie",
+        category: "Hoodies",
+        description: "Contemporary streetwear hoodie showcasing high-density tonal graphics on durable fleece, designed with dropped shoulders and a boxy relaxed fit.",
+        image: "Zero Degree Oversized Hoodie.avif",
+        price: 2299,
+        originalPrice: 3199,
+        colors: ["Onyx Black", "Off White"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 6. JACKETS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Cotton-Nylon Windbreaker Jacket",
+        category: "Jackets",
+        description: "Lightweight weather-resistant zip jacket engineered from technical cotton-nylon with high funnel collar, storm flap, and breathable interior mesh lining.",
+        image: "cotton nylon blend jacket.jpg",
+        price: 2799,
+        originalPrice: 3799,
+        colors: ["Matte Black", "Olive Green", "Desert Sand"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Classic Biker Leather Jacket",
+        category: "Jackets",
+        description: "Heritage biker jacket crafted from rich textured vegan leather, styled with an asymmetrical front zipper, notch lapels, and quilted diamond shoulder padding.",
+        image: "leather jacket.jpg",
+        price: 4499,
+        originalPrice: 5999,
+        colors: ["Classic Black", "Espresso Brown"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Minimalist Bomber Jacket",
+        category: "Jackets",
+        description: "Sleek zip-through bomber jacket with tonal ribbed baseball collar, side slip pockets, utility sleeve pocket, and smooth satin interior lining.",
+        image: "cotton nylon blend jacket.jpg",
+        price: 2999,
+        originalPrice: 3999,
+        colors: ["Navy Blue", "Dark Olive", "Black"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 7. TRACKSUITS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Fleece Lounge Tracksuit",
+        category: "Tracksuits",
+        description: "Premium two-piece lounge tracksuit including a pullover fleece top and matching tapered joggers with deep zippered pockets and ribbed ankles.",
+        image: "cotton fleece oversize hoodie.jpg",
+        price: 3199,
+        originalPrice: 4299,
+        colors: ["Charcoal", "Oatmeal Melange", "Black"],
+        sizes: ["S", "M", "L", "XL"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Athletic Street Tracksuit",
+        category: "Tracksuits",
+        description: "Athletic-cut tracksuit featuring color-block chevron side stripes, full-zip funnel jacket, and performance joggers with an elastic drawstring waist.",
+        image: "Zero Degree Oversized Hoodie.avif",
+        price: 3499,
+        originalPrice: 4699,
+        colors: ["Black/White", "Grey/Black"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Heritage Active Tracksuit",
+        category: "Tracksuits",
+        description: "Technical windproof tracksuit designed for training or city movement, finished with reflective accents, zip ankles, and durable weather coating.",
+        image: "cotton nylon blend jacket.jpg",
+        price: 3299,
+        originalPrice: 4499,
+        colors: ["Navy/Teal", "Burgundy/Navy"],
+        sizes: ["M", "L", "XL"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 8. SHOES
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Low-Top Minimalist Sneakers",
+        category: "Shoes",
+        description: "Crisp low-top court sneakers featuring supple micro-leather uppers, breathable perforation details, and a cushioned vulcanized rubber cupsole.",
+        image: "cotton nylon blend jacket.jpg",
+        price: 2499,
+        originalPrice: 3499,
+        colors: ["Triple White", "White/Gum", "Black/White"],
+        sizes: ["7", "8", "9", "10", "11"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Urban Leather Street Boots",
+        category: "Shoes",
+        description: "Rugged urban lace-up ankle boots crafted from full-grain textured leather with reinforced toe caps and aggressive lugged commando outsoles.",
+        image: "leather jacket.jpg",
+        price: 3499,
+        originalPrice: 4999,
+        colors: ["Vintage Black", "Saddle Brown"],
+        sizes: ["8", "9", "10", "11"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Retro Runner Casual Trainers",
+        category: "Shoes",
+        description: "Athletic lifestyle trainers engineered with mesh underlays, suede reinforcements, responsive EVA midsole foam, and grippy waffle tread.",
+        image: "Cotton Piqué Polo.avif",
+        price: 2799,
+        originalPrice: 3899,
+        colors: ["Grey/White", "Navy/Beige"],
+        sizes: ["7", "8", "9", "10"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 9. SLIPPERS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Ergonomic Comfort Slide Slippers",
+        category: "Slippers",
+        description: "Ultra-cushioned injection-molded EVA slide sandals engineered with an anatomical contour footbed, arch support, and anti-slip wave traction.",
+        image: "Relaxed Fit Printed T-shirt.avif",
+        price: 799,
+        originalPrice: 1199,
+        colors: ["Matte Black", "Bone White", "Olive"],
+        sizes: ["7", "8", "9", "10", "11"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Leather Comfort Dual-Strap Slippers",
+        category: "Slippers",
+        description: "Premium slide sandals with dual adjustable buckle straps in faux leather, set atop a suede-lined genuine cork-latex ergonomic footbed.",
+        image: "leather jacket.jpg",
+        price: 1199,
+        originalPrice: 1699,
+        colors: ["Tan Brown", "Dark Brown", "Black"],
+        sizes: ["7", "8", "9", "10"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Casual Daily Flip-Flop Slippers",
+        category: "Slippers",
+        description: "Lightweight everyday thong slippers with comfortable woven canvas toe post straps, textured footbed patterning, and durable rubber sponge soles.",
+        image: "Cotton Piqué Polo.avif",
+        price: 599,
+        originalPrice: 899,
+        colors: ["Navy Blue", "Black", "Grey"],
+        sizes: ["7", "8", "9", "10", "11"],
+        isFeatured: false,
+    },
+
+    // -------------------------------------------------
+    // 10. CAPS
+    // -------------------------------------------------
+    {
+        name: "Gupta Wears Signature Embroidered Baseball Cap",
+        category: "Caps",
+        description: "Classic unstructured 6-panel dad cap constructed from 100% washed cotton twill, detailed with tone-on-tone embroidery and antique brass buckle closure.",
+        image: "Printed Cotton-Jersey Regular T-Shirt.avif",
+        price: 499,
+        originalPrice: 799,
+        colors: ["Black", "Washed Navy", "Khaki"],
+        sizes: ["Free Size"],
+        isFeatured: false,
+    },
+    {
+        name: "Gupta Wears Vintage Corduroy Strapback Cap",
+        category: "Caps",
+        description: "Retro wide-wale cotton corduroy cap featuring embroidered breathability eyelets, pre-curved peak, and an adjustable genuine leather strap closure.",
+        image: "Barocco cotton T-shirt.webp",
+        price: 599,
+        originalPrice: 899,
+        colors: ["Rust Orange", "Forest Green", "Charcoal"],
+        sizes: ["Free Size"],
+        isFeatured: true,
+    },
+    {
+        name: "Gupta Wears Streetwear Trucker Snapback Cap",
+        category: "Caps",
+        description: "Structured 5-panel trucker cap featuring a high-density foam front panel, breathable nylon mesh back, and an adjustable 7-hole snapback closure.",
+        image: "leather jacket.jpg",
+        price: 549,
+        originalPrice: 849,
+        colors: ["Black/White", "All Black"],
+        sizes: ["Free Size"],
+        isFeatured: false,
+    },
+];
+
+// =====================================================
+// GENERATE DETERMINISTIC VARIANTS
+// =====================================================
+
+const generateVariants = (product, baseSlug) => {
     const variants = [];
+    let variantIndex = 1;
 
+    for (const color of product.colors) {
+        for (const size of product.sizes) {
+            const colorSlug = slugify(color);
+            const sizeSlug = slugify(size);
+            const sku = `${baseSlug}-${colorSlug}-${sizeSlug}`.toUpperCase();
 
-    for (
-        const color of product.colors
-    ) {
-
-        for (
-            const size of product.sizes
-        ) {
+            // Deterministic stock calculation based on product name and variant index
+            const stock = 15 + ((product.name.length * 7 + variantIndex * 3) % 25);
 
             variants.push({
-
-                sku:
-                    `${slugify(product.name)}-${slugify(color)}-${slugify(size)}-${index + 1}`,
-
+                sku,
                 attributes: [
-
                     {
                         name: "Color",
                         value: color,
                     },
-
                     {
                         name: "Size",
                         value: size,
                     },
-
                 ],
-
-                price:
-                    product.price,
-
-                originalPrice:
-                    product.originalPrice,
-
-                stock:
-                    Math.floor(
-                        Math.random() * 21
-                    ) + 5,
-
+                price: product.price,
+                originalPrice: product.originalPrice,
+                stock,
                 isActive: true,
             });
+
+            variantIndex++;
         }
     }
-
 
     return variants;
 };
 
-
 // =====================================================
-// SEED PRODUCTS
+// SEED PRODUCTS EXECUTION
+// Safe, idempotent upsert without deleting existing products
 // =====================================================
 
-const seedProducts = async () => {
-
+export const seedProducts = async () => {
     try {
-
         await connectDB();
 
-
-        // -----------------------------------------
-        // Get categories
-        // -----------------------------------------
-
-        const categories =
-            await Category.find({
-                isActive: true,
-            });
-
-
+        // 1. Fetch active categories
+        const categories = await Category.find({ isActive: true });
         if (!categories.length) {
-
-            console.log(
-                "No active categories found. Please seed categories first."
-            );
-
+            console.error("No active categories found in database. Please seed categories first.");
             process.exit(1);
         }
 
-
-        // -----------------------------------------
-        // Create category lookup
-        // -----------------------------------------
-
+        // Build normalized category lookup map
         const categoryLookup = {};
+        categories.forEach((cat) => {
+            categoryLookup[normalizeCategory(cat.name)] = cat._id;
+            categoryLookup[normalizeCategory(cat.slug)] = cat._id;
+        });
 
+        console.log(`Loaded ${categories.length} categories for product mapping.`);
 
-        categories.forEach(
-            (category) => {
+        let insertedCount = 0;
+        let updatedCount = 0;
 
-                categoryLookup[
-                    category.name.toLowerCase()
-                ] = category._id;
+        for (let i = 0; i < sampleProducts.length; i++) {
+            const item = sampleProducts[i];
+            const normCat = normalizeCategory(item.category);
+            const categoryId = categoryLookup[normCat];
 
+            if (!categoryId) {
+                throw new Error(`Category not found for product "${item.name}" (category: "${item.category}")`);
             }
-        );
 
+            const baseSlug = `gw-sample-${slugify(item.name)}`;
 
-        // -----------------------------------------
-        // Convert products
-        // -----------------------------------------
+            const formattedProduct = {
+                name: item.name,
+                slug: baseSlug,
+                description: item.description,
+                category: categoryId,
+                options: [
+                    {
+                        name: "Color",
+                        values: item.colors,
+                    },
+                    {
+                        name: "Size",
+                        values: item.sizes,
+                    },
+                ],
+                variants: generateVariants(item, baseSlug),
+                images: [
+                    {
+                        url: `/sample_products/${item.image}`,
+                        publicId: null,
+                        alt: item.name,
+                    },
+                ],
+                isActive: true,
+                isFeatured: Boolean(item.isFeatured),
+            };
 
-        const formattedProducts =
-            products.map(
-                (product, index) => {
+            // SAFE IDEMPOTENT UPSERT: Never delete existing products, upsert by deterministic slug
+            const existing = await Product.findOne({ slug: baseSlug });
 
-                    const categoryId =
-                        categoryLookup[
-                            product.category.toLowerCase()
-                        ];
+            if (existing) {
+                await Product.updateOne({ _id: existing._id }, { $set: formattedProduct });
+                updatedCount++;
+            } else {
+                await Product.create(formattedProduct);
+                insertedCount++;
+            }
+        }
 
-
-                    if (!categoryId) {
-
-                        throw new Error(
-                            `Category not found: ${product.category}`
-                        );
-                    }
-
-
-                    return {
-
-                        name:
-                            product.name,
-
-                        slug:
-                            `${slugify(product.name)}-${index + 1}`,
-
-                        description:
-                            product.description,
-
-                        category:
-                            categoryId,
-
-                        options: [
-
-                            {
-                                name: "Color",
-                                values:
-                                    product.colors,
-                            },
-
-                            {
-                                name: "Size",
-                                values:
-                                    product.sizes,
-                            },
-
-                        ],
-
-                        variants:
-                            generateVariants(
-                                product,
-                                index
-                            ),
-
-                        images: [
-
-                            {
-                                url:
-                                    `https://placehold.co/600x800?text=${encodeURIComponent(
-                                        product.name
-                                    )}`,
-
-                                alt:
-                                    product.name,
-                            },
-
-                        ],
-
-                        isActive: true,
-
-                        isFeatured:
-                            index % 10 === 0,
-                    };
-                }
-            );
-
-
-        // -----------------------------------------
-        // Delete existing products
-        // -----------------------------------------
-
-        await Product.deleteMany({});
-
-
-        // -----------------------------------------
-        // Insert new products
-        // -----------------------------------------
-
-        await Product.insertMany(
-            formattedProducts
-        );
-
-
-        console.log(
-            `Successfully seeded ${formattedProducts.length} products`
-        );
-
+        console.log("==================================================");
+        console.log("SEEDING COMPLETED SUCCESSFULLY");
+        console.log(`Inserted: ${insertedCount} new products`);
+        console.log(`Updated:  ${updatedCount} existing sample products`);
+        console.log(`Total 30 sample products are active in the database.`);
+        console.log("Existing real products and other collections remain untouched.");
+        console.log("==================================================");
 
         process.exit(0);
-
     } catch (error) {
-
-        console.error(
-            "Product seeding failed:",
-            error
-        );
-
+        console.error("Product seeding failed:", error);
         process.exit(1);
     }
 };
 
-
+// Direct script execution
 seedProducts();
