@@ -97,8 +97,8 @@ This file controls:
 Edit these lines in `src/data/siteData.js`:
 
 ```js
-phone: '+91-XXXXX-XXXXX',        // → Your real number
-whatsapp: 'https://wa.me/91XXXXXXXXXX', // → Replace XXXXXXXXXX
+phone: '+91-9582585258',        // → Your real number
+whatsapp: 'https://wa.me/9582585258', // → Replace XXXXXXXXXX
 instagram: 'https://instagram.com/dhruvchauhan', // → Your handle
 youtube: 'https://youtube.com/@dhruvchauhan',    // → Your channel
 showreelUrl: 'https://www.youtube.com/embed/VIDEO_ID', // → Your video

@@ -26,10 +26,10 @@ export const siteConfig = {
   roles: ['Anchor', 'Comedian', 'Dancer', 'Character Artist', 'Entertainer'],
 
   // ── TODO: Replace with real contact info confirmed by Dhruv ──
-  phone: '+91-XXXXX-XXXXX',        // Replace: e.g. '+919876543210'
-  email: 'book@dhruvchauhan.com',  // Replace with real email
-  whatsapp: 'https://wa.me/91XXXXXXXXXX', // Replace XXXXXXXXXX with real number
-  instagram: 'https://instagram.com/dhruvchauhan', // Replace with real handle
+  phone: '+91-9582585258',        // Replace: e.g. '+919876543210'
+  email: 'anchordc.dhruvchauhan06@gmail.com',  // Replace with real email
+  whatsapp: 'https://wa.me/919582585258', // Replace XXXXXXXXXX with real number
+  instagram: 'https://www.instagram.com/anchor.dhruvchauhan?dlrf=MWszZXNlaGR4ZGVr&utm_source=qr', // Replace with real handle
   youtube: 'https://youtube.com/@dhruvchauhan',    // Replace with real channel
   showreelUrl: 'https://www.youtube.com/watch?v=REPLACE_WITH_SHOWREEL', // Replace
 };
@@ -63,7 +63,7 @@ export const aboutContent = {
   highlights: [
     { label: 'Events Hosted', value: '500+', note: 'Confirm count with Dhruv' },
     { label: 'Happy Clients', value: '400+', note: 'Confirm count with Dhruv' },
-    { label: 'Cities Covered', value: '20+',  note: 'Confirm count with Dhruv' },
+    { label: 'Cities Covered', value: '20+', note: 'Confirm count with Dhruv' },
     { label: 'Years Experience', value: '8+', note: 'Confirm count with Dhruv' },
   ],
 };
@@ -449,7 +449,7 @@ export const corporateContent = {
  */
 export const bookingFormFields = [
   { name: 'name', label: 'Your Name', type: 'text', required: true, placeholder: 'Full name' },
-  { name: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 XXXXX XXXXX' },
+  { name: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 95825 85258' },
   { name: 'email', label: 'Email Address', type: 'email', required: false, placeholder: 'your@email.com' },
   {
     name: 'eventType', label: 'Event Type', type: 'select', required: true, options: [
@@ -478,7 +478,7 @@ export const corporateFormFields = [
   { name: 'contactName', label: 'Contact Person Name', type: 'text', required: true, placeholder: 'Your full name' },
   { name: 'company', label: 'Company / Organisation', type: 'text', required: true, placeholder: 'Company name' },
   { name: 'workEmail', label: 'Work Email', type: 'email', required: true, placeholder: 'you@company.com' },
-  { name: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 XXXXX XXXXX' },
+  { name: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 95825 85258' },
   {
     name: 'eventType', label: 'Event Format', type: 'select', required: true, options: [
       'Team Building',
