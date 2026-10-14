@@ -28,4 +28,7 @@
   .wed-intro { text-align: left; }
 }
 
-.wed-media--watch .corp-pricing__actions { justify-content: center; }
+.wedding-page .corp-pricing__actions {
+  justify-content: center;
+  align-items: center;
+}
