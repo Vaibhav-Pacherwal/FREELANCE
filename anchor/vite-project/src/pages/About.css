@@ -1,0 +1,409 @@
+/* ============================================================
+   ABOUT PAGE STYLES
+   ============================================================ */
+
+/* ─── Hero ─── */
+.about-hero {
+  padding: calc(var(--nav-height) + var(--space-2xl)) 0 var(--space-2xl);
+  background: linear-gradient(135deg, var(--peach-light) 0%, var(--peach) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.about-hero__decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.about-hero__deco {
+  position: absolute;
+  opacity: 0.5;
+}
+
+.about-hero__deco--1 { top: 10%; right: 8%; animation: float 7s ease-in-out infinite; }
+.about-hero__deco--2 { bottom: 15%; left: 5%; }
+.about-hero__deco--3 { top: 20%; left: 12%; animation: float 8s ease-in-out infinite 1s; }
+.about-hero__deco--4 { top: 35%; right: 25%; }
+.about-hero__deco--5 { bottom: 30%; right: 15%; }
+
+.about-hero__content {
+  position: relative;
+  z-index: 2;
+}
+
+.about-hero__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: var(--fs-handwritten-lg);
+  color: var(--coral-deep);
+  margin-bottom: var(--space-sm);
+}
+
+.about-hero__title {
+  font-size: var(--fs-section-title);
+  font-weight: 900;
+  color: var(--teal-dark);
+  line-height: 1.1;
+  margin-bottom: var(--space-md);
+}
+
+/* ─── Bio Section ─── */
+.about-bio {
+  padding: var(--space-2xl) 0;
+  background: var(--cream);
+}
+
+.about-bio__layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.about-bio__photo-col {
+  position: relative;
+}
+
+.about-bio__photo-frame {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 3 / 4;
+  background: var(--cream-warm);
+  border: 4px solid var(--ink);
+  border-radius: 8px 4px 12px 4px;
+  box-shadow: 6px 8px 0 var(--ink);
+  overflow: hidden;
+  transform: rotate(-2deg);
+}
+
+.about-bio__photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  background: linear-gradient(160deg, var(--peach) 0%, var(--cream-warm) 100%);
+  text-align: center;
+}
+
+.about-bio__photo-emoji {
+  font-size: 4rem;
+}
+
+.about-bio__photo-text {
+  font-size: var(--fs-handwritten-lg);
+  color: var(--teal-dark);
+}
+
+.about-bio__photo-sticker {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  transform: rotate(15deg);
+}
+
+.about-bio__annotation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--fs-handwritten);
+  color: var(--ink-light);
+  margin-top: var(--space-sm);
+  margin-left: var(--space-lg);
+  transform: rotate(-3deg);
+}
+
+.about-bio__notes {
+  margin-top: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.about-bio__note {
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--marigold);
+  background: var(--cream-warm);
+  border-radius: 0 4px 4px 0;
+  transform: rotate(-1deg);
+}
+
+.about-bio__note--2 {
+  margin-left: var(--space-lg);
+  border-left-color: var(--hot-magenta);
+  transform: rotate(1deg);
+}
+
+.about-bio__note p {
+  font-size: var(--fs-handwritten);
+  color: var(--teal-dark);
+}
+
+/* Text column */
+.about-bio__text-col {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all var(--duration-slow) var(--ease-out);
+}
+
+.about-bio__text-col--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.about-bio__name {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: var(--space-sm);
+}
+
+.about-bio__name-dhruv {
+  color: var(--teal-dark);
+}
+
+.about-bio__name-chauhan {
+  color: var(--hot-magenta);
+}
+
+.about-bio__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-lg);
+}
+
+.about-bio__role {
+  padding: 0.3rem 0.7rem;
+  background: var(--peach-light);
+  border: 2px solid var(--ink);
+  border-radius: 2px 6px 2px 8px;
+  font-weight: 700;
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal-dark);
+  box-shadow: 2px 3px 0 var(--ink);
+}
+
+.about-bio__paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.about-bio__para {
+  font-size: var(--fs-body-lg);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.about-bio__para:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 3em;
+  font-weight: 800;
+  float: left;
+  color: var(--hot-magenta);
+  line-height: 0.8;
+  margin-right: 0.1em;
+  margin-top: 0.05em;
+}
+
+.about-bio__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+/* ─── Stats ─── */
+.about-stats {
+  padding: var(--space-2xl) 0;
+  background: var(--teal);
+  color: var(--cream);
+  position: relative;
+}
+
+.about-stats__tear {
+  position: absolute;
+  top: -44px;
+  left: 0;
+  right: 0;
+}
+
+.about-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  text-align: center;
+}
+
+.about-stats__grid--visible .about-stat {
+  animation: fadeInUp var(--duration-slow) var(--ease-out) both;
+}
+
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.about-stat__value {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  color: var(--marigold);
+  line-height: 1;
+}
+
+.about-stat__label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: var(--fs-caption);
+}
+
+.about-stat__note {
+  font-size: var(--fs-caption);
+  color: var(--peach);
+  opacity: 0.7;
+}
+
+/* ─── Journey ─── */
+.about-journey {
+  padding: var(--space-2xl) 0;
+  background: var(--cream);
+}
+
+.about-journey__content {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-journey__item {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+  border-left: 3px dashed var(--teal);
+  padding-left: var(--space-xl);
+  position: relative;
+}
+
+.about-journey__marker {
+  position: absolute;
+  left: -12px;
+  top: var(--space-lg);
+  background: var(--cream);
+  padding: 2px;
+}
+
+.about-journey__title {
+  font-size: var(--fs-card-title);
+  color: var(--teal-dark);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.about-journey__note {
+  font-size: var(--fs-handwritten);
+  color: var(--coral-deep);
+  margin-bottom: var(--space-sm);
+}
+
+.about-journey__text p:last-child {
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ─── CTA ─── */
+.about-cta {
+  padding: var(--space-2xl) 0;
+  background: var(--teal-dark);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-cta__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.about-cta__bird {
+  position: absolute;
+  top: -10px;
+  right: 10%;
+  opacity: 0.3;
+  animation: float 6s ease-in-out infinite;
+}
+
+.about-cta__title {
+  font-size: var(--fs-section-title);
+  color: var(--cream);
+  font-weight: 900;
+  margin-bottom: var(--space-xl);
+  line-height: 1.15;
+}
+
+.about-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .about-bio__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .about-bio__photo-frame {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .about-bio__annotation {
+    text-align: center;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .about-bio__notes {
+    display: none;
+  }
+
+  .about-bio__text-col {
+    text-align: center;
+  }
+
+  .about-bio__roles {
+    justify-content: center;
+  }
+
+  .about-bio__actions {
+    justify-content: center;
+  }
+
+  .about-bio__para:first-child::first-letter {
+    float: none;
+    font-size: 1.5em;
+    margin-right: 0;
+  }
+
+  .about-stats__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
