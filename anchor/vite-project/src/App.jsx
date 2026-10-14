@@ -9,6 +9,7 @@ import About from './pages/About';
 import Experiences from './pages/Experiences';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import CorporateAnchor from './pages/CorporateAnchor';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/experiences" element={<Experiences />} />
+          <Route path="/corporate-anchor" element={<CorporateAnchor />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>

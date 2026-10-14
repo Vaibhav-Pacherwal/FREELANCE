@@ -6,6 +6,8 @@ import {
   Star, Sparkle, DoodleArrow, WavyLine, DecorativeBorder, PaperTearSVG
 } from '../components/Decorations';
 import { useInView, usePrefersReducedMotion } from '../hooks/useHooks';
+import ShowreelSection from '../components/ShowreelSection';
+import QuickBookForm from '../components/QuickBookForm';
 import './Home.css';
 
 /* ─── HERO SECTION ─── */
@@ -48,12 +50,15 @@ function HeroSection() {
             ))}
           </div>
           <div className="hero__actions animate-in animate-in-delay-4">
-            <a href={siteConfig.showreelUrl} className="btn btn-secondary btn-lg">
+            <a href="#showreel" className="btn btn-secondary btn-lg">
               ▶ Watch Showreel
             </a>
             <Link to="/contact" className="btn btn-primary btn-lg">
               Book Now
             </Link>
+            <a href={siteConfig.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp btn-lg">
+              💬 WhatsApp
+            </a>
           </div>
         </div>
 
@@ -214,7 +219,17 @@ function TestimonialsSection() {
               </blockquote>
               <div className="testimonial-card__footer">
                 <cite className="testimonial-card__name">{t.name}</cite>
+                {t.role && <span className="testimonial-card__role">{t.role}</span>}
                 <span className="testimonial-card__event font-handwritten">{t.event}</span>
+                {t.source && (
+                  t.sourceUrl ? (
+                    <a href={t.sourceUrl} target="_blank" rel="noopener noreferrer" className="testimonial-card__source">
+                      via {t.source} ↗
+                    </a>
+                  ) : (
+                    <span className="testimonial-card__source">via {t.source}</span>
+                  )
+                )}
               </div>
               {t.isPlaceholder && (
                 <div className="testimonial-card__placeholder-badge">
@@ -270,17 +285,52 @@ function CTABanner() {
   );
 }
 
+/* ─── QUICK BOOK PANEL (homepage) ─── */
+function QuickBookPanel() {
+  const [ref, isInView] = useInView();
+  return (
+    <section className="home-qbf-section" ref={ref} id="quick-book">
+      <div className="container home-qbf-layout">
+        <div className={`home-qbf-layout__text ${isInView ? 'home-qbf-layout__text--visible' : ''}`}>
+          <p className="font-handwritten home-qbf-annotation">
+            <Sparkle size={16} color="var(--hot-magenta)" /> The fastest way to book
+          </p>
+          <h2 className="font-display home-qbf-title">
+            Get a Custom Quote<br />
+            <span className="font-handwritten" style={{ color: 'var(--hot-magenta)' }}>in Minutes</span>
+          </h2>
+          <p className="home-qbf-desc">
+            Tell us a little about your event and we'll reach out on WhatsApp
+            with a tailored proposal — no spam, ever.
+          </p>
+          <div className="home-qbf-extras">
+            <span className="home-qbf-extra-item">✅ Weddings</span>
+            <span className="home-qbf-extra-item">✅ Corporate Events</span>
+            <span className="home-qbf-extra-item">✅ Private Parties</span>
+            <span className="home-qbf-extra-item">✅ Character Shows</span>
+          </div>
+        </div>
+        <div className={`home-qbf-layout__form ${isInView ? 'home-qbf-layout__form--visible' : ''}`}>
+          <QuickBookForm />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── HOME PAGE ─── */
 export default function Home() {
   useEffect(() => {
-    document.title = 'Dhruv Chauhan — Anchor, Comedian, Dancer & Character Artist';
+    document.title = 'Dhruv Chauhan — Anchor, Comedian, Corporate Host & Character Artist';
   }, []);
 
   return (
     <main>
       <HeroSection />
       <ShowcaseMarquee />
+      <ShowreelSection variant="general" title="See Dhruv in Action" subtitle="Watch the showreel — then book your event." />
       <ExperiencePreview />
+      <QuickBookPanel />
       <TestimonialsSection />
       <CTABanner />
     </main>

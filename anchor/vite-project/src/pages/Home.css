@@ -466,6 +466,26 @@
   color: var(--coral-deep);
 }
 
+.testimonial-card__role {
+  font-size: var(--fs-caption);
+  color: var(--teal);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.testimonial-card__source {
+  font-size: var(--fs-caption);
+  color: var(--ink-light);
+  opacity: 0.7;
+  text-decoration: none;
+}
+
+a.testimonial-card__source:hover {
+  color: var(--hot-magenta);
+  opacity: 1;
+}
+
 .testimonial-card__placeholder-badge {
   position: absolute;
   top: var(--space-sm);
@@ -551,6 +571,78 @@
   gap: var(--space-md);
 }
 
+/* ─── QUICK BOOK PANEL ─── */
+.home-qbf-section {
+  padding: var(--space-2xl) 0;
+  background: var(--peach-light);
+  position: relative;
+}
+
+.home-qbf-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.home-qbf-layout__text {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all var(--duration-slow) var(--ease-out);
+}
+
+.home-qbf-layout__text--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.home-qbf-layout__form {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all var(--duration-slow) var(--ease-out) 150ms;
+}
+
+.home-qbf-layout__form--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.home-qbf-annotation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--fs-handwritten);
+  color: var(--coral-deep);
+  margin-bottom: var(--space-xs);
+}
+
+.home-qbf-title {
+  font-size: var(--fs-section-title);
+  font-weight: 900;
+  color: var(--teal-dark);
+  line-height: 1.1;
+  margin-bottom: var(--space-md);
+}
+
+.home-qbf-desc {
+  font-size: var(--fs-body-lg);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+.home-qbf-extras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.home-qbf-extra-item {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--teal-dark);
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
   .hero__content {
@@ -627,6 +719,10 @@
   .showcase__item {
     padding: var(--space-xs) var(--space-lg);
     font-size: 0.9rem;
+  }
+
+  .home-qbf-layout {
+    grid-template-columns: 1fr;
   }
 }
 

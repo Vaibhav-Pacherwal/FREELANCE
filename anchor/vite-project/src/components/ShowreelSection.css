@@ -1,0 +1,184 @@
+/* ============================================================
+   SHOWREEL SECTION STYLES
+   ============================================================ */
+
+.showreel-section {
+  padding: var(--space-2xl) 0;
+  background: var(--ink);
+  position: relative;
+}
+
+.showreel-section__header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.showreel-section__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: var(--fs-handwritten);
+  color: var(--marigold);
+  margin-bottom: var(--space-xs);
+}
+
+.showreel-section__title {
+  font-size: var(--fs-section-title);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.1;
+  margin-bottom: var(--space-sm);
+}
+
+.showreel-section__subtitle {
+  font-size: var(--fs-body);
+  color: var(--peach);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ─── Player wrapper ─── */
+.showreel-section__player-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+/* ─── iframe embed ─── */
+.showreel-section__iframe-wrap {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 */
+  border: 4px solid var(--marigold);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(245, 201, 70, 0.2);
+}
+
+.showreel-section__iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ─── Thumbnail (click to play) ─── */
+.showreel-section__thumbnail {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--ink-light);
+  border: 4px solid var(--marigold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.showreel-section__thumbnail:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 60px rgba(245, 201, 70, 0.3);
+}
+
+.showreel-section__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.showreel-section__thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--ink-light), var(--teal-dark));
+}
+
+.showreel-section__play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 22, 18, 0.3);
+  transition: background var(--duration-fast);
+}
+
+.showreel-section__thumbnail:hover .showreel-section__play-overlay {
+  background: rgba(26, 22, 18, 0.15);
+}
+
+.showreel-section__play-btn {
+  width: 80px;
+  height: 80px;
+  background: var(--hot-magenta);
+  border: 4px solid var(--cream);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--cream);
+  box-shadow: 0 4px 20px rgba(232, 54, 93, 0.5);
+  transition: transform var(--duration-fast) var(--ease-bounce),
+              background var(--duration-fast);
+  padding-left: 4px; /* optical centering for ▶ */
+}
+
+.showreel-section__thumbnail:hover .showreel-section__play-btn {
+  transform: scale(1.1);
+  background: var(--magenta-dark);
+}
+
+/* ─── No-video placeholder ─── */
+.showreel-section__placeholder {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 3px dashed var(--marigold);
+  border-radius: var(--radius-md);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  opacity: 0.85;
+}
+
+.showreel-section__placeholder-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.showreel-section__placeholder-title {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  color: var(--cream);
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+}
+
+.showreel-section__placeholder-text {
+  font-size: var(--fs-handwritten);
+  color: var(--marigold);
+  margin-bottom: var(--space-sm);
+}
+
+.showreel-section__placeholder-note {
+  font-size: var(--fs-caption);
+  color: var(--peach);
+  opacity: 0.7;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .showreel-section__player-wrap {
+    padding: 0 var(--space-md);
+  }
+
+  .showreel-section__play-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+  }
+}
