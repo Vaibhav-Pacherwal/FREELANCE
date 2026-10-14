@@ -38,6 +38,7 @@ export const navigation = [
   { label: 'Home', href: '/', id: 'home' },
   { label: 'About', href: '/about', id: 'about' },
   { label: 'Experiences', href: '/experiences', id: 'experiences' },
+  { label: 'Wedding', href: '/wedding-anchor', id: 'wedding-anchor' },
   { label: 'Corporate', href: '/corporate-anchor', id: 'corporate-anchor' },
   { label: 'Gallery', href: '/gallery', id: 'gallery' },
   { label: 'Contact', href: '/contact', id: 'contact' },
@@ -300,6 +301,13 @@ export const showreels = {
     thumbnailUrl: null,
     title: 'Dhruv Chauhan — Corporate Hosting Showreel',
   },
+  wedding: {
+    // TODO: Dhruv to supply genuine wedding footage (YouTube embed URL).
+    // The wedding page hides its showreel block until embedUrl is set.
+    embedUrl: null,
+    thumbnailUrl: null,
+    title: 'Dhruv Chauhan — Wedding Hosting Showreel',
+  },
 };
 
 /**
@@ -503,4 +511,63 @@ export const corporateFormFields = [
   },
   { name: 'duration', label: 'Hosting Duration Required', type: 'text', required: false, placeholder: 'e.g. 2 hours, half-day, full-day' },
   { name: 'message', label: 'Additional Requirements (optional)', type: 'textarea', required: false, placeholder: 'Theme, language preference, special requirements...' },
+];
+
+/**
+ * WEDDING PAGE — additional data
+ * Function cards are derived from experiences[wedding].subcategories (Haldi, Mehndi, Sangeet).
+ */
+export const weddingContent = {
+  heroHeadline: 'Wedding Anchor for Haldi, Mehndi & Sangeet',
+  heroSubline: 'Wedding Emcee · Games & Dance · Sangeet Host',
+  intro: "A wedding is many celebrations in one, and each function needs its own energy. Dhruv Chauhan hosts the haldi, mehndi and sangeet with humour, dance and games that bring both families onto the same stage — keeping the evening flowing while everyone has a good time.",
+  capabilities: [
+    'Fun haldi games and family participation',
+    'Mehndi nights with dance and audience engagement',
+    'Sangeet hosting with comedy and choreographed acts',
+    'Smooth transitions between performances and rituals',
+    'High-energy hosting that includes guests of every age',
+    'Optional character acts and stand-up sets for your event',
+  ],
+  functions: [
+    { id: 'haldi', emoji: '🌼', formValue: 'Haldi' },
+    { id: 'mehndi', emoji: '🪔', formValue: 'Mehndi' },
+    { id: 'sangeet', emoji: '🎶', formValue: 'Sangeet' },
+  ],
+  faqs: [
+    {
+      q: 'Can Dhruv host more than one wedding function?',
+      a: 'Yes — the enquiry form lets you list the functions you need (haldi, mehndi, sangeet or a combination). Share your dates and Dhruv’s team will confirm availability.',
+    },
+    {
+      q: 'How do I check availability for my date?',
+      a: 'Send the enquiry form below or message on WhatsApp with your date and city. Peak wedding dates fill up, so reach out as early as you can.',
+    },
+    {
+      q: 'What is the fee for wedding hosting?',
+      a: 'Fees depend on the number of functions, duration, location, date and any extra performances. Send an enquiry for a custom quote.',
+    },
+  ],
+};
+
+/**
+ * BOOKING FORM — Wedding inquiry
+ */
+export const weddingFormFields = [
+  { name: 'contactName', label: 'Your Name', type: 'text', required: true, placeholder: 'Full name' },
+  { name: 'phone', label: 'Phone Number', type: 'tel', required: true, placeholder: '+91 95825 85258' },
+  { name: 'email', label: 'Email Address (optional)', type: 'email', required: false, placeholder: 'your@email.com' },
+  {
+    name: 'weddingFunction', label: 'Function', type: 'select', required: true, options: [
+      'Haldi',
+      'Mehndi',
+      'Sangeet',
+      'More than one function',
+      'Other wedding event',
+    ],
+  },
+  { name: 'eventDate', label: 'Event Date (or tentative)', type: 'date', required: false, placeholder: '' },
+  { name: 'eventLocation', label: 'City / Venue', type: 'text', required: true, placeholder: 'Delhi NCR / Jaipur / etc.' },
+  { name: 'guestCount', label: 'Approximate Guest Count (optional)', type: 'text', required: false, placeholder: 'e.g. 150' },
+  { name: 'message', label: 'Additional Details (optional)', type: 'textarea', required: false, placeholder: 'Theme, other functions, special requests...' },
 ];

@@ -14,14 +14,12 @@ export default function QuickBookForm() {
     eventDate: '',
     eventCity: '',
     functions: '1 function',
-    budget: '',
   });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
 
   const eventTypes = ['Wedding', 'Corporate', 'Comedy / Character Artist', 'Other'];
   const functionOptions = ['1 function', '2 functions', '3 functions', '4+ functions'];
-  const budgetOptions = ['Below ₹15,000', '₹15,000 – ₹25,000', '₹25,000 – ₹50,000', '₹50,000+'];
 
   const handleChange = useCallback((field, val) => {
     setValues(prev => ({ ...prev, [field]: val }));
@@ -46,8 +44,7 @@ export default function QuickBookForm() {
       `Event Type: ${values.eventType}\n` +
       `Date: ${values.eventDate}\n` +
       `City: ${values.eventCity}\n` +
-      `Functions: ${values.functions}\n` +
-      `Budget: ${values.budget || 'Not specified'}`
+      `Functions: ${values.functions}`
     );
     setTimeout(() => {
       setStatus('sent');
@@ -61,7 +58,7 @@ export default function QuickBookForm() {
         <span className="qbf__success-icon">🎉</span>
         <p className="font-display qbf__success-title">Enquiry Sent!</p>
         <p className="qbf__success-sub font-handwritten">We'll respond on WhatsApp shortly.</p>
-        <button className="btn btn-outline qbf__reset" onClick={() => { setStatus('idle'); setValues({ eventType: 'Wedding', eventDate: '', eventCity: '', functions: '1 function', budget: '' }); }}>
+        <button className="btn btn-outline qbf__reset" onClick={() => { setStatus('idle'); setValues({ eventType: 'Wedding', eventDate: '', eventCity: '', functions: '1 function' }); }}>
           Send Another
         </button>
       </div>
@@ -140,26 +137,6 @@ export default function QuickBookForm() {
                   value={opt}
                   checked={values.functions === opt}
                   onChange={() => handleChange('functions', opt)}
-                  className="qbf__radio"
-                />
-                {opt}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        {/* Approximate budget */}
-        <fieldset className="qbf__fieldset">
-          <legend className="qbf__legend">Approximate budget</legend>
-          <div className="qbf__radio-group">
-            {budgetOptions.map(opt => (
-              <label key={opt} className={`qbf__radio-label ${values.budget === opt ? 'qbf__radio-label--active' : ''}`}>
-                <input
-                  type="radio"
-                  name="budget"
-                  value={opt}
-                  checked={values.budget === opt}
-                  onChange={() => handleChange('budget', opt)}
                   className="qbf__radio"
                 />
                 {opt}
