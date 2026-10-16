@@ -1,0 +1,204 @@
+/* ============================================
+   BOMBAY CARDIAC AMBULANCE — Design System
+   Concept: "The Response Line"
+   Palette: Crimson · Sage Green · Bone White
+   Typography: Instrument Serif + Space Grotesk
+   ============================================ */
+
+/* ── CSS Custom Properties ── */
+:root {
+  /* Palette */
+  --crimson: #D0342C;
+  --crimson-dark: #A82922;
+  --crimson-soft: rgba(208, 52, 44, 0.08);
+  --crimson-glow: rgba(208, 52, 44, 0.25);
+  --green: #2D6A4F;
+  --green-dark: #1B4332;
+  --green-soft: rgba(45, 106, 79, 0.08);
+  --green-glow: rgba(45, 106, 79, 0.25);
+  --bone: #F8F6F2;
+  --bone-warm: #F3F0EA;
+  --charcoal: #1A1A1A;
+  --gray-700: #3D3D3D;
+  --gray-500: #6B6B6B;
+  --gray-400: #8A8A8A;
+  --gray-200: #D4D4D4;
+  --gray-100: #EEECEC;
+  --white: #FFFFFF;
+
+  /* Typography */
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4.5rem;
+  --space-4xl: 6rem;
+  --space-5xl: 8rem;
+
+  /* Layout */
+  --max-width: 1280px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+
+  /* Borders */
+  --border-thin: 1px solid var(--gray-200);
+  --border-dark: 1px solid var(--charcoal);
+}
+
+/* ── Global Reset ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--charcoal);
+  background-color: var(--bone);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ── Typography System ── */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(3rem, 7.5vw, 6.5rem);
+  line-height: 0.95;
+}
+
+h2 {
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  line-height: 1.05;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1.15;
+}
+
+h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+p {
+  max-width: 65ch;
+  color: var(--gray-700);
+  font-weight: 300;
+}
+
+em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--crimson);
+}
+
+/* ── Utility Classes ── */
+.overline {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.overline::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--crimson);
+  flex-shrink: 0;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.section-padding {
+  padding-top: var(--space-5xl);
+  padding-bottom: var(--space-5xl);
+}
+
+/* ── Focus Styles ── */
+:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 3px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--crimson);
+  color: var(--white);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
