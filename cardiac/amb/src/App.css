@@ -1100,6 +1100,7 @@
   border: var(--border-thin);
   border-radius: 4px;
   transition: all var(--duration-base) var(--ease-out);
+  min-width: 0;
 }
 
 .contact__channel:hover {
@@ -1137,6 +1138,7 @@
 .contact__channel-text {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .contact__channel-label {
@@ -1151,6 +1153,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--charcoal);
+  overflow-wrap: anywhere;
 }
 
 /* Contact Form */
