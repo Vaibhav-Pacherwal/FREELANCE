@@ -172,8 +172,9 @@
 
   .nav__toggle {
     display: flex;
-    flex: 0 0 32px;
-    margin-right: max(0.5rem, env(safe-area-inset-right));
+    position: absolute;
+    top: 20px;
+    right: max(var(--gutter), env(safe-area-inset-right));
   }
 
   .nav__mobile-menu {
