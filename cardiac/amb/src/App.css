@@ -1208,6 +1208,46 @@
   min-height: 100px;
 }
 
+.location-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--space-sm);
+  padding: 0.35rem 0;
+  color: var(--green-dark);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.location-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.location-button:hover:not(:disabled) {
+  color: var(--green);
+}
+
+.location-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.location-status {
+  min-height: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+.location-status p {
+  max-width: none;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.location-status--success { color: var(--green-dark); }
+.location-status--error { color: var(--crimson-dark); }
+
 .form-submit {
   width: 100%;
   padding: 0.9rem;

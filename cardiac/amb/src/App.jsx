@@ -526,14 +526,52 @@ function Transport() {
 /* ── Contact Section ── */
 function Contact() {
   const sectionRef = useScrollReveal()
-  const [formState, setFormState] = useState({ name: '', phone: '', message: '' })
+  const [formState, setFormState] = useState({ name: '', phone: '', pickupLocation: '', message: '' })
   const [status, setStatus] = useState({ type: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [coordinates, setCoordinates] = useState(null)
+  const [locationStatus, setLocationStatus] = useState({ type: '', message: '' })
+  const [isLocating, setIsLocating] = useState(false)
 
   const updateField = (field, value) => {
     setFormState((current) => ({ ...current, [field]: value }))
     if (status.message) setStatus({ type: '', message: '' })
     if (isSubmitting) setIsSubmitting(false)
+  }
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus({ type: 'error', message: 'Current location is not available in this browser. Please enter your pickup location manually.' })
+      return
+    }
+
+    setIsLocating(true)
+    setLocationStatus({ type: '', message: '' })
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const capturedCoordinates = {
+          latitude: coords.latitude.toFixed(6),
+          longitude: coords.longitude.toFixed(6),
+        }
+        const coordinateLabel = `Current location coordinates: ${capturedCoordinates.latitude}, ${capturedCoordinates.longitude}`
+        setCoordinates(capturedCoordinates)
+        setFormState((current) => current.pickupLocation.trim()
+          ? current
+          : { ...current, pickupLocation: coordinateLabel })
+        setLocationStatus({ type: 'success', message: 'Current coordinates captured. You can edit the pickup location before sending.' })
+        setIsLocating(false)
+      },
+      (error) => {
+        const messages = {
+          [error.PERMISSION_DENIED]: 'Location permission was denied. Please enter your pickup location manually.',
+          [error.POSITION_UNAVAILABLE]: 'Your current location is unavailable. Please enter your pickup location manually.',
+          [error.TIMEOUT]: 'Location request timed out. Please enter your pickup location manually.',
+        }
+        setLocationStatus({ type: 'error', message: messages[error.code] || 'Unable to retrieve your location. Please enter your pickup location manually.' })
+        setIsLocating(false)
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 },
+    )
   }
 
   const handleSubmit = (e) => {
@@ -542,22 +580,28 @@ function Contact() {
 
     const name = formState.name.trim()
     const phone = formState.phone.trim()
+    const pickupLocation = formState.pickupLocation.trim()
     const message = formState.message.trim()
     const phoneDigits = phone.replace(/\D/g, '')
 
-    if (!name || phoneDigits.length < 7) {
-      setStatus({ type: 'error', message: 'Please enter your name and a valid phone number.' })
+    if (!name || phoneDigits.length < 7 || !pickupLocation) {
+      setStatus({ type: 'error', message: 'Please enter your name, a valid phone number, and pickup location.' })
       return
     }
 
     setIsSubmitting(true)
     setStatus({ type: '', message: '' })
     const enquiry = [
-      'Hello, I would like to enquire about ambulance service requirements.',
+      'Hello, I need an ambulance.',
+      '',
       `Name: ${name}`,
-      `Phone: ${phone}`,
-      message ? `Message: ${message}` : null,
-    ].filter(Boolean).join('\n')
+      `Contact number: ${phone}`,
+      ...(message ? [`Additional details: ${message}`] : []),
+      `Pickup location: ${pickupLocation}`,
+      ...(coordinates ? [`Google Maps: https://www.google.com/maps?q=${coordinates.latitude},${coordinates.longitude}`] : []),
+      '',
+      'Please confirm ambulance availability and contact me as soon as possible.',
+    ].join('\n')
 
     const enquiryWindow = window.open(buildWhatsAppUrl(enquiry), '_blank')
     if (!enquiryWindow) {
@@ -652,6 +696,25 @@ function Contact() {
                 pattern="[0-9+()\\s-]{7,}"
                 autoComplete="tel"
               />
+            </div>
+            <div className="form-group">
+              <label htmlFor="contact-pickup-location">Pickup Location</label>
+              <input
+                type="text"
+                id="contact-pickup-location"
+                name="pickupLocation"
+                value={formState.pickupLocation}
+                onChange={(e) => updateField('pickupLocation', e.target.value)}
+                required
+                autoComplete="street-address"
+              />
+              <button type="button" className="location-button" onClick={useCurrentLocation} disabled={isLocating}>
+                <MapPinIcon />
+                {isLocating ? 'Finding your location…' : 'Use My Current Location'}
+              </button>
+              <div className="location-status" role="status" aria-live="polite">
+                {locationStatus.message && <p className={`location-status--${locationStatus.type}`}>{locationStatus.message}</p>}
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="contact-message">Message</label>
