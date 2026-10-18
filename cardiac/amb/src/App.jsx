@@ -6,10 +6,15 @@ const PHONE_1 = '+918850427667'
 const PHONE_1_DISPLAY = '+91 88504 27667'
 const PHONE_2 = '+919702709270'
 const PHONE_2_DISPLAY = '+91 9702 709 270'
-const WHATSAPP_MSG = encodeURIComponent(
-  'Hello, I need an ambulance service. Please share availability and details.'
-)
-const WHATSAPP_URL = `https://wa.me/918850427667?text=${WHATSAPP_MSG}`
+// This is the number already used by the site. Confirm with the client that it is WhatsApp-enabled.
+const WHATSAPP_NUMBER = '918850427667'
+const EMAIL = 'bombayambulance.149@gmail.com'
+const INSTAGRAM_URL = 'https://www.instagram.com/bombayambulance/'
+const FACEBOOK_URL = 'https://www.facebook.com/61576424741431/'
+const MAPS_URL = 'https://www.google.com/maps/place/Mira+Bhayandar,+Maharashtra/@19.2899,72.8565,17z/data=!4m6!3m5!1s0x3be7b05931cfcaf1:0x747d46e84f49bcf1!8m2!3d19.2952325!4d72.8543897!16zL20vMGY1bXM5?hl=en'
+const buildWhatsAppUrl = (message = 'Hello, I need an ambulance service. Please share availability and details.') =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+const WHATSAPP_URL = buildWhatsAppUrl()
 
 /* ── SVG Icon Components ── */
 const PhoneIcon = () => (
@@ -98,14 +103,6 @@ const CheckIcon = () => (
   </svg>
 )
 
-const StarOfLifeIcon = () => (
-  <svg viewBox="0 0 48 48" fill="none">
-    <path d="M24 2l4.5 7.8H38l-4.5 7.8L38 25.4H28.5L24 33.2l-4.5-7.8H10l4.5-7.8L10 9.8h9.5z" fill="currentColor" opacity="0.15"/>
-    <path d="M24 6v36M6 24h36M10 10l28 28M38 10L10 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-    <circle cx="24" cy="24" r="5" fill="currentColor"/>
-  </svg>
-)
-
 /* ── Scroll Observer Hook ── */
 function useScrollReveal() {
   const ref = useRef(null)
@@ -161,9 +158,9 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`} role="navigation" aria-label="Main navigation">
       <div className="nav__inner">
-        <a href="#" className="nav__brand" aria-label="Bombay Cardiac Ambulance — Home">
+        <a href="#hero" className="nav__brand" aria-label="Bombay Cardiac Ambulance — Home">
           <div className="nav__logo-icon">
-            <StarOfLifeIcon />
+            <img src="/bca_logo.png" alt="" width="38" height="38" />
           </div>
           <div className="nav__name">
             Bombay Cardiac<br/>Ambulance
@@ -196,7 +193,7 @@ function Nav() {
         <a href="#how-it-works" className="nav__mobile-link" onClick={closeMenu}>How It Works</a>
         <a href="#about" className="nav__mobile-link" onClick={closeMenu}>About</a>
         <a href="#contact" className="nav__mobile-link" onClick={closeMenu}>Contact</a>
-        <a href={`tel:${PHONE_1}`} className="nav__mobile-cta">
+        <a href={`tel:${PHONE_1}`} className="nav__mobile-cta" onClick={closeMenu}>
           <PhoneIcon /> Call Now
         </a>
       </div>
@@ -530,12 +527,47 @@ function Transport() {
 function Contact() {
   const sectionRef = useScrollReveal()
   const [formState, setFormState] = useState({ name: '', phone: '', message: '' })
+  const [status, setStatus] = useState({ type: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const updateField = (field, value) => {
+    setFormState((current) => ({ ...current, [field]: value }))
+    if (status.message) setStatus({ type: '', message: '' })
+    if (isSubmitting) setIsSubmitting(false)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Frontend-only demo: show confirmation
-    alert('Thank you for reaching out. In a live environment, this form would send your message to Bombay Cardiac Ambulance.')
-    setFormState({ name: '', phone: '', message: '' })
+    if (isSubmitting) return
+
+    const name = formState.name.trim()
+    const phone = formState.phone.trim()
+    const message = formState.message.trim()
+    const phoneDigits = phone.replace(/\D/g, '')
+
+    if (!name || phoneDigits.length < 7) {
+      setStatus({ type: 'error', message: 'Please enter your name and a valid phone number.' })
+      return
+    }
+
+    setIsSubmitting(true)
+    setStatus({ type: '', message: '' })
+    const enquiry = [
+      'Hello, I would like to enquire about ambulance service requirements.',
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      message ? `Message: ${message}` : null,
+    ].filter(Boolean).join('\n')
+
+    const enquiryWindow = window.open(buildWhatsAppUrl(enquiry), '_blank')
+    if (!enquiryWindow) {
+      setStatus({ type: 'error', message: 'We could not open WhatsApp. Please allow pop-ups or use the WhatsApp contact link above.' })
+      setIsSubmitting(false)
+      return
+    }
+    enquiryWindow.opener = null
+
+    setStatus({ type: 'success', message: 'WhatsApp has opened with your enquiry. Please review it and tap Send to contact us.' })
   }
 
   return (
@@ -570,6 +602,22 @@ function Contact() {
                 <span className="contact__channel-value">Message Us</span>
               </div>
             </a>
+
+            <a href={`mailto:${EMAIL}?subject=${encodeURIComponent('Ambulance service enquiry')}`} className="contact__channel fade-in-up" id="contact-email">
+              <div className="contact__channel-icon">@</div>
+              <div className="contact__channel-text">
+                <span className="contact__channel-label">Email</span>
+                <span className="contact__channel-value">{EMAIL}</span>
+              </div>
+            </a>
+
+            <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="contact__channel fade-in-up" id="contact-location">
+              <div className="contact__channel-icon"><MapPinIcon /></div>
+              <div className="contact__channel-text">
+                <span className="contact__channel-label">Location reference</span>
+                <span className="contact__channel-value">Mira Bhayandar, Maharashtra</span>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -586,7 +634,7 @@ function Contact() {
                 id="contact-name"
                 name="name"
                 value={formState.name}
-                onChange={(e) => setFormState({...formState, name: e.target.value})}
+                onChange={(e) => updateField('name', e.target.value)}
                 required
                 autoComplete="name"
               />
@@ -598,8 +646,10 @@ function Contact() {
                 id="contact-phone"
                 name="phone"
                 value={formState.phone}
-                onChange={(e) => setFormState({...formState, phone: e.target.value})}
+                onChange={(e) => updateField('phone', e.target.value)}
                 required
+                inputMode="tel"
+                pattern="[0-9+()\\s-]{7,}"
                 autoComplete="tel"
               />
             </div>
@@ -609,12 +659,15 @@ function Contact() {
                 id="contact-message"
                 name="message"
                 value={formState.message}
-                onChange={(e) => setFormState({...formState, message: e.target.value})}
+                onChange={(e) => updateField('message', e.target.value)}
                 rows="4"
               />
             </div>
-            <button type="submit" className="form-submit" id="contact-submit">
-              Send Inquiry
+            <div className="form-status" role="status" aria-live="polite">
+              {status.message && <p className={`form-status--${status.type}`}>{status.message}</p>}
+            </div>
+            <button type="submit" className="form-submit" id="contact-submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Inquiry Ready in WhatsApp' : 'Send Inquiry'}
             </button>
           </form>
         </div>
@@ -655,6 +708,10 @@ function Footer() {
               <li><a href={`tel:${PHONE_1}`}>{PHONE_1_DISPLAY}</a></li>
               <li><a href={`tel:${PHONE_2}`}>{PHONE_2_DISPLAY}</a></li>
               <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp Us</a></li>
+              <li><a href={`mailto:${EMAIL}?subject=${encodeURIComponent('Ambulance service enquiry')}`}>Email Us</a></li>
+              <li><a href={MAPS_URL} target="_blank" rel="noopener noreferrer">Mira Bhayandar location</a></li>
+              <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Cardiac Ambulance on Instagram">Instagram</a></li>
+              <li><a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Cardiac Ambulance on Facebook">Facebook</a></li>
             </ul>
           </div>
         </div>
@@ -673,12 +730,36 @@ function Footer() {
 }
 
 
-/* ── Mobile Floating Call Button ── */
-function MobileCallButton() {
+/* ── Floating Ambulance Contact Widget ── */
+function FloatingAmbulanceContact() {
+  const [isOpen, setIsOpen] = useState(false)
+  const widgetRef = useRef(null)
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target)) setIsOpen(false)
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setIsOpen(false)
+    }
+    document.addEventListener('mousedown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [])
+
   return (
-    <a href={`tel:${PHONE_1}`} className="mobile-call-btn" aria-label="Call Bombay Cardiac Ambulance" id="mobile-call-fab">
-      <PhoneIcon />
-    </a>
+    <div className={`ambulance-contact ${isOpen ? 'ambulance-contact--open' : ''}`} ref={widgetRef}>
+      <div className="ambulance-contact__actions" id="ambulance-contact-actions" aria-hidden={!isOpen}>
+        <a href={`tel:${PHONE_1}`} tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--call" aria-label="Call Bombay Cardiac Ambulance"><PhoneIcon /><span>Call</span></a>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--whatsapp" aria-label="Message Bombay Cardiac Ambulance on WhatsApp"><WhatsAppIcon /><span>WhatsApp</span></a>
+      </div>
+      <button type="button" className="ambulance-contact__toggle" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen} aria-controls="ambulance-contact-actions" aria-label={isOpen ? 'Close emergency contact options' : 'Open emergency contact options'}>
+        <span className="ambulance-contact__vehicle" aria-hidden="true"><span className="ambulance-contact__light" /><span className="ambulance-contact__cross">+</span><span className="ambulance-contact__wheel ambulance-contact__wheel--back" /><span className="ambulance-contact__wheel ambulance-contact__wheel--front" /></span>
+      </button>
+    </div>
   )
 }
 
@@ -701,7 +782,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
-      <MobileCallButton />
+      <FloatingAmbulanceContact />
     </>
   )
 }
