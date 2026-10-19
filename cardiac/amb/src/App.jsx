@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
+import approvedTestimonials from './testimonials.js'
 
 /* ── Constants ── */
 const PHONE_1 = '+918850427667'
@@ -103,6 +104,12 @@ const CheckIcon = () => (
   </svg>
 )
 
+const StarIcon = ({ filled }) => (
+  <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+)
+
 /* ── Scroll Observer Hook ── */
 function useScrollReveal() {
   const ref = useRef(null)
@@ -172,6 +179,7 @@ function Nav() {
           <a href="#services" className="nav__link">Services</a>
           <a href="#how-it-works" className="nav__link">How It Works</a>
           <a href="#about" className="nav__link">About</a>
+          <a href="#testimonials" className="nav__link">Testimonials</a>
           <a href="#contact" className="nav__link">Contact</a>
           <a href={`tel:${PHONE_1}`} className="nav__cta">
             <PhoneIcon /> Call Now
@@ -192,6 +200,7 @@ function Nav() {
         <a href="#services" className="nav__mobile-link" onClick={closeMenu}>Services</a>
         <a href="#how-it-works" className="nav__mobile-link" onClick={closeMenu}>How It Works</a>
         <a href="#about" className="nav__mobile-link" onClick={closeMenu}>About</a>
+        <a href="#testimonials" className="nav__mobile-link" onClick={closeMenu}>Testimonials</a>
         <a href="#contact" className="nav__mobile-link" onClick={closeMenu}>Contact</a>
         <a href={`tel:${PHONE_1}`} className="nav__mobile-cta" onClick={closeMenu}>
           <PhoneIcon /> Call Now
@@ -523,6 +532,213 @@ function Transport() {
 }
 
 
+/* ── Star Rating Display ── */
+function StarRating({ rating, size = 'md' }) {
+  return (
+    <div className={`star-rating star-rating--${size}`} aria-label={`${rating} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span key={star} className={`star-rating__star ${star <= rating ? 'star-rating__star--filled' : ''}`}>
+          <StarIcon filled={star <= rating} />
+        </span>
+      ))}
+    </div>
+  )
+}
+
+
+/* ── Testimonials Section ── */
+function Testimonials() {
+  const sectionRef = useScrollReveal()
+  const hasTestimonials = approvedTestimonials && approvedTestimonials.length > 0
+
+  return (
+    <section className="testimonials section-padding" id="testimonials" ref={sectionRef}>
+      <div className="container">
+        <div className="testimonials__header">
+          <div className="overline fade-in-up">Testimonials</div>
+          <h2 className="fade-in-up">What Our <em>Patients</em><br/>Say</h2>
+        </div>
+
+        {hasTestimonials ? (
+          <div className="testimonials__grid">
+            {approvedTestimonials.map((t, i) => (
+              <div className="testimonial-card fade-in-up" key={i}>
+                <StarRating rating={t.rating} />
+                <blockquote className="testimonial-card__text">
+                  <p>&ldquo;{t.text}&rdquo;</p>
+                </blockquote>
+                <div className="testimonial-card__author">
+                  <span className="testimonial-card__name">{t.name}</span>
+                  {t.date && <span className="testimonial-card__date">{t.date}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="testimonials__empty fade-in-up">
+            No testimonials yet. Be the first to share your experience with us.
+          </p>
+        )}
+
+        <TestimonialForm />
+      </div>
+    </section>
+  )
+}
+
+
+/* ── Testimonial Submission Form ── */
+const TESTIMONIAL_MAX_LENGTH = 500
+
+function TestimonialForm() {
+  const [name, setName] = useState('')
+  const [rating, setRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [text, setText] = useState('')
+  const [errors, setErrors] = useState({})
+  const [status, setStatus] = useState({ type: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const clearError = (field) => {
+    if (errors[field]) setErrors((prev) => { const next = { ...prev }; delete next[field]; return next })
+    if (status.message) setStatus({ type: '', message: '' })
+    if (isSubmitting) setIsSubmitting(false)
+  }
+
+  const validate = () => {
+    const newErrors = {}
+    if (!name.trim()) newErrors.name = 'Please enter your name.'
+    if (rating < 1 || rating > 5) newErrors.rating = 'Please select a rating.'
+    if (!text.trim()) newErrors.text = 'Please write your testimonial.'
+    else if (text.trim().length > TESTIMONIAL_MAX_LENGTH) newErrors.text = `Testimonial must be ${TESTIMONIAL_MAX_LENGTH} characters or fewer.`
+    return newErrors
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (isSubmitting) return
+
+    const newErrors = validate()
+    setErrors(newErrors)
+    if (Object.keys(newErrors).length > 0) return
+
+    setIsSubmitting(true)
+    setStatus({ type: '', message: '' })
+
+    const stars = '\u2605'.repeat(rating) + '\u2606'.repeat(5 - rating)
+    const message = [
+      'New testimonial submission:',
+      '',
+      `Name: ${name.trim()}`,
+      `Rating: ${stars} (${rating}/5)`,
+      `Testimonial: ${text.trim()}`,
+      '',
+      'Sent via the Bombay Cardiac Ambulance website.',
+    ].join('\n')
+
+    const whatsappWindow = window.open(buildWhatsAppUrl(message), '_blank')
+
+    if (!whatsappWindow) {
+      setStatus({
+        type: 'error',
+        message: 'WhatsApp could not be opened. Your testimonial is preserved above \u2014 please allow pop-ups and try again, or message us directly on WhatsApp.',
+      })
+      setIsSubmitting(false)
+      return
+    }
+    whatsappWindow.opener = null
+
+    setStatus({
+      type: 'success',
+      message: 'WhatsApp has opened with your testimonial. Please review and tap Send. Your testimonial will be reviewed before it may appear on our website.',
+    })
+  }
+
+  const displayRating = hoverRating || rating
+
+  return (
+    <div className="testimonial-form-wrapper fade-in-up">
+      <h3 className="testimonial-form__title">Share Your Experience</h3>
+      <p className="testimonial-form__note">
+        Your testimonial will be sent to us via WhatsApp for review.
+        Approved testimonials may be published on this page.
+      </p>
+
+      <form onSubmit={handleSubmit} id="testimonial-form" noValidate>
+        <div className="form-group">
+          <label htmlFor="testimonial-name">Your Name</label>
+          <input
+            type="text"
+            id="testimonial-name"
+            name="testimonial-name"
+            value={name}
+            onChange={(e) => { setName(e.target.value); clearError('name') }}
+            required
+            autoComplete="name"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'testimonial-name-error' : undefined}
+          />
+          {errors.name && <p className="field-error" id="testimonial-name-error" role="alert">{errors.name}</p>}
+        </div>
+
+        <div className="form-group">
+          <label id="testimonial-rating-label">Rating</label>
+          <div
+            className="star-input"
+            role="radiogroup"
+            aria-labelledby="testimonial-rating-label"
+            onMouseLeave={() => setHoverRating(0)}
+          >
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className={`star-input__btn ${star <= displayRating ? 'star-input__btn--active' : ''}`}
+                onClick={() => { setRating(star); clearError('rating') }}
+                onMouseEnter={() => setHoverRating(star)}
+                aria-label={`${star} star${star > 1 ? 's' : ''}`}
+                aria-checked={star === rating}
+                role="radio"
+              >
+                <StarIcon filled={star <= displayRating} />
+              </button>
+            ))}
+            {rating > 0 && <span className="star-input__label">{rating}/5</span>}
+          </div>
+          {errors.rating && <p className="field-error" id="testimonial-rating-error" role="alert">{errors.rating}</p>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="testimonial-text">Your Testimonial</label>
+          <textarea
+            id="testimonial-text"
+            name="testimonial-text"
+            value={text}
+            onChange={(e) => { setText(e.target.value); clearError('text') }}
+            rows="4"
+            required
+            maxLength={TESTIMONIAL_MAX_LENGTH + 50}
+            aria-invalid={!!errors.text}
+            aria-describedby={errors.text ? 'testimonial-text-error' : 'testimonial-text-count'}
+          />
+          <span className="char-count" id="testimonial-text-count">{text.length}/{TESTIMONIAL_MAX_LENGTH}</span>
+          {errors.text && <p className="field-error" id="testimonial-text-error" role="alert">{errors.text}</p>}
+        </div>
+
+        <div className="form-status" role="status" aria-live="polite">
+          {status.message && <p className={`form-status--${status.type}`}>{status.message}</p>}
+        </div>
+
+        <button type="submit" className="form-submit" id="testimonial-submit" disabled={isSubmitting}>
+          <WhatsAppIcon />
+          {isSubmitting ? 'Testimonial Ready in WhatsApp' : 'Send Testimonial via WhatsApp'}
+        </button>
+      </form>
+    </div>
+  )
+}
+
+
 /* ── Contact Section ── */
 function Contact() {
   const sectionRef = useScrollReveal()
@@ -761,6 +977,7 @@ function Footer() {
               <li><a href="#services">Services</a></li>
               <li><a href="#how-it-works">How It Works</a></li>
               <li><a href="#about">About Us</a></li>
+              <li><a href="#testimonials">Testimonials</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>
@@ -842,6 +1059,7 @@ function App() {
         <HowItWorks />
         <Trust />
         <Transport />
+        <Testimonials />
         <Contact />
       </main>
       <Footer />
