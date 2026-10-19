@@ -20,93 +20,93 @@ const WHATSAPP_URL = buildWhatsAppUrl()
 /* ── SVG Icon Components ── */
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
   </svg>
 )
 
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
   </svg>
 )
 
 const HeartIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
   </svg>
 )
 
 const ShieldIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
   </svg>
 )
 
 const ClockIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
   </svg>
 )
 
 const TruckIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
-    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+    <rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+    <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
   </svg>
 )
 
 const ActivityIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
   </svg>
 )
 
 const WindIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+    <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
   </svg>
 )
 
 const ThermometerIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
   </svg>
 )
 
 const PlaneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
   </svg>
 )
 
 const MapPinIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
   </svg>
 )
 
 const BoxIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
   </svg>
 )
 
 const UsersIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
   </svg>
 )
 
 const CheckIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
+    <polyline points="20 6 9 17 4 12" />
   </svg>
 )
 
 const StarIcon = ({ filled }) => (
   <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
   </svg>
 )
 
@@ -165,12 +165,14 @@ function Nav() {
   return (
     <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`} role="navigation" aria-label="Main navigation">
       <div className="nav__inner">
-        <a href="#hero" className="nav__brand" aria-label="Bombay Cardiac Ambulance — Home">
+        <a href="#hero" className="nav__brand" aria-label="Bombay Ambulance Service 24/7 — Home">
           <div className="nav__logo-icon">
             <img src="/bca_logo.png" alt="" width="38" height="38" />
           </div>
           <div className="nav__name">
-            Bombay Cardiac<br/>Ambulance
+            Bombay Ambulance
+            <br />
+            Service 24/7
             <span>We Care, We Save Lives</span>
           </div>
         </a>
@@ -219,7 +221,7 @@ function Hero() {
         <div className="hero__content">
           <div className="overline hero__overline">Emergency Cardiac Ambulance Service</div>
           <h1 className="hero__title">
-            When Every<br/>Second Counts,<br/>We <em>Respond</em>
+            When Every<br />Second Counts,<br />We <em>Respond</em>
           </h1>
           <p className="hero__subtitle">
             24/7 cardiac and critical care ambulance service across Mumbai.
@@ -250,7 +252,7 @@ function Hero() {
             <div className="hero__siren-glow" aria-hidden="true" />
             <img
               src="/ambulance-hero.jpg"
-              alt="Bombay Cardiac Ambulance — illustrated side view of an emergency ambulance with red and green markings"
+              alt="Bombay Ambulance Service 24/7 — illustrated side view of an emergency ambulance with red and green markings"
               className="hero__ambulance-img"
               width="800"
               height="450"
@@ -280,14 +282,14 @@ function ResponseDivider() {
         {/* Miniature ambulance traveling on the line */}
         <g className="response-divider__ambulance">
           <g className="response-divider__ambulance-icon">
-            <rect x="0" y="48" width="28" height="16" rx="2" fill="#F8F6F2" stroke="#1A1A1A" strokeWidth="1.5"/>
-            <rect x="20" y="44" width="12" height="20" rx="2" fill="#F8F6F2" stroke="#1A1A1A" strokeWidth="1.5"/>
-            <rect x="22" y="46" width="8" height="8" rx="1" fill="#2D6A4F" opacity="0.3"/>
-            <line x1="8" y1="52" x2="18" y2="52" stroke="#D0342C" strokeWidth="2"/>
-            <line x1="13" y1="49" x2="13" y2="55" stroke="#D0342C" strokeWidth="2"/>
-            <rect x="24" y="40" width="6" height="3" rx="1" fill="#D0342C"/>
-            <circle cx="7" cy="66" r="3" fill="#1A1A1A"/>
-            <circle cx="25" cy="66" r="3" fill="#1A1A1A"/>
+            <rect x="0" y="48" width="28" height="16" rx="2" fill="#F8F6F2" stroke="#1A1A1A" strokeWidth="1.5" />
+            <rect x="20" y="44" width="12" height="20" rx="2" fill="#F8F6F2" stroke="#1A1A1A" strokeWidth="1.5" />
+            <rect x="22" y="46" width="8" height="8" rx="1" fill="#2D6A4F" opacity="0.3" />
+            <line x1="8" y1="52" x2="18" y2="52" stroke="#D0342C" strokeWidth="2" />
+            <line x1="13" y1="49" x2="13" y2="55" stroke="#D0342C" strokeWidth="2" />
+            <rect x="24" y="40" width="6" height="3" rx="1" fill="#D0342C" />
+            <circle cx="7" cy="66" r="3" fill="#1A1A1A" />
+            <circle cx="25" cy="66" r="3" fill="#1A1A1A" />
           </g>
         </g>
       </svg>
@@ -332,7 +334,7 @@ function Services() {
     <section className="services section-padding container" id="services" ref={sectionRef}>
       <div className="services__header">
         <div className="overline">Our Fleet</div>
-        <h2>Every <em>Emergency,</em><br/>Every Distance</h2>
+        <h2>Every <em>Emergency,</em><br />Every Distance</h2>
         <p className="services__subtitle">
           From critical cardiac transport to intercity road ambulance and air transfers —
           we operate a range of equipped vehicles for different medical situations.
@@ -348,7 +350,7 @@ function Services() {
         <div className="service-group">
           <div className="service-group__label">Patient Transport</div>
           {patientTransport.map((s, i) => <ServiceCard key={i} service={s} />)}
-          <div style={{marginTop: 'var(--space-2xl)'}}>
+          <div style={{ marginTop: 'var(--space-2xl)' }}>
             <div className="service-group__label">Specialized</div>
             {specialized.map((s, i) => <ServiceCard key={i} service={s} />)}
           </div>
@@ -450,7 +452,7 @@ function Trust() {
       <div className="container">
         <div className="trust__header">
           <div className="overline">Why Choose Us</div>
-          <h2>Built for <em>Critical</em><br/>Moments</h2>
+          <h2>Built for <em>Critical</em><br />Moments</h2>
         </div>
 
         <div className="trust__grid">
@@ -500,7 +502,7 @@ function Transport() {
       <div className="transport__layout">
         <div className="transport__content">
           <div className="overline fade-in-up">Transport & Coverage</div>
-          <h2 className="fade-in-up">Beyond <em>Mumbai,</em><br/>Across India</h2>
+          <h2 className="fade-in-up">Beyond <em>Mumbai,</em><br />Across India</h2>
           <p className="transport__text fade-in-up">
             Whether it's within Mumbai or across the country, we coordinate patient
             transport by road and air. Our intercity ambulance service covers all
@@ -556,7 +558,7 @@ function Testimonials() {
       <div className="container">
         <div className="testimonials__header">
           <div className="overline fade-in-up">Testimonials</div>
-          <h2 className="fade-in-up">What Our <em>Patients</em><br/>Say</h2>
+          <h2 className="fade-in-up">What Our <em>Patients</em><br />Say</h2>
         </div>
 
         {hasTestimonials ? (
@@ -633,7 +635,7 @@ function TestimonialForm() {
       `Rating: ${stars} (${rating}/5)`,
       `Testimonial: ${text.trim()}`,
       '',
-      'Sent via the Bombay Cardiac Ambulance website.',
+      'Sent via the Bombay Ambulance Service 24/7 website.',
     ].join('\n')
 
     const whatsappWindow = window.open(buildWhatsAppUrl(message), '_blank')
@@ -963,7 +965,7 @@ function Footer() {
       <div className="container">
         <div className="footer__top">
           <div className="footer__brand">
-            <div className="footer__brand-name">Bombay Cardiac Ambulance</div>
+            <div className="footer__brand-name">Bombay Ambulance Service 24/7</div>
             <div className="footer__brand-tagline">We Care, We Save Lives</div>
             <p className="footer__brand-desc">
               24/7 cardiac and critical care ambulance service. From basic patient transport to
@@ -990,15 +992,15 @@ function Footer() {
               <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp Us</a></li>
               <li><a href={`mailto:${EMAIL}?subject=${encodeURIComponent('Ambulance service enquiry')}`}>Email Us</a></li>
               <li><a href={MAPS_URL} target="_blank" rel="noopener noreferrer">Mira Bhayandar location</a></li>
-              <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Cardiac Ambulance on Instagram">Instagram</a></li>
-              <li><a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Cardiac Ambulance on Facebook">Facebook</a></li>
+              <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Ambulance Service 24/7 on Instagram">Instagram</a></li>
+              <li><a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bombay Ambulance Service 24/7 on Facebook">Facebook</a></li>
             </ul>
           </div>
         </div>
 
         <div className="footer__bottom">
           <div className="footer__copy">
-            © {new Date().getFullYear()} Bombay Cardiac Ambulance. All rights reserved.
+            © {new Date().getFullYear()} Bombay Ambulance Service 24/7. All rights reserved.
           </div>
           <div className="footer__credit">
             Crafted by <a href="https://estaris.com" target="_blank" rel="noopener noreferrer">Estaris</a>
@@ -1033,8 +1035,8 @@ function FloatingAmbulanceContact() {
   return (
     <div className={`ambulance-contact ${isOpen ? 'ambulance-contact--open' : ''}`} ref={widgetRef}>
       <div className="ambulance-contact__actions" id="ambulance-contact-actions" aria-hidden={!isOpen}>
-        <a href={`tel:${PHONE_1}`} tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--call" aria-label="Call Bombay Cardiac Ambulance"><PhoneIcon /><span>Call</span></a>
-        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--whatsapp" aria-label="Message Bombay Cardiac Ambulance on WhatsApp"><WhatsAppIcon /><span>WhatsApp</span></a>
+        <a href={`tel:${PHONE_1}`} tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--call" aria-label="Call Bombay Ambulance Service 24/7"><PhoneIcon /><span>Call</span></a>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" tabIndex={isOpen ? 0 : -1} className="ambulance-contact__action ambulance-contact__action--whatsapp" aria-label="Message Bombay Ambulance Service 24/7 on WhatsApp"><WhatsAppIcon /><span>WhatsApp</span></a>
       </div>
       <button type="button" className="ambulance-contact__toggle" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen} aria-controls="ambulance-contact-actions" aria-label={isOpen ? 'Close emergency contact options' : 'Open emergency contact options'}>
         <span className="ambulance-contact__vehicle" aria-hidden="true"><span className="ambulance-contact__light" /><span className="ambulance-contact__cross">+</span><span className="ambulance-contact__wheel ambulance-contact__wheel--back" /><span className="ambulance-contact__wheel ambulance-contact__wheel--front" /></span>

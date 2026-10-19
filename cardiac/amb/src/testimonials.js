@@ -1,5 +1,5 @@
 /**
- * APPROVED TESTIMONIALS — Bombay Cardiac Ambulance
+ * APPROVED TESTIMONIALS — Bombay Ambulance Service 24/7
  * ==================================================
  *
  * HOW TO ADD A NEW APPROVED TESTIMONIAL
