@@ -1,0 +1,148 @@
+/* ═══════════════════════════════════════════════════════════════
+   Occasions — Editorial Staggered Layout
+   ═══════════════════════════════════════════════════════════════ */
+
+.occasions {
+  background-color: var(--color-ivory);
+  overflow: hidden;
+}
+
+.occasions__layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-4xl);
+  align-items: center;
+}
+
+/* ── Intro (Left) ── */
+.occasions__intro {
+  position: sticky;
+  top: 8rem;
+}
+
+.occasions__intro .label {
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.occasions__title {
+  margin-bottom: var(--space-xl);
+  line-height: 1.15;
+}
+
+.occasions__title em {
+  color: var(--color-oxblood);
+  font-weight: 400;
+}
+
+.occasions__desc {
+  font-size: 1.05rem;
+  color: var(--color-cocoa-light);
+  max-width: 30ch;
+  margin-bottom: var(--space-2xl);
+  line-height: 1.7;
+}
+
+/* ── Occasion Cards (Right) ── */
+.occasions__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.occasions__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--color-warm-white);
+  border: var(--border-light);
+  text-decoration: none;
+  color: var(--color-cocoa);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+/* Staggered offset */
+.occasions__card--right {
+  margin-left: 2.5rem;
+}
+
+.occasions__card:hover {
+  border-color: var(--color-oxblood);
+  background: var(--color-cream);
+  transform: translateX(4px);
+}
+
+.occasions__card-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-cream);
+  border: var(--border-light);
+}
+
+.occasions__card:hover .occasions__card-icon {
+  background: var(--color-warm-white);
+}
+
+.occasions__card-content {
+  flex: 1;
+}
+
+.occasions__card-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+}
+
+.occasions__card-tagline {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-cocoa-light);
+}
+
+.occasions__card-arrow {
+  flex-shrink: 0;
+  color: var(--color-cocoa-light);
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.occasions__card:hover .occasions__card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--color-oxblood);
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .occasions__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .occasions__intro {
+    position: static;
+    text-align: center;
+  }
+
+  .occasions__desc {
+    margin-inline: auto;
+  }
+
+  .occasions__intro .btn {
+    margin-inline: auto;
+  }
+
+  .occasions__card--right {
+    margin-left: 0;
+  }
+}

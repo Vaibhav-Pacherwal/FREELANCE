@@ -1,0 +1,458 @@
+/* ═══════════════════════════════════════════════════════════════
+   GUPTA BAKERS — Design System
+   Vintage English Patisserie · Royal · Editorial · Premium
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ── */
+:root {
+  /* Colour Palette — Warm, Vintage, Burgundy-led */
+  --color-oxblood: #722F37;
+  --color-oxblood-dark: #5A2029;
+  --color-burgundy: #4A1525;
+  --color-brick: #8B3A3A;
+  --color-brick-light: #A05050;
+  --color-cream: #F5EDE3;
+  --color-ivory: #FAF7F2;
+  --color-parchment: #EDE5D8;
+  --color-warm-white: #FFFDF9;
+  --color-cocoa: #2B1B12;
+  --color-cocoa-mid: #4A3428;
+  --color-cocoa-light: #6B5B50;
+  --color-gold: #B8954F;
+  --color-gold-muted: #C4A870;
+  --color-gold-light: #D4C4A0;
+  --color-border: #D4C5B3;
+  --color-border-light: #E8DDD0;
+  --color-warm-gray: #8B7D72;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Josefin Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Spacing Scale */
+  --space-2xs: 0.125rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --space-5xl: 8rem;
+  --space-6xl: 10rem;
+
+  /* Layout */
+  --max-width: 1340px;
+  --max-width-narrow: 900px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* Borders */
+  --border-fine: 1px solid var(--color-border);
+  --border-light: 1px solid var(--color-border-light);
+  --border-gold: 1px solid var(--color-gold-light);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 350ms;
+  --duration-slow: 600ms;
+
+  /* Z-index scale */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-cocoa);
+  background-color: var(--color-ivory);
+  overflow-x: hidden;
+}
+
+body.cart-open {
+  overflow: hidden;
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-cocoa);
+}
+
+h1 { font-size: clamp(2.4rem, 5.5vw, 4.5rem); }
+h2 { font-size: clamp(1.8rem, 4vw, 3.2rem); }
+h3 { font-size: clamp(1.4rem, 3vw, 2rem); }
+h4 { font-size: clamp(1.15rem, 2vw, 1.5rem); }
+
+p {
+  max-width: 65ch;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a:hover {
+  color: var(--color-oxblood);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-oxblood);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: inherit;
+  color: inherit;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-oxblood);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-cocoa);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-oxblood);
+  outline-offset: 2px;
+}
+
+/* ── Utility Classes ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: var(--max-width-narrow);
+}
+
+/* Label style — uppercase tracking */
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-cocoa-light);
+}
+
+.label--gold {
+  color: var(--color-gold);
+}
+
+.label--oxblood {
+  color: var(--color-oxblood);
+}
+
+/* Decorative ornament */
+.ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-cocoa-light);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* Fine rule divider */
+.rule {
+  border: none;
+  height: 1px;
+  background: var(--color-border);
+  margin: 0;
+}
+
+.rule--gold {
+  background: var(--color-gold-light);
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.9rem 2.2rem;
+  border: 1px solid transparent;
+  transition: all var(--duration-normal) var(--ease-out);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--color-oxblood);
+  color: var(--color-ivory);
+  border-color: var(--color-oxblood);
+}
+.btn--primary:hover {
+  background: var(--color-oxblood-dark);
+  border-color: var(--color-oxblood-dark);
+  color: var(--color-ivory);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--color-cocoa);
+  border-color: var(--color-cocoa);
+}
+.btn--secondary:hover {
+  background: var(--color-cocoa);
+  color: var(--color-ivory);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-oxblood);
+  border-color: var(--color-oxblood);
+}
+.btn--ghost:hover {
+  background: var(--color-oxblood);
+  color: var(--color-ivory);
+}
+
+.btn--cream {
+  background: var(--color-cream);
+  color: var(--color-cocoa);
+  border-color: var(--color-cream);
+}
+.btn--cream:hover {
+  background: var(--color-parchment);
+  border-color: var(--color-parchment);
+}
+
+.btn--small {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.65rem;
+}
+
+.btn--icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn--icon:hover {
+  border-color: var(--color-oxblood);
+  color: var(--color-oxblood);
+}
+
+/* ── Section Spacing ── */
+.section {
+  padding-block: var(--space-4xl);
+}
+
+.section--sm {
+  padding-block: var(--space-3xl);
+}
+
+.section--lg {
+  padding-block: var(--space-5xl);
+}
+
+.section--cream {
+  background-color: var(--color-cream);
+}
+
+.section--parchment {
+  background-color: var(--color-parchment);
+}
+
+.section--burgundy {
+  background-color: var(--color-burgundy);
+  color: var(--color-cream);
+}
+
+.section--burgundy h2,
+.section--burgundy h3,
+.section--burgundy h4 {
+  color: var(--color-cream);
+}
+
+/* ── Section Headers ── */
+.section-header {
+  margin-bottom: var(--space-3xl);
+}
+
+.section-header--center {
+  text-align: center;
+}
+
+.section-header--center p {
+  margin-inline: auto;
+}
+
+.section-header .label {
+  margin-bottom: var(--space-md);
+  display: block;
+}
+
+.section-header h2 {
+  margin-bottom: var(--space-md);
+}
+
+.section-header p {
+  font-size: 1.15rem;
+  color: var(--color-cocoa-light);
+  line-height: 1.7;
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-in {
+  animation: fadeInUp var(--duration-slow) var(--ease-out) both;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cocoa-light);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-oxblood);
+  color: var(--color-ivory);
+}

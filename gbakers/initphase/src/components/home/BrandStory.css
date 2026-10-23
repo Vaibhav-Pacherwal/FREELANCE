@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════
+   Brand Story — Typography-Led Editorial Section
+   ═══════════════════════════════════════════════════════════════ */
+
+.brand-story__layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--space-4xl);
+  align-items: center;
+}
+
+/* ── Visual ── */
+.brand-story__image-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  max-height: 600px;
+}
+
+.brand-story__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+/* ── Content ── */
+.brand-story__content .label {
+  display: block;
+  margin-bottom: var(--space-lg);
+}
+
+.brand-story__title {
+  margin-bottom: var(--space-2xl);
+  line-height: 1.15;
+}
+
+.brand-story__title em {
+  font-weight: 400;
+  color: var(--color-gold-muted);
+}
+
+.brand-story__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.brand-story__text p {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: rgba(255, 253, 249, 0.8);
+}
+
+/* Pull quote */
+.brand-story__quote {
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--color-gold);
+  margin-bottom: var(--space-2xl);
+}
+
+.brand-story__quote p {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-cream);
+  letter-spacing: 0.01em;
+}
+
+/* Ornament */
+.brand-story__ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-story__ornament span:first-child,
+.brand-story__ornament span:last-child {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-gold-light);
+  opacity: 0.4;
+}
+
+.brand-story__ornament span:nth-child(2) {
+  font-size: 0.6rem;
+  color: var(--color-gold);
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .brand-story__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .brand-story__image-wrap {
+    aspect-ratio: 16 / 9;
+    max-height: 300px;
+  }
+
+  .brand-story__content {
+    text-align: center;
+  }
+
+  .brand-story__text p {
+    margin-inline: auto;
+  }
+
+  .brand-story__quote {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--color-gold);
+    border-bottom: 1px solid var(--color-gold);
+    padding: var(--space-lg) 0;
+    text-align: center;
+  }
+
+  .brand-story__ornament {
+    justify-content: center;
+  }
+}

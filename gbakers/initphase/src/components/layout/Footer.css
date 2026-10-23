@@ -1,0 +1,222 @@
+/* ═══════════════════════════════════════════════════════════════
+   Footer
+   ═══════════════════════════════════════════════════════════════ */
+
+.footer {
+  background-color: var(--color-oxblood);
+  color: var(--color-cream);
+}
+
+/* ── Brand Band ── */
+.footer__brand-band {
+  text-align: center;
+  padding: var(--space-3xl) var(--gutter) var(--space-xl);
+  border-bottom: 1px solid rgba(255,253,249,0.1);
+}
+
+.footer__brand-word {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255, 253, 249, 0.12);
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+/* ── Main Grid ── */
+.footer__main {
+  padding: var(--space-3xl) 0;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: var(--space-3xl);
+}
+
+/* ── Brand Column ── */
+.footer__col--brand {
+  padding-right: var(--space-xl);
+}
+
+.footer__wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  margin-bottom: var(--space-lg);
+}
+
+.footer__wordmark-top {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--color-cream);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.footer__wordmark-bottom {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 253, 249, 0.6);
+}
+
+.footer__tagline {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 253, 249, 0.7);
+  max-width: 28ch;
+}
+
+/* ── Column headings ── */
+.footer__heading {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold-muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Links ── */
+.footer__links li {
+  margin-bottom: 0.65rem;
+}
+
+.footer__links a {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: rgba(255, 253, 249, 0.75);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.footer__links a:hover {
+  color: var(--color-cream);
+}
+
+/* ── Contact ── */
+.footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: var(--space-lg);
+}
+
+.footer__detail {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(255, 253, 249, 0.7);
+  line-height: 1.5;
+}
+
+.footer__detail-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 253, 249, 0.4);
+  margin-bottom: 0.15rem;
+}
+
+/* ── Social ── */
+.footer__social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(255, 253, 249, 0.2);
+  border-radius: 50%;
+  color: rgba(255, 253, 249, 0.7);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.footer__social-link:hover {
+  border-color: var(--color-cream);
+  color: var(--color-cream);
+  background: rgba(255, 253, 249, 0.08);
+}
+
+/* ── Bottom Bar ── */
+.footer__bottom {
+  border-top: 1px solid rgba(255, 253, 249, 0.1);
+  padding: var(--space-lg) 0;
+}
+
+.footer__bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.footer__copyright {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 253, 249, 0.4);
+}
+
+.footer__legal {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.footer__legal a {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 253, 249, 0.4);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.footer__legal a:hover {
+  color: var(--color-cream);
+}
+
+/* ═══════════════════════════════════════════════
+   Mobile Responsive
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl) var(--space-xl);
+  }
+
+  .footer__col--brand {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .footer__brand-word {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .footer__bottom-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,42 @@
+/* ── Announcement Bar ── */
+
+.announcement-bar {
+  background-color: var(--color-burgundy);
+  color: var(--color-cream);
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  z-index: var(--z-sticky);
+}
+
+.announcement-bar__track {
+  display: inline-flex;
+  align-items: center;
+  animation: marquee 35s linear infinite;
+  padding-block: 0.55rem;
+}
+
+.announcement-bar__text {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  padding-inline: 0.5rem;
+}
+
+.announcement-bar__separator {
+  flex-shrink: 0;
+  font-size: 0.5rem;
+  opacity: 0.5;
+  padding-inline: 1.5rem;
+  color: var(--color-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar__track {
+    animation: none;
+    justify-content: center;
+  }
+}
