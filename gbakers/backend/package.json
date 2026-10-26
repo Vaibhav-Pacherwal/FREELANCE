@@ -1,0 +1,19 @@
+{
+  "name": "gbakers-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Gupta Bakers bakery e-commerce backend API",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "node --watch main.js",
+    "test": "node tests/hardening.test.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "mongoose": "^9.11.4",
+    "razorpay": "^2.9.8"
+  }
+}

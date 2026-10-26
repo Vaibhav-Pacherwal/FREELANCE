@@ -1,19 +1,69 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useReducer, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/useCart';
-import { products, categories, formatPrice } from '../data/products';
+import { categories, formatPrice } from '../data/products';
+import { fetchProducts } from '../services/api';
+import { mapProducts } from '../services/productMapper';
 import './CataloguePage.css';
+
+// ── Category filter config (UI-side; maps UI slug → backend category value) ─
+// Backend enum is singular: cake | bread | pastry | cookie | snack | other
+// Frontend routes use plural slugs: cakes | brownies | pastries | cookies
+const CATEGORY_SLUG_TO_BACKEND = {
+  cakes:    'cake',
+  brownies: 'snack',   // brownies map to the closest backend category
+  pastries: 'pastry',
+  cookies:  'cookie',
+};
+
+// ── Fetch state machine (avoids multiple synchronous setState calls in effects) ─
+const FETCH_INIT    = 'FETCH_INIT';
+const FETCH_SUCCESS = 'FETCH_SUCCESS';
+const FETCH_ERROR   = 'FETCH_ERROR';
+
+const initialFetchState = { products: [], loading: true, error: null };
+
+function fetchReducer(state, action) {
+  switch (action.type) {
+    case FETCH_INIT:    return { ...state, loading: true,  error: null };
+    case FETCH_SUCCESS: return { products: action.data, loading: false, error: null };
+    case FETCH_ERROR:   return { ...state, loading: false, error: action.error };
+    default:            return state;
+  }
+}
 
 export default function CataloguePage() {
   const { category: categoryParam } = useParams();
   const { addItem } = useCart();
 
+  const [fetchState, dispatch] = useReducer(fetchReducer, initialFetchState);
+  const { products, loading, error } = fetchState;
+  const [fetchKey, setFetchKey] = useState(0); // increment to retry
+
   const activeCategory = categoryParam || 'all';
+
+  // Fetch products from the backend on mount (and on retry)
+  useEffect(() => {
+    let cancelled = false;
+    dispatch({ type: FETCH_INIT });
+
+    fetchProducts()
+      .then((raw) => {
+        if (!cancelled) dispatch({ type: FETCH_SUCCESS, data: mapProducts(raw) });
+      })
+      .catch((err) => {
+        if (!cancelled) dispatch({ type: FETCH_ERROR, error: err.message });
+      });
+
+    return () => { cancelled = true; };
+  }, [fetchKey]);
 
   const filtered = useMemo(() => {
     if (activeCategory === 'all') return products;
-    return products.filter((p) => p.category === activeCategory);
-  }, [activeCategory]);
+    const backendCategory = CATEGORY_SLUG_TO_BACKEND[activeCategory];
+    if (!backendCategory) return products;
+    return products.filter((p) => p.category === backendCategory);
+  }, [products, activeCategory]);
 
   const activeLabel =
     activeCategory === 'all'
@@ -56,22 +106,55 @@ export default function CataloguePage() {
           ))}
         </nav>
 
-        {/* Product grid */}
-        <div className="catalogue__grid">
-          {filtered.map((product) => (
-            <CatalogueCard
-              key={product.id}
-              product={product}
-              onAddToCart={addItem}
-            />
-          ))}
-        </div>
-
-        {filtered.length === 0 && (
-          <div className="catalogue__empty">
-            <p>No products found in this category.</p>
-            <Link to="/shop" className="btn btn--ghost">View All Products</Link>
+        {/* Loading state */}
+        {loading && (
+          <div className="catalogue__grid" aria-busy="true" aria-label="Loading products">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="cat-card cat-card--skeleton" aria-hidden="true">
+                <div className="cat-card__image-wrap" />
+                <div className="cat-card__body">
+                  <div className="cat-card__skeleton-line cat-card__skeleton-line--short" />
+                  <div className="cat-card__skeleton-line" />
+                  <div className="cat-card__skeleton-line cat-card__skeleton-line--medium" />
+                </div>
+              </div>
+            ))}
           </div>
+        )}
+
+        {/* Error state */}
+        {!loading && error && (
+          <div className="catalogue__error" role="alert">
+            <p className="catalogue__error-msg">{error}</p>
+            <button
+              className="btn btn--ghost"
+              onClick={() => setFetchKey((k) => k + 1)}
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Product grid */}
+        {!loading && !error && (
+          <>
+            <div className="catalogue__grid">
+              {filtered.map((product) => (
+                <CatalogueCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={addItem}
+                />
+              ))}
+            </div>
+
+            {filtered.length === 0 && (
+              <div className="catalogue__empty">
+                <p>No products found in this category.</p>
+                <Link to="/shop" className="btn btn--ghost">View All Products</Link>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

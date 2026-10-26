@@ -243,3 +243,52 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Skeleton loading cards ── */
+.cat-card--skeleton {
+  pointer-events: none;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.cat-card--skeleton .cat-card__image-wrap {
+  background: var(--color-parchment);
+  aspect-ratio: 4 / 3;
+}
+
+.cat-card__skeleton-line {
+  height: 0.85rem;
+  background: var(--color-parchment);
+  border-radius: 2px;
+  margin-top: 0.6rem;
+  width: 100%;
+}
+
+.cat-card__skeleton-line--short {
+  width: 40%;
+}
+
+.cat-card__skeleton-line--medium {
+  width: 65%;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ── Error state ── */
+.catalogue__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-4xl) 0;
+  text-align: center;
+}
+
+.catalogue__error-msg {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-cocoa-light);
+  max-width: 44ch;
+}

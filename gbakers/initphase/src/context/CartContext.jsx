@@ -1,27 +1,70 @@
-import { createContext, useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
+import { CartContext } from './cartContextValue';
 
-export const CartContext = createContext(null);
+// ── Maximum quantity per line-item (mirrors backend MAX_QUANTITY_PER_ITEM) ──
+const MAX_QUANTITY_PER_ITEM = 50;
 
+// ── localStorage helpers ────────────────────────────────────────────────────
+const STORAGE_KEY = 'gbakers_cart_items';
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    // Validate: must be an array of objects that each have the required shape
+    if (
+      !Array.isArray(parsed) ||
+      !parsed.every(
+        (i) =>
+          i &&
+          typeof i === 'object' &&
+          typeof i.key === 'string' &&
+          typeof i.quantity === 'number' &&
+          i.product &&
+          i.variant
+      )
+    ) {
+      return [];
+    }
+    return parsed;
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(items) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Quota exceeded or private-browsing restriction — fail silently
+  }
+}
+
+// ── Initial state (hydrated from localStorage) ───────────────────────────────
 const initialState = {
-  items: [],
+  items: loadFromStorage(),
   isOpen: false,
 };
 
+// ── Reducer ──────────────────────────────────────────────────────────────────
 function cartReducer(state, action) {
   switch (action.type) {
     case 'ADD_ITEM': {
       const { product, variant, quantity = 1 } = action.payload;
       const itemKey = `${product.id}-${variant.label}`;
-      const existing = state.items.find(i => i.key === itemKey);
+      const existing = state.items.find((i) => i.key === itemKey);
 
       if (existing) {
+        const newQty = Math.min(
+          existing.quantity + quantity,
+          MAX_QUANTITY_PER_ITEM
+        );
         return {
           ...state,
           isOpen: true,
-          items: state.items.map(i =>
-            i.key === itemKey
-              ? { ...i, quantity: i.quantity + quantity }
-              : i
+          items: state.items.map((i) =>
+            i.key === itemKey ? { ...i, quantity: newQty } : i
           ),
         };
       }
@@ -35,7 +78,7 @@ function cartReducer(state, action) {
             key: itemKey,
             product,
             variant,
-            quantity,
+            quantity: Math.min(quantity, MAX_QUANTITY_PER_ITEM),
           },
         ],
       };
@@ -44,7 +87,7 @@ function cartReducer(state, action) {
     case 'REMOVE_ITEM':
       return {
         ...state,
-        items: state.items.filter(i => i.key !== action.payload),
+        items: state.items.filter((i) => i.key !== action.payload),
       };
 
     case 'UPDATE_QUANTITY': {
@@ -52,13 +95,14 @@ function cartReducer(state, action) {
       if (quantity <= 0) {
         return {
           ...state,
-          items: state.items.filter(i => i.key !== key),
+          items: state.items.filter((i) => i.key !== key),
         };
       }
+      const capped = Math.min(quantity, MAX_QUANTITY_PER_ITEM);
       return {
         ...state,
-        items: state.items.map(i =>
-          i.key === key ? { ...i, quantity } : i
+        items: state.items.map((i) =>
+          i.key === key ? { ...i, quantity: capped } : i
         ),
       };
     }
@@ -80,8 +124,14 @@ function cartReducer(state, action) {
   }
 }
 
+// ── Provider ─────────────────────────────────────────────────────────────────
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  // Persist items to localStorage whenever they change
+  useEffect(() => {
+    saveToStorage(state.items);
+  }, [state.items]);
 
   const addItem = useCallback((product, variant, quantity) => {
     dispatch({ type: 'ADD_ITEM', payload: { product, variant, quantity } });
@@ -137,5 +187,3 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
-
-
