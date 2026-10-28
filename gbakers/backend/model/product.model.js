@@ -119,7 +119,9 @@ productSchema.pre("validate", function (next) {
       "A product must have a base price or at least one variant"
     );
   }
-  next();
+  if (typeof next === "function") {
+    next();
+  }
 });
 
 // Index for efficient listing queries

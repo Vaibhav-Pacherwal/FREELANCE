@@ -1,11 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../../context/useCart';
-import { getBestsellers, formatPrice } from '../../data/products';
+import { formatPrice } from '../../data/products';
+import { fetchProducts } from '../../services/api';
+import { mapProducts } from '../../services/productMapper';
 import './SignatureProducts.css';
 
 export default function SignatureProducts() {
-  const bestsellers = getBestsellers();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { addItem } = useCart();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchProducts()
+      .then((raw) => {
+        if (!cancelled) {
+          const mapped = mapProducts(raw);
+          const bestsellers = mapped.filter((p) => p.tags.includes('bestseller'));
+          setProducts(bestsellers.length > 0 ? bestsellers : mapped.slice(0, 6));
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err.message);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className="signatures section--lg section--cream" aria-label="Signature Products">
@@ -21,16 +49,32 @@ export default function SignatureProducts() {
           </p>
         </div>
 
-        <div className="signatures__grid">
-          {bestsellers.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-              onAddToCart={addItem}
-            />
-          ))}
-        </div>
+        {loading && (
+          <div className="signatures__grid" aria-busy="true" aria-label="Loading signature products">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="product-card product-card--skeleton" style={{ minHeight: '380px', opacity: 0.6 }} />
+            ))}
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="signatures__error" style={{ textAlign: 'center', padding: '2rem' }}>
+            <p style={{ color: 'var(--color-cocoa-light)', marginBottom: '1rem' }}>{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className="signatures__grid">
+            {products.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                onAddToCart={addItem}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -39,7 +83,7 @@ export default function SignatureProducts() {
 function ProductCard({ product, onAddToCart }) {
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [isAdding, setIsAdding] = useState(false);
-  const variant = product.variants[selectedVariant];
+  const variant = product.variants[selectedVariant] || product.variants[0] || { label: 'Standard', price: 0 };
 
   const handleAdd = () => {
     onAddToCart(product, variant, 1);

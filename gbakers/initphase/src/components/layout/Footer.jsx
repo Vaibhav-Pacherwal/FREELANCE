@@ -47,7 +47,7 @@ export default function Footer() {
           </div>
 
           {/* Contact / Hours */}
-          <div className="footer__col">
+          <div className="footer__col" id="contact">
             <h4 className="footer__heading">Visit Us</h4>
             <div className="footer__contact">
               <p className="footer__detail">

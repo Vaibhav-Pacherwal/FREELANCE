@@ -21,6 +21,8 @@ import { ALLOWED_ORIGINS, JSON_BODY_LIMIT } from "./lib/config.js";
 import productRoutes from "./routes/product.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import locationRoutes from "./routes/location.routes.js";
 
 // ── 1. Load environment variables ──────────────────────────────────────────
 dotenv.config();
@@ -85,6 +87,8 @@ app.get("/", (_req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/location", locationRoutes);
 
 // ── 7. 404 catch-all for unregistered routes ───────────────────────────────
 app.use((_req, res) => {

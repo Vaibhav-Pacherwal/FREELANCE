@@ -29,6 +29,257 @@
   align-items: flex-start;
 }
 
+/* ── Phone input with prefix ── */
+.checkout__phone-group {
+  display: flex;
+  align-items: stretch;
+  border: var(--border-fine);
+  background: var(--color-warm-white);
+  transition: border-color var(--transition-fast);
+}
+
+.checkout__phone-group:focus-within {
+  border-color: var(--color-gold);
+}
+
+.checkout__phone-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  background: rgba(184, 149, 79, 0.08);
+  border-right: var(--border-fine);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-cocoa-mid);
+  user-select: none;
+}
+
+.checkout__phone-input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.checkout__phone-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.checkout__field-error {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: #c0392b;
+  margin-top: 0.35rem;
+}
+
+.checkout__field-hint {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--color-warm-gray);
+  margin-top: 0.35rem;
+}
+
+/* ── WhatsApp order notification banner ── */
+.checkout__whatsapp-banner {
+  text-align: left;
+  padding: 1rem 1.25rem;
+  background: rgba(37, 211, 102, 0.06);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  margin-bottom: var(--space-xl);
+}
+
+.checkout__whatsapp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #128c7e;
+  margin-bottom: 0.35rem;
+}
+
+.checkout__whatsapp-header svg {
+  color: #25d366;
+  flex-shrink: 0;
+}
+
+.checkout__whatsapp-banner p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-cocoa-mid);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.checkout__whatsapp-banner strong {
+  color: var(--color-cocoa);
+}
+
+
+/* ── Payment Error Banner ── */
+.checkout__payment-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  color: #c0392b;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: var(--space-lg);
+}
+
+.checkout__payment-error svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+/* ── Spinner for async submission ── */
+.checkout__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: checkout-spin 0.6s linear infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes checkout-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Status Badge for Verified Order ── */
+.checkout__status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(39, 174, 96, 0.1);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  color: #27ae60;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+}
+
+/* ── WhatsApp Action Card ── */
+.checkout__whatsapp-card {
+  text-align: left;
+  padding: 1.25rem 1.5rem;
+  background: var(--color-warm-white);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  margin-bottom: var(--space-2xl);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.checkout__whatsapp-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.checkout__whatsapp-card-header svg {
+  color: #25d366;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.checkout__whatsapp-card-header strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-cocoa);
+  display: block;
+}
+
+.checkout__whatsapp-card-header p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-cocoa-light);
+  margin: 0.15rem 0 0;
+}
+
+.btn--whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn--whatsapp:hover {
+  background: #1ebc59;
+  transform: translateY(-1px);
+}
+
+.checkout__whatsapp-disclaimer {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-warm-gray);
+  line-height: 1.4;
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+/* ── Payment info block (Razorpay) ── */
+.checkout__payment-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-warm-white);
+}
+
+.checkout__payment-info svg {
+  flex-shrink: 0;
+  color: var(--color-cocoa-mid);
+  margin-top: 0.2rem;
+}
+
+.checkout__payment-info strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.checkout__payment-info p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-cocoa-light);
+}
+
+
 /* ── Empty State ── */
 .checkout__empty {
   text-align: center;
@@ -378,3 +629,126 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Geolocation & Autofill
+   ═══════════════════════════════════════════════ */
+.checkout__field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.checkout__field-header .checkout__label {
+  margin-bottom: 0;
+}
+
+.checkout__location-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-cocoa);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.checkout__location-btn:hover:not(:disabled) {
+  background: var(--color-parchment);
+  border-color: var(--color-cocoa-mid);
+  color: var(--color-oxblood);
+}
+
+.checkout__location-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.checkout__location-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkout__location-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(43, 27, 18, 0.2);
+  border-top-color: var(--color-oxblood);
+  border-radius: 50%;
+  animation: checkout-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.checkout__location-spinner--small {
+  width: 11px;
+  height: 11px;
+}
+
+.checkout__location-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.checkout__location-notice svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.checkout__location-notice--info {
+  background: var(--color-parchment);
+  border: 1px solid var(--color-border);
+  color: var(--color-cocoa-light);
+}
+
+.checkout__location-notice--success {
+  background: rgba(39, 174, 96, 0.08);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  color: #1e7e43;
+}
+
+.checkout__location-notice--error {
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  color: #a93226;
+}
+
+.checkout__coords-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-cocoa-light);
+  margin-top: 0.35rem;
+}
+
+.checkout__coords-note svg {
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .checkout__field-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+}
+

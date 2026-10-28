@@ -28,7 +28,7 @@ const router = Router();
 
 // ── POST /api/orders ───────────────────────────────────────────────────────
 router.post("/", async (req, res) => {
-  const { customerName, customerPhone, deliveryAddress, items } = req.body;
+  const { customerName, customerPhone, deliveryAddress, items, deliveryCoordinates } = req.body;
 
   // ── 1. Validate required top-level fields ────────────────────────────────
   const missing = [];
@@ -186,8 +186,24 @@ router.post("/", async (req, res) => {
   const totalPaise = subtotalPaise + deliveryFeePaise;
 
   // ── 6. Create and save the order ─────────────────────────────────────────
+  let validatedCoordinates = null;
+  if (deliveryCoordinates && typeof deliveryCoordinates === "object") {
+    const lat = Number(deliveryCoordinates.latitude);
+    const lon = Number(deliveryCoordinates.longitude);
+    if (
+      Number.isFinite(lat) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      Number.isFinite(lon) &&
+      lon >= -180 &&
+      lon <= 180
+    ) {
+      validatedCoordinates = { latitude: lat, longitude: lon };
+    }
+  }
+
   try {
-    const order = await Order.create({
+    const orderData = {
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
       deliveryAddress: deliveryAddress.trim(),
@@ -197,7 +213,11 @@ router.post("/", async (req, res) => {
       totalPaise,
       paymentStatus: "pending",
       orderStatus: "placed",
-    });
+    };
+    if (validatedCoordinates) {
+      orderData.deliveryCoordinates = validatedCoordinates;
+    }
+    const order = await Order.create(orderData);
 
     return res.status(201).json({
       success: true,

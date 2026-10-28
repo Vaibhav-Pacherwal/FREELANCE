@@ -7,6 +7,8 @@ const MAX_QUANTITY_PER_ITEM = 50;
 // ── localStorage helpers ────────────────────────────────────────────────────
 const STORAGE_KEY = 'gbakers_cart_items';
 
+const isValidObjectId = (id) => typeof id === 'string' && /^[0-9a-fA-F]{24}$/.test(id);
+
 function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -27,7 +29,11 @@ function loadFromStorage() {
     ) {
       return [];
     }
-    return parsed;
+    // Filter out any stale items that used old non-ObjectId mock product IDs
+    return parsed.filter((i) => {
+      const prodId = i.product?._id || i.product?.id;
+      return isValidObjectId(prodId);
+    });
   } catch {
     return [];
   }
@@ -52,7 +58,13 @@ function cartReducer(state, action) {
   switch (action.type) {
     case 'ADD_ITEM': {
       const { product, variant, quantity = 1 } = action.payload;
-      const itemKey = `${product.id}-${variant.label}`;
+      const prodId = String(product._id || product.id);
+      const normalizedProduct = {
+        ...product,
+        id: prodId,
+        _id: prodId,
+      };
+      const itemKey = `${prodId}-${variant.label}`;
       const existing = state.items.find((i) => i.key === itemKey);
 
       if (existing) {
@@ -76,7 +88,7 @@ function cartReducer(state, action) {
           ...state.items,
           {
             key: itemKey,
-            product,
+            product: normalizedProduct,
             variant,
             quantity: Math.min(quantity, MAX_QUANTITY_PER_ITEM),
           },

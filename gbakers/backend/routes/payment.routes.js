@@ -64,7 +64,7 @@ router.post("/create-order", async (req, res) => {
     });
   }
 
-  const { customerName, customerPhone, deliveryAddress, items } = req.body;
+  const { customerName, customerPhone, deliveryAddress, items, deliveryCoordinates } = req.body;
 
   // ── 1. Basic field validation ────────────────────────────────────────────
   const missing = [];
@@ -191,9 +191,25 @@ router.post("/create-order", async (req, res) => {
   const totalPaise = subtotalPaise + deliveryFeePaise;
 
   // ── 4. Create the internal pending order in MongoDB ──────────────────────
+  let validatedCoordinates = null;
+  if (deliveryCoordinates && typeof deliveryCoordinates === "object") {
+    const lat = Number(deliveryCoordinates.latitude);
+    const lon = Number(deliveryCoordinates.longitude);
+    if (
+      Number.isFinite(lat) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      Number.isFinite(lon) &&
+      lon >= -180 &&
+      lon <= 180
+    ) {
+      validatedCoordinates = { latitude: lat, longitude: lon };
+    }
+  }
+
   let order;
   try {
-    order = await Order.create({
+    const orderData = {
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
       deliveryAddress: deliveryAddress.trim(),
@@ -203,7 +219,11 @@ router.post("/create-order", async (req, res) => {
       totalPaise,
       paymentStatus: "pending",
       orderStatus: "placed",
-    });
+    };
+    if (validatedCoordinates) {
+      orderData.deliveryCoordinates = validatedCoordinates;
+    }
+    order = await Order.create(orderData);
   } catch (err) {
     if (err.name === "ValidationError") {
       const messages = Object.values(err.errors).map((e) => e.message);

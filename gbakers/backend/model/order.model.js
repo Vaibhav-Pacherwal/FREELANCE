@@ -86,6 +86,24 @@ const orderSchema = new mongoose.Schema(
       maxlength: [500, "Delivery address must be 500 characters or fewer"],
     },
 
+    // ── Delivery Coordinates (Optional) ──────────────────────────────────────
+    // Confirmed GPS coordinates stored only when customer used geolocation autofill.
+    // NEVER treated as proof of the delivery address; deliveryAddress is authoritative.
+    deliveryCoordinates: {
+      latitude: {
+        type: Number,
+        min: [-90, "Latitude must be between -90 and 90"],
+        max: [90, "Latitude must be between -90 and 90"],
+        default: null,
+      },
+      longitude: {
+        type: Number,
+        min: [-180, "Longitude must be between -180 and 180"],
+        max: [180, "Longitude must be between -180 and 180"],
+        default: null,
+      },
+    },
+
     // ── Items ────────────────────────────────────────────────────────────────
     items: {
       type: [orderItemSchema],

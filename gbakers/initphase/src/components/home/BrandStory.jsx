@@ -2,7 +2,7 @@ import './BrandStory.css';
 
 export default function BrandStory() {
   return (
-    <section className="brand-story section--lg section--burgundy" aria-label="Our Story">
+    <section className="brand-story section--lg section--burgundy" id="about" aria-label="Our Story">
       <div className="container brand-story__layout">
         {/* Image */}
         <div className="brand-story__visual">

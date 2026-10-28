@@ -33,7 +33,34 @@ const CATEGORY_FALLBACK_IMAGE = {
   other:   '/images/hero-cake.jpg',
 };
 
+/** Specific editorial fallback photos matching the prototype sample catalog */
+const PRODUCT_FALLBACK_IMAGES = {
+  'Chocolate Truffle Cake':    '/images/cat-brownies.jpg',
+  'Vanilla Berry Cake':        '/images/cat-cakes.jpg',
+  'Butterscotch Crunch Cake':  '/images/cat-cakes.jpg',
+  'Red Velvet Cake':           '/images/cat-brownies.jpg',
+  'Classic Fudge Brownie':     '/images/cat-brownies.jpg',
+  'Walnut Brownie':            '/images/cat-brownies.jpg',
+  'Salted Caramel Brownie':    '/images/cat-brownies.jpg',
+  'Butter Croissant':          '/images/cat-pastries.jpg',
+  'Almond Croissant':          '/images/cat-pastries.jpg',
+  'Fruit Danish':              '/images/cat-pastries.jpg',
+  'Chocolate Chip Cookie':     '/images/cat-cookies.jpg',
+  'Shortbread Butter Cookie':  '/images/cat-cookies.jpg',
+  'Oatmeal Raisin Cookie':     '/images/cat-cookies.jpg',
+};
+
 const DEFAULT_IMAGE = '/images/hero-cake.jpg';
+
+/** Curated signature/bestseller products to display in the Signature Selection section */
+const BESTSELLER_NAMES = new Set([
+  'Chocolate Truffle Cake',
+  'Red Velvet Cake',
+  'Classic Fudge Brownie',
+  'Salted Caramel Brownie',
+  'Almond Croissant',
+  'Chocolate Chip Cookie',
+]);
 
 /**
  * Map one backend product document to the UI product shape.
@@ -46,7 +73,7 @@ export function mapProduct(raw) {
   const image =
     Array.isArray(raw.images) && raw.images.length > 0
       ? raw.images[0]
-      : (CATEGORY_FALLBACK_IMAGE[raw.category] ?? DEFAULT_IMAGE);
+      : (PRODUCT_FALLBACK_IMAGES[raw.name] ?? CATEGORY_FALLBACK_IMAGE[raw.category] ?? DEFAULT_IMAGE);
 
   // ── Variants ─────────────────────────────────────────────────────────────
   // Backend stores prices in paise; UI calls formatPrice(rupees), so divide by 100.
@@ -65,16 +92,24 @@ export function mapProduct(raw) {
     variants = [{ label: 'Standard', price: 0 }];
   }
 
+  const tags =
+    Array.isArray(raw.tags) && raw.tags.length > 0
+      ? raw.tags
+      : BESTSELLER_NAMES.has(raw.name)
+        ? ['bestseller']
+        : [];
+
+  const mongoId = String(raw._id || raw.id);
+
   return {
-    id:          raw._id,
+    id:          mongoId,
+    _id:         mongoId,
     name:        raw.name,
     description: raw.description ?? '',
     category:    raw.category,
     image,
     variants,
-    // Backend has no tags field; the UI uses tags only for the 'bestseller' badge.
-    // Leave as empty array — badges can be added when the backend gains a tags field.
-    tags:        [],
+    tags,
   };
 }
 
