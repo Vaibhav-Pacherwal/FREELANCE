@@ -2,7 +2,7 @@
  * Gupta Bakers — API Client
  *
  * Thin wrapper around fetch that:
- *  - Reads VITE_API_URL from env (falls back to http://localhost:8080 in dev)
+ *  - Reads VITE_API_URL from env (falls back to https://freelance-1-p0kf.onrender.com)
  *  - Checks response.ok before parsing JSON
  *  - Handles non-JSON error bodies (e.g. HTML 502 gateway pages) gracefully
  *  - Propagates meaningful error messages so callers can show them to the user
@@ -10,7 +10,8 @@
  * Do NOT add silent mock-data fallbacks here — errors must be visible.
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+const RAW_URL = import.meta.env.VITE_API_URL ?? 'https://freelance-1-p0kf.onrender.com';
+const BASE_URL = RAW_URL.replace(/\/+$/, '');
 
 /**
  * Core fetch helper.  Throws an Error on any non-2xx status or network failure.
