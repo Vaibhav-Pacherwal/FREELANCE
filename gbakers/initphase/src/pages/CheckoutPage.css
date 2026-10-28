@@ -559,7 +559,7 @@
 /* ── Confirmation Screen ── */
 .checkout__confirmation {
   text-align: center;
-  padding: var(--space-4xl) 0;
+  padding: var(--space-2xl) 0 var(--space-4xl);
   max-width: 520px;
   margin-inline: auto;
 }

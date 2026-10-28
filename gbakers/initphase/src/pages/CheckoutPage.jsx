@@ -4,7 +4,7 @@ import { useCart } from '../context/useCart';
 import { formatPrice } from '../data/products';
 import { createPaymentOrder, verifyPayment, reverseGeocode } from '../services/api';
 import {
-  buildWhatsAppOrderMessage,
+  buildWhatsAppOrderUrl,
   BAKERY_WHATSAPP_PHONE,
   getDeliveryCoordinates,
 } from '../utils/whatsapp';
@@ -89,6 +89,10 @@ export default function CheckoutPage() {
 
   // Guard ref to prevent repeat / duplicate submissions
   const submissionInProgressRef = useRef(false);
+
+  // WhatsApp auto-redirect guard ref and popup-blocked fallback state
+  const hasRedirectedWhatsAppRef = useRef(false);
+  const [whatsappPopupBlocked, setWhatsappPopupBlocked] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -324,7 +328,7 @@ export default function CheckoutPage() {
               // ── 6. Clear cart & show confirmation ─────────────────────────
               clearCart();
 
-              setConfirmedOrder({
+              const orderConfirmationData = {
                 orderId: verifyResult.orderId || orderId,
                 paymentId: response.razorpay_payment_id,
                 totalRupees: totalRupees,
@@ -338,9 +342,39 @@ export default function CheckoutPage() {
                 deliveryCoordinates: confirmedCoordinates,
                 itemCount,
                 items: itemsSnapshot,
-              });
+              };
 
+              setConfirmedOrder(orderConfirmationData);
               setStep('confirm');
+
+              // ── 7. Automatic WhatsApp order dispatch redirect ────────────
+              if (!hasRedirectedWhatsAppRef.current) {
+                hasRedirectedWhatsAppRef.current = true;
+                const finalOrderId = orderConfirmationData.orderId;
+                const sessionKey = finalOrderId ? `gb_wa_redirect_${finalOrderId}` : null;
+                if (sessionKey) {
+                  try {
+                    sessionStorage.setItem(sessionKey, '1');
+                  } catch {
+                    // Ignore sessionStorage write errors
+                  }
+                }
+
+                const whatsappUrl = buildWhatsAppOrderUrl(orderConfirmationData);
+                let blocked = false;
+                try {
+                  const win = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                  if (!win || win.closed || typeof win.closed === 'undefined') {
+                    blocked = true;
+                  }
+                } catch {
+                  blocked = true;
+                }
+
+                if (blocked) {
+                  setWhatsappPopupBlocked(true);
+                }
+              }
             } else {
               setPaymentError(
                 `Payment verification could not be confirmed. If amount was deducted, please quote Payment ID: ${response.razorpay_payment_id}`
@@ -396,14 +430,11 @@ export default function CheckoutPage() {
       : `+91 ${confirmedOrder.phone}`;
     const orderRef = String(confirmedOrder.orderId).slice(-6).toUpperCase();
 
-    // Customer-triggered prefilled WhatsApp message to bakery support
-    const whatsappMessage = encodeURIComponent(
-      buildWhatsAppOrderMessage(confirmedOrder)
-    );
+    const whatsappUrl = buildWhatsAppOrderUrl(confirmedOrder);
     const confirmedCoords = getDeliveryCoordinates(confirmedOrder);
 
     return (
-      <div className="checkout section">
+      <div className="checkout">
         <div className="container checkout__confirmation">
           <div className="checkout__confirmation-icon" aria-hidden="true">✦</div>
           
@@ -421,7 +452,7 @@ export default function CheckoutPage() {
             Our bakers are now preparing your treats with care.
           </p>
 
-          {/* Customer-Triggered WhatsApp Link Card */}
+          {/* WhatsApp Action Card with Fallback Button */}
           <div className="checkout__whatsapp-card">
             <div className="checkout__whatsapp-card-header">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -429,21 +460,27 @@ export default function CheckoutPage() {
               </svg>
               <div>
                 <strong>Send Order Reference on WhatsApp</strong>
-                <p>Connect directly with Gupta Bakers (+91 {BAKERY_WHATSAPP_PHONE.slice(2)}) for priority delivery dispatch.</p>
+                <p>
+                  {whatsappPopupBlocked
+                    ? 'Your browser prevented WhatsApp from opening automatically. Click below to coordinate priority delivery dispatch.'
+                    : `Opening WhatsApp automatically... Connect directly with Gupta Bakers (+91 ${BAKERY_WHATSAPP_PHONE.slice(2)}) for priority delivery dispatch.`}
+                </p>
               </div>
             </div>
             
             <a
-              href={`https://wa.me/${BAKERY_WHATSAPP_PHONE}?text=${whatsappMessage}`}
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn--whatsapp"
             >
-              Share Order on WhatsApp
+              Open WhatsApp
             </a>
 
             <p className="checkout__whatsapp-disclaimer">
-              Clicking above opens WhatsApp with your order details prefilled for immediate coordination with our team.
+              {whatsappPopupBlocked
+                ? 'Click above to open WhatsApp with your order details prefilled for immediate coordination with our team.'
+                : 'Clicking above opens WhatsApp with your order details prefilled if automatic redirect was blocked.'}
             </p>
           </div>
 

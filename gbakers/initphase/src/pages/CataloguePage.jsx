@@ -70,6 +70,31 @@ export default function CataloguePage() {
       ? 'All Products'
       : categories.find((c) => c.id === activeCategory)?.name || 'Products';
 
+  // Auto-scroll and highlight target product when navigated via direct product URL
+  useEffect(() => {
+    if (loading || filtered.length === 0 || typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const targetId =
+      params.get('product') ||
+      (window.location.hash ? window.location.hash.replace(/^#product-|^#/, '') : null);
+
+    if (!targetId) return;
+
+    const timer = setTimeout(() => {
+      const el =
+        document.getElementById(`product-${targetId}`) ||
+        document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('cat-card--highlighted');
+        setTimeout(() => el.classList.remove('cat-card--highlighted'), 3000);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [loading, filtered]);
+
   return (
     <div className="catalogue">
       {/* Page header */}
@@ -173,7 +198,11 @@ function CatalogueCard({ product, onAddToCart }) {
   };
 
   return (
-    <article className="cat-card">
+    <article
+      className="cat-card"
+      id={`product-${product.id}`}
+      data-product-id={product.id}
+    >
       <div className="cat-card__image-wrap">
         <img
           src={product.image}
