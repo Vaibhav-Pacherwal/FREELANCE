@@ -13,14 +13,16 @@
 //   http://localhost:5173  — Vite default dev server
 //
 // Production:
-//   TODO: Add your deployed frontend URL before going live.
-//         Example: "https://gbakers.vercel.app"
-//         Commit the change and re-deploy the backend.
+//   Deployed frontend URL:
+//   "https://freelance-ke5z.vercel.app"
 //
 // NEVER add a wildcard ("*") here — this API handles payment data.
 export const ALLOWED_ORIGINS = [
   "http://localhost:5173", // Vite dev server (React frontend)
-  // "https://gbakers.vercel.app",  // TODO: uncomment and set real production URL
+  "https://freelance-ke5z.vercel.app", // Production Vercel frontend
+  ...(process.env.CLIENT_URL && !["http://localhost:5173", "https://freelance-ke5z.vercel.app"].includes(process.env.CLIENT_URL.replace(/\/+$/, ""))
+    ? [process.env.CLIENT_URL.replace(/\/+$/, "")]
+    : []),
 ];
 
 // ── Request body ──────────────────────────────────────────────────────────
