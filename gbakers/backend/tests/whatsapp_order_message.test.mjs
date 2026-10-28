@@ -17,6 +17,10 @@ import {
   buildWhatsAppOrderUrl,
   getDeliveryCoordinates,
   buildGoogleMapsUrl,
+  buildProductPageUrl,
+  getFrontendBaseUrl,
+  formatCurrency,
+  DEFAULT_CLIENT_URL,
   BAKERY_WHATSAPP_PHONE,
 } from "../../initphase/src/utils/whatsapp.js";
 
@@ -262,5 +266,277 @@ describe("WhatsApp Order Message Builder & Coordinates Link", () => {
     assert.equal(getDeliveryCoordinates({ deliveryCoordinates: null }), null);
     assert.equal(getDeliveryCoordinates({ deliveryCoordinates: { latitude: 95, longitude: 77 } }), null);
     assert.equal(getDeliveryCoordinates({ deliveryCoordinates: { latitude: 28, longitude: 185 } }), null);
+  });
+});
+
+describe("WhatsApp Order Items Formatting, Product URLs & Variants", () => {
+  test("buildProductPageUrl maps category slugs correctly without inventing /product/:slug", () => {
+    const base = "https://freelance-ke5z.vercel.app";
+
+    // Backend category 'cake' -> /shop/cakes?product=ID
+    assert.equal(
+      buildProductPageUrl({ product: { id: "cake-1", category: "cake" } }, base),
+      "https://freelance-ke5z.vercel.app/shop/cakes?product=cake-1"
+    );
+
+    // Backend category 'snack' -> /shop/brownies?product=ID
+    assert.equal(
+      buildProductPageUrl({ product: { id: "brownie-2", category: "snack" } }, base),
+      "https://freelance-ke5z.vercel.app/shop/brownies?product=brownie-2"
+    );
+
+    // Backend category 'pastry' -> /shop/pastries?product=ID
+    assert.equal(
+      buildProductPageUrl({ product: { id: "pastry-3", category: "pastry" } }, base),
+      "https://freelance-ke5z.vercel.app/shop/pastries?product=pastry-3"
+    );
+
+    // Backend category 'cookie' -> /shop/cookies?product=ID
+    assert.equal(
+      buildProductPageUrl({ product: { id: "cookie-4", category: "cookie" } }, base),
+      "https://freelance-ke5z.vercel.app/shop/cookies?product=cookie-4"
+    );
+
+    // Direct plural category slug 'cakes'
+    assert.equal(
+      buildProductPageUrl({ product: { id: "cake-5", category: "cakes" } }, base),
+      "https://freelance-ke5z.vercel.app/shop/cakes?product=cake-5"
+    );
+
+    // Missing category falls back cleanly to general catalogue /shop?product=ID
+    assert.equal(
+      buildProductPageUrl({ product: { id: "item-6" } }, base),
+      "https://freelance-ke5z.vercel.app/shop?product=item-6"
+    );
+
+    // Preserves explicit productUrl if provided on the item
+    assert.equal(
+      buildProductPageUrl({ productUrl: "/shop/cakes?product=explicit-1" }, base),
+      "https://freelance-ke5z.vercel.app/shop/cakes?product=explicit-1"
+    );
+  });
+
+  test("formats order with ITEMS ORDERED matching prompt template exactly", () => {
+    const sampleOrder = {
+      orderId: "B65C2F",
+      totalRupees: 100,
+      name: "Vaibhav Pacherwal",
+      phone: "+91 8851412125",
+      date: "2026-10-29",
+      address: "Hari Nagar, Delhi",
+      pincode: "110064",
+      deliveryCoordinates: {
+        latitude: 28.620806850051004,
+        longitude: 77.11207747517851,
+      },
+      paymentId: "pay_TtQq1kyM1Oms3N",
+      items: [
+        {
+          product: {
+            id: "product-slug-1",
+            name: "Belgian Chocolate Truffle",
+            category: "cake",
+          },
+          variant: {
+            label: "500g Regular",
+            price: 100,
+          },
+          quantity: 1,
+          unitPrice: 100,
+        },
+      ],
+    };
+
+    const message = buildWhatsAppOrderMessage(sampleOrder, {
+      baseUrl: "https://freelance-ke5z.vercel.app",
+    });
+
+    // Opening greeting with Order ID and total
+    assert.ok(message.includes("Hello Gupta Bakers! I have placed Order #B65C2F (₹100)."));
+
+    // ITEMS ORDERED header
+    assert.ok(message.includes("ITEMS ORDERED:\n\n1. Belgian Chocolate Truffle"));
+    assert.ok(
+      message.includes(
+        "   Product URL: https://freelance-ke5z.vercel.app/shop/cakes?product=product-slug-1"
+      )
+    );
+    assert.ok(message.includes("   Quantity: 1"));
+    assert.ok(message.includes("   Size/Variant: 500g Regular"));
+    assert.ok(message.includes("   Unit Price: ₹100.00"));
+    assert.ok(message.includes("   Item Total: ₹100.00"));
+
+    // Customer details
+    assert.ok(message.includes("CUSTOMER DETAILS:"));
+    assert.ok(message.includes("Customer: Vaibhav Pacherwal"));
+    assert.ok(message.includes("Phone: +91 8851412125"));
+
+    // Delivery details
+    assert.ok(message.includes("DELIVERY DETAILS:"));
+    assert.ok(message.includes("Preferred Delivery Date: 2026-10-29"));
+    assert.ok(message.includes("Delivery Address: Hari Nagar, Delhi, PIN: 110064"));
+    assert.ok(
+      message.includes(
+        "Location Map: https://www.google.com/maps?q=28.620806850051004,77.11207747517851"
+      )
+    );
+
+    // Payment details
+    assert.ok(message.includes("PAYMENT:"));
+    assert.ok(message.includes("Payment ID: pay_TtQq1kyM1Oms3N"));
+    assert.ok(message.includes("Total Paid: ₹100.00"));
+
+    // Closing statement
+    assert.ok(message.includes("Please confirm receipt and dispatch schedule."));
+  });
+
+  test("handles multiple products with 1-based indexing, different quantities, and line totals", () => {
+    const multiItemOrder = {
+      orderId: "ORDER789",
+      totalRupees: 1350,
+      name: "Priya Sharma",
+      phone: "9876543210",
+      date: "2026-11-01",
+      address: "Sector 14, Gurgaon",
+      pincode: "122001",
+      paymentId: "pay_MultiItem12345",
+      items: [
+        {
+          product: {
+            id: "truffle-cake",
+            name: "Belgian Chocolate Cake",
+            category: "cake",
+          },
+          variant: {
+            label: "1kg",
+            price: 450,
+          },
+          quantity: 2,
+          unitPrice: 450,
+        },
+        {
+          product: {
+            id: "fudge-brownie",
+            name: "Walnut Fudge Brownie",
+            category: "snack",
+          },
+          variant: {
+            label: "Box of 4",
+            price: 150,
+          },
+          quantity: 3,
+          unitPrice: 150,
+        },
+      ],
+    };
+
+    const message = buildWhatsAppOrderMessage(multiItemOrder, {
+      baseUrl: "https://freelance-ke5z.vercel.app",
+    });
+
+    // Item 1
+    assert.ok(message.includes("1. Belgian Chocolate Cake"));
+    assert.ok(
+      message.includes(
+        "   Product URL: https://freelance-ke5z.vercel.app/shop/cakes?product=truffle-cake"
+      )
+    );
+    assert.ok(message.includes("   Quantity: 2"));
+    assert.ok(message.includes("   Size/Variant: 1kg"));
+    assert.ok(message.includes("   Unit Price: ₹450.00"));
+    assert.ok(message.includes("   Item Total: ₹900.00")); // 450 * 2
+
+    // Item 2
+    assert.ok(message.includes("2. Walnut Fudge Brownie"));
+    assert.ok(
+      message.includes(
+        "   Product URL: https://freelance-ke5z.vercel.app/shop/brownies?product=fudge-brownie"
+      )
+    );
+    assert.ok(message.includes("   Quantity: 3"));
+    assert.ok(message.includes("   Size/Variant: Box of 4"));
+    assert.ok(message.includes("   Unit Price: ₹150.00"));
+    assert.ok(message.includes("   Item Total: ₹450.00")); // 150 * 3
+  });
+
+  test("handles missing optional variants and missing prices gracefully", () => {
+    const orderWithMissingVariantAndPrice = {
+      orderId: "SAFE123",
+      totalRupees: 50,
+      name: "Rohit Verma",
+      phone: "9123456780",
+      date: "2026-11-05",
+      address: "Karol Bagh, Delhi",
+      pincode: "110005",
+      paymentId: "pay_Safe123",
+      items: [
+        {
+          product: {
+            id: "classic-biscuit",
+            name: "Classic Butter Biscuit",
+            // no category
+          },
+          // variant is missing
+          quantity: 1,
+          // unitPrice is missing
+        },
+      ],
+    };
+
+    const message = buildWhatsAppOrderMessage(orderWithMissingVariantAndPrice);
+
+    // Safely defaults variant to Standard
+    assert.ok(message.includes("1. Classic Butter Biscuit"));
+    assert.ok(message.includes("   Size/Variant: Standard"));
+    // Falls back to /shop?product=ID without throwing
+    assert.ok(message.includes("/shop?product=classic-biscuit"));
+    // Safely formats missing prices to ₹0.00
+    assert.ok(message.includes("   Unit Price: ₹0.00"));
+    assert.ok(message.includes("   Item Total: ₹0.00"));
+  });
+
+  test("verifies full URL encoding of items and product URLs in buildWhatsAppOrderUrl", () => {
+    const order = {
+      orderId: "ENC999",
+      totalRupees: 300,
+      name: "Sneha Patel",
+      phone: "+91 9998887776",
+      date: "2026-11-02",
+      address: "Rohini Sec 7, Delhi",
+      pincode: "110085",
+      paymentId: "pay_EncTest123",
+      items: [
+        {
+          product: {
+            id: "red-velvet-jar",
+            name: "Red Velvet Jar Cake & Cream",
+            category: "pastry",
+          },
+          variant: {
+            label: "Single (200ml)",
+            price: 150,
+          },
+          quantity: 2,
+          unitPrice: 150,
+        },
+      ],
+    };
+
+    const waUrl = buildWhatsAppOrderUrl(order);
+    assert.ok(waUrl.startsWith(`https://wa.me/${BAKERY_WHATSAPP_PHONE}?text=`));
+
+    const encodedText = waUrl.slice(`https://wa.me/${BAKERY_WHATSAPP_PHONE}?text=`.length);
+
+    // Verify critical characters are safely encoded in URL
+    assert.ok(encodedText.includes("%20")); // spaces
+    assert.ok(encodedText.includes("%0A")); // newlines
+    assert.ok(encodedText.includes("%2Fshop%2Fpastries%3Fproduct%3Dred-velvet-jar")); // product url
+
+    // Full roundtrip lossless decoding
+    const decodedText = decodeURIComponent(encodedText);
+    const rawMessage = buildWhatsAppOrderMessage(order);
+    assert.equal(decodedText, rawMessage);
+    assert.ok(decodedText.includes("Red Velvet Jar Cake & Cream"));
+    assert.ok(decodedText.includes("Size/Variant: Single (200ml)"));
   });
 });
