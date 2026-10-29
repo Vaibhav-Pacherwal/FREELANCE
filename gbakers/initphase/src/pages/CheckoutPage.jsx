@@ -62,8 +62,28 @@ function loadRazorpaySdk() {
 export default function CheckoutPage() {
   const { items, subtotal, itemCount, clearCart } = useCart();
 
+  // Snapshot of confirmed order details populated after backend verification or restored from session
+  const [confirmedOrder, setConfirmedOrder] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const saved = sessionStorage.getItem('gb_last_confirmed_order');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   // 'details' | 'confirm'
-  const [step, setStep] = useState('details');
+  const [step, setStep] = useState(() => {
+    if (typeof window === 'undefined') return 'details';
+    try {
+      if (items.length > 0) return 'details';
+      const saved = sessionStorage.getItem('gb_last_confirmed_order');
+      return saved ? 'confirm' : 'details';
+    } catch {
+      return 'details';
+    }
+  });
 
   const [form, setForm] = useState({
     name: '',
@@ -78,9 +98,6 @@ export default function CheckoutPage() {
   const [paymentError, setPaymentError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-
-  // Snapshot of confirmed order details populated only after backend verification
-  const [confirmedOrder, setConfirmedOrder] = useState(null);
 
   // Geolocation & reverse-geocoding state
   const [isLocating, setIsLocating] = useState(false);
@@ -347,12 +364,27 @@ export default function CheckoutPage() {
               setConfirmedOrder(orderConfirmationData);
               setStep('confirm');
 
+              try {
+                sessionStorage.setItem(
+                  'gb_last_confirmed_order',
+                  JSON.stringify(orderConfirmationData)
+                );
+              } catch {
+                // Ignore storage write errors
+              }
+
               // ── 7. Automatic WhatsApp order dispatch redirect ────────────
-              if (!hasRedirectedWhatsAppRef.current) {
+              const finalOrderId = orderConfirmationData.orderId;
+              const sessionKey = finalOrderId ? `gb_wa_redirect_${finalOrderId}` : null;
+              const alreadyRedirected = Boolean(
+                sessionKey &&
+                  typeof sessionStorage !== 'undefined' &&
+                  sessionStorage.getItem(sessionKey) === '1'
+              );
+
+              if (!hasRedirectedWhatsAppRef.current && !alreadyRedirected) {
                 hasRedirectedWhatsAppRef.current = true;
-                const finalOrderId = orderConfirmationData.orderId;
-                const sessionKey = finalOrderId ? `gb_wa_redirect_${finalOrderId}` : null;
-                if (sessionKey) {
+                if (sessionKey && typeof sessionStorage !== 'undefined') {
                   try {
                     sessionStorage.setItem(sessionKey, '1');
                   } catch {
@@ -361,17 +393,11 @@ export default function CheckoutPage() {
                 }
 
                 const whatsappUrl = buildWhatsAppOrderUrl(orderConfirmationData);
-                let blocked = false;
                 try {
-                  const win = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-                  if (!win || win.closed || typeof win.closed === 'undefined') {
-                    blocked = true;
-                  }
-                } catch {
-                  blocked = true;
-                }
-
-                if (blocked) {
+                  // Same-tab navigation avoids popup blocker rejections on mobile browsers
+                  window.location.assign(whatsappUrl);
+                } catch (navErr) {
+                  console.warn('Automatic WhatsApp navigation failed:', navErr);
                   setWhatsappPopupBlocked(true);
                 }
               }
@@ -530,8 +556,32 @@ export default function CheckoutPage() {
           </div>
 
           <div className="checkout__confirmation-actions">
-            <Link to="/" className="btn btn--primary">Back to Home</Link>
-            <Link to="/shop" className="btn btn--ghost">Continue Shopping</Link>
+            <Link
+              to="/"
+              className="btn btn--primary"
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem('gb_last_confirmed_order');
+                } catch {
+                  // Ignore storage write errors
+                }
+              }}
+            >
+              Back to Home
+            </Link>
+            <Link
+              to="/shop"
+              className="btn btn--ghost"
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem('gb_last_confirmed_order');
+                } catch {
+                  // Ignore storage write errors
+                }
+              }}
+            >
+              Continue Shopping
+            </Link>
           </div>
         </div>
       </div>

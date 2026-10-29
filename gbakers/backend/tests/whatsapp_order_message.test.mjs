@@ -539,4 +539,39 @@ describe("WhatsApp Order Items Formatting, Product URLs & Variants", () => {
     assert.ok(decodedText.includes("Red Velvet Jar Cake & Cream"));
     assert.ok(decodedText.includes("Size/Variant: Single (200ml)"));
   });
+
+  test("generates valid HTTPS wa.me URL compatible with window.location.assign for mobile Chrome", () => {
+    const order = {
+      orderId: "8E9BD4",
+      totalRupees: 120,
+      name: "Vaibhav Pacherwal",
+      phone: "+91 8851412125",
+      date: "2026-10-29",
+      address: "Hari Nagar, Delhi",
+      pincode: "110064",
+      paymentId: "pay_TtcodyfLl8gxVo",
+      items: [
+        {
+          product: { id: "pastry-1", name: "Red Velvet Jar", category: "pastry" },
+          variant: { label: "200ml" },
+          quantity: 1,
+          unitPrice: 120,
+        },
+      ],
+    };
+
+    const url = buildWhatsAppOrderUrl(order);
+
+    // Verifies protocol and domain suitable for window.location.assign() same-tab navigation
+    const parsed = new URL(url);
+    assert.equal(parsed.protocol, "https:");
+    assert.equal(parsed.hostname, "wa.me");
+    assert.equal(parsed.pathname, `/${BAKERY_WHATSAPP_PHONE}`);
+    assert.ok(parsed.searchParams.has("text"));
+
+    // Verifies redirect key session format
+    const sessionKey = `gb_wa_redirect_${order.orderId}`;
+    assert.equal(sessionKey, "gb_wa_redirect_8E9BD4");
+  });
 });
+
