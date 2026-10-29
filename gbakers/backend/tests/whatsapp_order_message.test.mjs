@@ -35,7 +35,7 @@ describe("WhatsApp Order Message Builder & Coordinates Link", () => {
     orderId: "671df3a958e8b31a2938a123",
     totalRupees: 950,
     name: "Aarav Gupta",
-    phone: "9810945356",
+    phone: "9891123526",
     date: "2026-10-30",
     address: "Flat 304, Palm Grove Heights, Civil Lines, Delhi",
     pincode: "110054",
@@ -200,7 +200,7 @@ describe("WhatsApp Order Message Builder & Coordinates Link", () => {
     // Customer name
     assert.ok(message.includes("Customer: Aarav Gupta"));
     // Customer phone with +91 format
-    assert.ok(message.includes("Phone: +91 9810945356"));
+    assert.ok(message.includes("Phone: +91 9891123526"));
     // Preferred delivery date
     assert.ok(message.includes("Preferred Delivery Date: 2026-10-30"));
     // Delivery address & PIN

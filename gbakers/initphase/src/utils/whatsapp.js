@@ -9,7 +9,7 @@
  * - Preserves all customer, delivery, Google Maps, order ID, and payment details.
  */
 
-export const BAKERY_WHATSAPP_PHONE = '919810945356';
+export const BAKERY_WHATSAPP_PHONE = '919891123526';
 export const DEFAULT_CLIENT_URL = 'https://freelance-ke5z.vercel.app';
 
 const BACKEND_CATEGORY_TO_SLUG = {
@@ -168,15 +168,15 @@ export function buildWhatsAppOrderMessage(order, options = {}) {
     order.totalRupees != null
       ? order.totalRupees
       : order.totalPaise
-      ? order.totalPaise / 100
-      : order.totalAmount || 0;
+        ? order.totalPaise / 100
+        : order.totalAmount || 0;
 
   const rawPhone = String(order.phone || order.customerPhone || '');
   const formattedPhone = rawPhone.startsWith('+')
     ? rawPhone
     : rawPhone
-    ? `+91 ${rawPhone}`
-    : '+91';
+      ? `+91 ${rawPhone}`
+      : '+91';
 
   const customerName = order.name || order.customerName || '';
   const date = order.date || order.preferredDeliveryDate || '';
@@ -218,19 +218,19 @@ export function buildWhatsAppOrderMessage(order, options = {}) {
         it.unitPrice != null
           ? Number(it.unitPrice)
           : it.variant?.price != null
-          ? Number(it.variant.price)
-          : it.unitPricePaise != null
-          ? Number(it.unitPricePaise) / 100
-          : it.price != null
-          ? Number(it.price)
-          : 0;
+            ? Number(it.variant.price)
+            : it.unitPricePaise != null
+              ? Number(it.unitPricePaise) / 100
+              : it.price != null
+                ? Number(it.price)
+                : 0;
 
       const lineTotalVal =
         it.lineTotal != null
           ? Number(it.lineTotal)
           : it.lineTotalPaise != null
-          ? Number(it.lineTotalPaise) / 100
-          : unitPriceVal * qty;
+            ? Number(it.lineTotalPaise) / 100
+            : unitPriceVal * qty;
 
       return (
         `${idx + 1}. ${name}\n` +
@@ -378,8 +378,8 @@ export function getWhatsAppOrderUrls(order, options = {}) {
     options.platform === 'android'
       ? true
       : options.platform === 'desktop'
-      ? false
-      : isAndroidPlatform(options.userAgent);
+        ? false
+        : isAndroidPlatform(options.userAgent);
 
   return {
     preferredUrl: waMeUrl,

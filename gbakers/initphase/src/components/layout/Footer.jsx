@@ -63,7 +63,7 @@ export default function Footer() {
               <p className="footer__detail">
                 {/* Replace with actual phone */}
                 <span className="footer__detail-label">Phone</span>
-                +91 9810945356
+                +91 9891123526
               </p>
             </div>
 
