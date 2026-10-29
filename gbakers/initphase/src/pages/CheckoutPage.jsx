@@ -5,6 +5,7 @@ import { formatPrice } from '../data/products';
 import { createPaymentOrder, verifyPayment, reverseGeocode } from '../services/api';
 import {
   buildWhatsAppOrderUrl,
+  getWhatsAppOrderUrls,
   BAKERY_WHATSAPP_PHONE,
   getDeliveryCoordinates,
 } from '../utils/whatsapp';
@@ -456,7 +457,9 @@ export default function CheckoutPage() {
       : `+91 ${confirmedOrder.phone}`;
     const orderRef = String(confirmedOrder.orderId).slice(-6).toUpperCase();
 
-    const whatsappUrl = buildWhatsAppOrderUrl(confirmedOrder);
+    const { waMeUrl, apiUrl } = getWhatsAppOrderUrls(confirmedOrder);
+    const whatsappUrl = waMeUrl;
+    const whatsappFallbackUrl = apiUrl;
     const confirmedCoords = getDeliveryCoordinates(confirmedOrder);
 
     return (
@@ -503,10 +506,24 @@ export default function CheckoutPage() {
               Open WhatsApp
             </a>
 
+            <div className="checkout__whatsapp-fallback">
+              <span className="checkout__whatsapp-fallback-label">
+                If the app didn&apos;t open or you&apos;re using browser:
+              </span>
+              <a
+                href={whatsappFallbackUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="checkout__whatsapp-fallback-link"
+              >
+                Continue via WhatsApp Web / Browser (api.whatsapp.com)
+              </a>
+            </div>
+
             <p className="checkout__whatsapp-disclaimer">
               {whatsappPopupBlocked
                 ? 'Click above to open WhatsApp with your order details prefilled for immediate coordination with our team.'
-                : 'Clicking above opens WhatsApp with your order details prefilled if automatic redirect was blocked.'}
+                : 'Clicking above opens WhatsApp with your order details prefilled if automatic redirect was blocked or opened in browser.'}
             </p>
           </div>
 

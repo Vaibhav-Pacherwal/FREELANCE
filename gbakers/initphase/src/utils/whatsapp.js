@@ -264,7 +264,8 @@ export function buildWhatsAppOrderMessage(order, options = {}) {
 }
 
 /**
- * Builds the full wa.me link with URL-encoded message.
+ * Builds the full wa.me link with URL-encoded message (standard HTTPS link).
+ * Preferred on all platforms because Android handles it via App Links and PC via WhatsApp Web.
  *
  * @param {object} order
  * @param {string} [bakeryPhone]
@@ -280,7 +281,151 @@ export function buildWhatsAppOrderUrl(
   return `https://wa.me/${bakeryPhone}?text=${encodeURIComponent(message)}`;
 }
 
+/**
+ * Builds the fallback api.whatsapp.com/send/ URL for devices where wa.me opens in browser.
+ *
+ * @param {object} order
+ * @param {string} [bakeryPhone]
+ * @param {object} [options]
+ * @returns {string}
+ */
+export function buildWhatsAppApiUrl(
+  order,
+  bakeryPhone = BAKERY_WHATSAPP_PHONE,
+  options = {}
+) {
+  const message = buildWhatsAppOrderMessage(order, options);
+  return `https://api.whatsapp.com/send/?phone=${bakeryPhone}&text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Builds an Android WhatsApp Intent URI for direct application handoff.
+ *
+ * @param {object} order
+ * @param {string} [bakeryPhone]
+ * @param {object} [options]
+ * @returns {string}
+ */
+export function buildWhatsAppIntentUrl(
+  order,
+  bakeryPhone = BAKERY_WHATSAPP_PHONE,
+  options = {}
+) {
+  const message = buildWhatsAppOrderMessage(order, options);
+  return `intent://send?phone=${bakeryPhone}&text=${encodeURIComponent(message)}#Intent;package=com.whatsapp;scheme=whatsapp;end`;
+}
+
+/**
+ * Builds a native whatsapp:// custom scheme deep link URL.
+ *
+ * @param {object} order
+ * @param {string} [bakeryPhone]
+ * @param {object} [options]
+ * @returns {string}
+ */
+export function buildWhatsAppAppSchemeUrl(
+  order,
+  bakeryPhone = BAKERY_WHATSAPP_PHONE,
+  options = {}
+) {
+  const message = buildWhatsAppOrderMessage(order, options);
+  return `whatsapp://send?phone=${bakeryPhone}&text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Detects whether the current environment or user agent string is Android.
+ *
+ * @param {string} [userAgent]
+ * @returns {boolean}
+ */
+export function isAndroidPlatform(userAgent) {
+  if (typeof userAgent === 'string') {
+    return /android/i.test(userAgent);
+  }
+  if (typeof navigator !== 'undefined' && navigator.userAgent) {
+    return /android/i.test(navigator.userAgent);
+  }
+  return false;
+}
+
+/**
+ * Returns a comprehensive set of WhatsApp URLs for the confirmed order across platforms.
+ *
+ * @param {object} order
+ * @param {object} [options]
+ * @param {string} [options.platform] 'android' | 'desktop' | 'auto'
+ * @param {string} [options.userAgent] custom user agent for testing/detection
+ * @param {string} [options.bakeryPhone]
+ * @param {string} [options.baseUrl]
+ * @returns {{
+ *   preferredUrl: string,
+ *   fallbackUrl: string,
+ *   waMeUrl: string,
+ *   apiUrl: string,
+ *   intentUrl: string,
+ *   schemeUrl: string,
+ *   isAndroid: boolean
+ * }}
+ */
+export function getWhatsAppOrderUrls(order, options = {}) {
+  const bakeryPhone = options.bakeryPhone || BAKERY_WHATSAPP_PHONE;
+  const waMeUrl = buildWhatsAppOrderUrl(order, bakeryPhone, options);
+  const apiUrl = buildWhatsAppApiUrl(order, bakeryPhone, options);
+  const intentUrl = buildWhatsAppIntentUrl(order, bakeryPhone, options);
+  const schemeUrl = buildWhatsAppAppSchemeUrl(order, bakeryPhone, options);
+
+  const isAndroid =
+    options.platform === 'android'
+      ? true
+      : options.platform === 'desktop'
+      ? false
+      : isAndroidPlatform(options.userAgent);
+
+  return {
+    preferredUrl: waMeUrl,
+    fallbackUrl: apiUrl,
+    waMeUrl,
+    apiUrl,
+    intentUrl,
+    schemeUrl,
+    isAndroid,
+  };
+}
+
+/**
+ * Selects the appropriate WhatsApp order URL based on platform and fallback preferences.
+ *
+ * @param {object} order
+ * @param {string|object} [platformOrOptions]
+ * @param {object} [options]
+ * @returns {string}
+ */
+export function selectWhatsAppUrlForPlatform(
+  order,
+  platformOrOptions = 'auto',
+  options = {}
+) {
+  const mergedOptions =
+    typeof platformOrOptions === 'string'
+      ? { ...options, platform: platformOrOptions }
+      : { ...platformOrOptions, ...options };
+
+  const urls = getWhatsAppOrderUrls(order, mergedOptions);
+
+  if (mergedOptions.fallback || mergedOptions.useFallback) {
+    return urls.fallbackUrl;
+  }
+  if (mergedOptions.useIntent) {
+    return urls.intentUrl;
+  }
+  if (mergedOptions.useScheme) {
+    return urls.schemeUrl;
+  }
+  return urls.preferredUrl;
+}
+
 // Aliases for convenience
 export const buildWhatsAppMessage = buildWhatsAppOrderMessage;
 export const createWhatsAppMessage = buildWhatsAppOrderMessage;
 export const getWhatsAppMessage = buildWhatsAppOrderMessage;
+

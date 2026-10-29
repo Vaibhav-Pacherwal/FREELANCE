@@ -15,6 +15,12 @@ import assert from "node:assert/strict";
 import {
   buildWhatsAppOrderMessage,
   buildWhatsAppOrderUrl,
+  buildWhatsAppApiUrl,
+  buildWhatsAppIntentUrl,
+  buildWhatsAppAppSchemeUrl,
+  isAndroidPlatform,
+  getWhatsAppOrderUrls,
+  selectWhatsAppUrlForPlatform,
   getDeliveryCoordinates,
   buildGoogleMapsUrl,
   buildProductPageUrl,
@@ -574,4 +580,155 @@ describe("WhatsApp Order Items Formatting, Product URLs & Variants", () => {
     assert.equal(sessionKey, "gb_wa_redirect_8E9BD4");
   });
 });
+
+describe("WhatsApp Platform-Specific URL Selection & Android App Handoff", () => {
+  const sampleOrder = {
+    orderId: "ANDR123",
+    totalRupees: 550,
+    name: "Karan Johar",
+    phone: "+91 9811122233",
+    date: "2026-11-03",
+    address: "DLF Phase 2, Gurgaon",
+    pincode: "122002",
+    paymentId: "pay_AndroidHandoff99",
+    items: [
+      {
+        product: { id: "pastry-truffle", name: "Dark Chocolate Truffle", category: "cake" },
+        variant: { label: "500g", price: 550 },
+        quantity: 1,
+        unitPrice: 550,
+      },
+    ],
+  };
+
+  test("buildWhatsAppApiUrl generates the reliable api.whatsapp.com/send/ fallback URL", () => {
+    const apiUrl = buildWhatsAppApiUrl(sampleOrder);
+    assert.ok(
+      apiUrl.startsWith(`https://api.whatsapp.com/send/?phone=${BAKERY_WHATSAPP_PHONE}&text=`),
+      `Expected api.whatsapp.com URL, got: ${apiUrl}`
+    );
+
+    const parsed = new URL(apiUrl);
+    assert.equal(parsed.protocol, "https:");
+    assert.equal(parsed.hostname, "api.whatsapp.com");
+    assert.equal(parsed.pathname, "/send/");
+    assert.equal(parsed.searchParams.get("phone"), BAKERY_WHATSAPP_PHONE);
+    assert.ok(parsed.searchParams.has("text"));
+
+    // Lossless decoding verification
+    const decodedMessage = decodeURIComponent(parsed.searchParams.get("text"));
+    const expectedMessage = buildWhatsAppOrderMessage(sampleOrder);
+    assert.equal(decodedMessage, expectedMessage);
+  });
+
+  test("buildWhatsAppIntentUrl generates a valid Android intent URI for native WhatsApp handoff", () => {
+    const intentUrl = buildWhatsAppIntentUrl(sampleOrder);
+    assert.ok(
+      intentUrl.startsWith(`intent://send?phone=${BAKERY_WHATSAPP_PHONE}&text=`),
+      `Expected intent URI, got: ${intentUrl}`
+    );
+    assert.ok(intentUrl.includes("#Intent;package=com.whatsapp;scheme=whatsapp;end"));
+
+    // Raw message decode test from intent query
+    const queryString = intentUrl.slice("intent://send?".length, intentUrl.indexOf("#Intent;"));
+    const params = new URLSearchParams(queryString);
+    assert.equal(params.get("phone"), BAKERY_WHATSAPP_PHONE);
+    assert.equal(decodeURIComponent(params.get("text")), buildWhatsAppOrderMessage(sampleOrder));
+  });
+
+  test("buildWhatsAppAppSchemeUrl generates valid whatsapp:// deep link URL", () => {
+    const schemeUrl = buildWhatsAppAppSchemeUrl(sampleOrder);
+    assert.ok(
+      schemeUrl.startsWith(`whatsapp://send?phone=${BAKERY_WHATSAPP_PHONE}&text=`),
+      `Expected scheme URL, got: ${schemeUrl}`
+    );
+    const parsed = new URL(schemeUrl);
+    assert.equal(parsed.protocol, "whatsapp:");
+    assert.equal(parsed.searchParams.get("phone"), BAKERY_WHATSAPP_PHONE);
+    assert.equal(decodeURIComponent(parsed.searchParams.get("text")), buildWhatsAppOrderMessage(sampleOrder));
+  });
+
+  test("isAndroidPlatform detects Android User-Agents and excludes Desktop/iOS User-Agents", () => {
+    const androidUA1 = "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36";
+    const androidUA2 = "Mozilla/5.0 (Linux; U; Android 13; en-us; Pixel 7 Build/TQ3A.230805.001) AppleWebKit/537.36";
+    const desktopChromeUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+    const macOSSafariUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15";
+    const iPhoneUA = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1";
+
+    assert.equal(isAndroidPlatform(androidUA1), true);
+    assert.equal(isAndroidPlatform(androidUA2), true);
+    assert.equal(isAndroidPlatform(desktopChromeUA), false);
+    assert.equal(isAndroidPlatform(macOSSafariUA), false);
+    assert.equal(isAndroidPlatform(iPhoneUA), false);
+    assert.equal(isAndroidPlatform(null), false);
+    assert.equal(isAndroidPlatform(undefined), false);
+  });
+
+  test("getWhatsAppOrderUrls provides both preferred wa.me URL and reliable api.whatsapp.com fallback", () => {
+    const urls = getWhatsAppOrderUrls(sampleOrder, { platform: "android" });
+
+    // Standard HTTPS wa.me URL is always preferred first (handles App Links and WhatsApp Web)
+    assert.equal(urls.preferredUrl, buildWhatsAppOrderUrl(sampleOrder));
+    assert.ok(urls.preferredUrl.startsWith(`https://wa.me/${BAKERY_WHATSAPP_PHONE}?text=`));
+
+    // Fallback URL is the official api.whatsapp.com/send/ endpoint
+    assert.equal(urls.fallbackUrl, buildWhatsAppApiUrl(sampleOrder));
+    assert.ok(urls.fallbackUrl.startsWith(`https://api.whatsapp.com/send/?phone=${BAKERY_WHATSAPP_PHONE}&text=`));
+
+    // Deep link variants are also provided
+    assert.ok(urls.intentUrl.startsWith("intent://send?"));
+    assert.ok(urls.schemeUrl.startsWith("whatsapp://send?"));
+    assert.equal(urls.isAndroid, true);
+  });
+
+  test("selectWhatsAppUrlForPlatform selects preferred wa.me URL by default on both desktop and Android", () => {
+    // Desktop default
+    const desktopUrl = selectWhatsAppUrlForPlatform(sampleOrder, "desktop");
+    assert.equal(desktopUrl, buildWhatsAppOrderUrl(sampleOrder));
+    assert.ok(desktopUrl.startsWith("https://wa.me/"));
+
+    // Android default (prefers wa.me link first as per Requirement 4)
+    const androidDefaultUrl = selectWhatsAppUrlForPlatform(sampleOrder, "android");
+    assert.equal(androidDefaultUrl, buildWhatsAppOrderUrl(sampleOrder));
+    assert.ok(androidDefaultUrl.startsWith("https://wa.me/"));
+
+    // Android with fallback requested (api.whatsapp.com)
+    const androidFallbackUrl = selectWhatsAppUrlForPlatform(sampleOrder, "android", { fallback: true });
+    assert.equal(androidFallbackUrl, buildWhatsAppApiUrl(sampleOrder));
+    assert.ok(androidFallbackUrl.startsWith("https://api.whatsapp.com/send/"));
+
+    // Android with native intent requested
+    const androidIntentUrl = selectWhatsAppUrlForPlatform(sampleOrder, "android", { useIntent: true });
+    assert.equal(androidIntentUrl, buildWhatsAppIntentUrl(sampleOrder));
+    assert.ok(androidIntentUrl.startsWith("intent://send?"));
+
+    // Android with custom scheme requested
+    const androidSchemeUrl = selectWhatsAppUrlForPlatform(sampleOrder, "android", { useScheme: true });
+    assert.equal(androidSchemeUrl, buildWhatsAppAppSchemeUrl(sampleOrder));
+    assert.ok(androidSchemeUrl.startsWith("whatsapp://send?"));
+  });
+
+  test("preserves exact message encoding and recipient across wa.me, api, intent, and scheme URLs", () => {
+    const expectedMessage = buildWhatsAppOrderMessage(sampleOrder);
+    const urls = getWhatsAppOrderUrls(sampleOrder);
+
+    // 1. wa.me text matches
+    const waMeText = new URL(urls.waMeUrl).searchParams.get("text");
+    assert.equal(decodeURIComponent(waMeText), expectedMessage);
+
+    // 2. api.whatsapp.com text matches
+    const apiText = new URL(urls.apiUrl).searchParams.get("text");
+    assert.equal(decodeURIComponent(apiText), expectedMessage);
+
+    // 3. scheme text matches
+    const schemeText = new URL(urls.schemeUrl).searchParams.get("text");
+    assert.equal(decodeURIComponent(schemeText), expectedMessage);
+
+    // 4. intent text matches
+    const intentQuery = urls.intentUrl.slice("intent://send?".length, urls.intentUrl.indexOf("#Intent;"));
+    const intentText = new URLSearchParams(intentQuery).get("text");
+    assert.equal(decodeURIComponent(intentText), expectedMessage);
+  });
+});
+
 
